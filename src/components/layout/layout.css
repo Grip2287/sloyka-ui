@@ -78,4 +78,17 @@
   /* Группа радиокнопок */
   .sl-radiogroup { display: flex; flex-direction: column; gap: var(--sl-2); }
   .sl-radiogroup--row { flex-direction: row; flex-wrap: wrap; gap: var(--sl-5); }
+  /* Карточки: шапка с иконкой, строки-ссылки, таблица */
+  .sl-card__who { display: flex; gap: var(--sl-3); align-items: center; }
+  a.sl-card, a.sl-row { color: inherit; text-decoration: none; }
+  .sl-table__r { text-align: right; }
+  .sl-table__c { text-align: center; }
+  .sl-table__min { width: 1%; white-space: nowrap; }
+  .sl-table__row--click { cursor: pointer; }
+  .sl-table__row--click:focus-visible { outline: 2px solid var(--sl-focus); outline-offset: -2px; }
+  .sl-row:focus-visible { outline: 2px solid var(--sl-focus); outline-offset: -2px; }
+  .sl-banner__item > span { min-width: 0; overflow-wrap: anywhere; }
+  @media (max-width: 767px) {
+    .sl-table--stack .sl-table__r, .sl-table--stack .sl-table__c { text-align: inherit; }
+  }
 }
