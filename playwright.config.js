@@ -5,7 +5,7 @@ export default defineConfig({
   fullyParallel: true,
   reporter: [['list'], ['html', { open: 'never' }]],
   expect: { toHaveScreenshot: { maxDiffPixelRatio: 0.01, animations: 'disabled' } },
-  snapshotPathTemplate: '{testDir}/__screenshots__/{arg}{ext}',
+  snapshotPathTemplate: '{testDir}/__screenshots__/{platform}/{arg}{ext}',
   use: { baseURL: 'http://127.0.0.1:6007' },
   webServer: [
     { command: 'npx http-server storybook-static -p 6007 -s -c-1', url: 'http://127.0.0.1:6007/index.json', reuseExistingServer: true },
