@@ -1,6 +1,6 @@
 /* Sloyka · card */
 @layer sl.components {
-  .sl-card { position: relative; display: grid; gap: 12px; padding: 16px 18px; border: 1px solid var(--sl-border-soft); border-radius: var(--sl-r-md); background: var(--sl-surface); box-shadow: var(--sl-shadow-1); overflow: hidden; }
+  .sl-card { position: relative; display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; padding: 16px 18px; border: 1px solid var(--sl-border-soft); border-radius: var(--sl-r-md); background: var(--sl-surface); box-shadow: var(--sl-shadow-1); overflow: hidden; }
   .sl-card[data-accent]::before { content: ""; position: absolute; inset: 8px auto 8px 0; width: 3px; border-radius: 0 3px 3px 0; background: var(--a); }
   .sl-card[data-accent="ok"] { --a: var(--sl-ok); }
   .sl-card[data-accent="warn"] { --a: var(--sl-warn); }
@@ -8,12 +8,13 @@
   .sl-card[data-accent="off"] { --a: var(--sl-off); }
   .sl-card--interactive { cursor: pointer; transition: border-color var(--sl-dur), transform var(--sl-dur) var(--sl-ease), box-shadow var(--sl-dur); }
   .sl-card--interactive:hover { border-color: var(--sl-border-strong); box-shadow: var(--sl-shadow-2); transform: translateY(-1px); }
+  .sl-card__head > * { min-width: 0; }
   .sl-card__head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
-  .sl-card__title { font-size: var(--sl-fs-strong); font-weight: 600; }
-  .sl-card__sub { font-size: var(--sl-fs-small); color: var(--sl-text-3); margin-top: 2px; }
+  .sl-card__title { font-size: var(--sl-fs-strong); font-weight: 600; overflow-wrap: anywhere; }
+  .sl-card__sub { font-size: var(--sl-fs-small); color: var(--sl-text-3); margin-top: 2px; overflow-wrap: anywhere; }
   .sl-card__foot { padding-top: 12px; border-top: 1px solid var(--sl-border-soft); display: flex; align-items: center; justify-content: space-between; gap: 8px; }
-  .sl-kv { display: grid; grid-template-columns: auto 1fr; gap: 6px 16px; margin: 0; font-size: var(--sl-fs-body); }
-  .sl-kv dt { color: var(--sl-text-3); }
+  .sl-kv { display: grid; grid-template-columns: minmax(0, max-content) minmax(50%, 1fr); gap: 6px 16px; margin: 0; font-size: var(--sl-fs-body); }
+  .sl-kv dt { color: var(--sl-text-3); overflow-wrap: anywhere; }
   .sl-kv dd { margin: 0; text-align: right; font-weight: 500; overflow-wrap: anywhere; }
   .sl-avatar { display: grid; place-items: center; width: 34px; height: 34px; border-radius: var(--sl-r-sm); border: 1px solid var(--sl-border); color: var(--sl-text-2); background: var(--sl-surface-2); }
 }

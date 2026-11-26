@@ -1,6 +1,6 @@
 /* Sloyka · segmented */
 @layer sl.components {
-  .sl-segmented { display: inline-flex; padding: 3px; gap: 2px; border-radius: var(--sl-r-sm); background: var(--sl-surface-hover); }
+  .sl-segmented { display: inline-flex; max-width: 100%; overflow-x: auto; scrollbar-width: none; padding: 3px; gap: 2px; border-radius: var(--sl-r-sm); background: var(--sl-surface-hover); }
   .sl-segmented button { flex: 1; height: calc(var(--sl-h-md) - 6px); padding: 0 12px; border: 0; border-radius: calc(var(--sl-r-sm) - 2px); background: transparent; color: var(--sl-text-2); font: 500 var(--sl-fs-small)/1 var(--sl-font); cursor: pointer; white-space: nowrap; transition: background var(--sl-dur), color var(--sl-dur); }
   .sl-segmented button[aria-pressed="true"] { background: var(--sl-surface); color: var(--sl-text); box-shadow: var(--sl-shadow-1), 0 0 0 1px var(--sl-border); }
   .sl-segmented--block { display: flex; width: 100%; }

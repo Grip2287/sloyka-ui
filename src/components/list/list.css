@@ -8,10 +8,10 @@
   .sl-group[data-collapsed] .sl-group__head .sl-ic { rotate: -90deg; }
   .sl-row { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: var(--sl-r-sm); cursor: pointer; transition: background var(--sl-dur); }
   .sl-row:hover { background: var(--sl-surface-hover); }
-  .sl-row[aria-selected="true"] { background: var(--sl-inverse); color: var(--sl-on-inverse); }
-  .sl-row[aria-selected="true"] .sl-status { --c: var(--sl-on-inverse); }
+  .sl-row:is([aria-selected="true"], [aria-current="true"]) { background: var(--sl-inverse); color: var(--sl-on-inverse); }
+  .sl-row:is([aria-selected="true"], [aria-current="true"]) .sl-status { --c: var(--sl-on-inverse); }
   .sl-row__main { flex: 1; min-width: 0; display: grid; gap: 3px; }
   .sl-row__title { font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .sl-row > .sl-ic { color: var(--sl-text-3); }
-  .sl-row[aria-selected="true"] > .sl-ic { color: inherit; }
+  .sl-row:is([aria-selected="true"], [aria-current="true"]) > .sl-ic { color: inherit; }
 }

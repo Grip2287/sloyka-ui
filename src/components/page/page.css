@@ -12,4 +12,5 @@
     .sl-toolbar__end { margin-left: 0; width: 100%; }
     .sl-toolbar__end .sl-btn { flex: 1; }
   }
+  .sl-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr)); gap: var(--sl-3); }
 }

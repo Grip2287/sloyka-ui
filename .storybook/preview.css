@@ -1,0 +1,11 @@
+/* Только для витрины: раскладка примеров и режим «две темы рядом». */
+body { margin: 0; }
+.sb-pair { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 520px), 1fr)); gap: 20px; padding: 4px; }
+.sb-stage { grid-template-columns: minmax(0, 1fr); padding: 24px; border-radius: 12px; background: var(--sl-bg); display: grid; gap: 18px; align-content: start; min-width: 0; }
+.sb-stage[data-label]::before { content: attr(data-label); font: 600 11px/1 var(--sl-font); letter-spacing: .08em; text-transform: uppercase; color: var(--sl-text-3); }
+.row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.col { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; }
+.g2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: 12px; }
+.g3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); gap: 12px; }
+.panel { padding: 12px; border-radius: var(--sl-r-lg); background: var(--sl-surface); border: 1px solid var(--sl-border-soft); box-shadow: var(--sl-shadow-1); }
+.lbl { font-size: 11px; color: var(--sl-text-3); }

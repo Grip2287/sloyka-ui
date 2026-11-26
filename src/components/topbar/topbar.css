@@ -5,4 +5,8 @@
   .sl-topbar__end { margin-left: auto; display: flex; gap: 8px; }
   .sl-brand { display: flex; align-items: center; gap: 8px; font-weight: 700; letter-spacing: .06em; }
   .sl-brand__mark { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 9px; background: var(--sl-inverse); color: var(--sl-on-inverse); font-size: 13px; }
+  @media (max-width: 767px) {
+    .sl-topbar { padding: 0 10px; gap: 8px; }
+    .sl-topbar__title, .sl-hide-sm, .sl-brand__text { display: none; }
+  }
 }

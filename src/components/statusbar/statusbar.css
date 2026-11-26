@@ -1,6 +1,6 @@
 /* Sloyka · statusbar */
 @layer sl.components {
-  .sl-statusbar { display: inline-flex; align-items: stretch; border: 1px solid var(--sl-border-soft); border-radius: var(--sl-r-md); background: var(--sl-surface); box-shadow: var(--sl-shadow-2); overflow: hidden; }
+  .sl-statusbar { display: inline-flex; flex-wrap: wrap; max-width: 100%; align-items: stretch; border: 1px solid var(--sl-border-soft); border-radius: var(--sl-r-md); background: var(--sl-surface); box-shadow: var(--sl-shadow-2); overflow: hidden; }
   .sl-statusbar > div { display: grid; gap: 3px; padding: 7px 14px; }
   .sl-statusbar > div + div { border-left: 1px solid var(--sl-border-soft); }
   .sl-statusbar strong { font-size: var(--sl-fs-body); font-weight: 600; font-variant-numeric: tabular-nums; }

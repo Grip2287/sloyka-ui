@@ -1,6 +1,6 @@
 /* Sloyka · tag */
 @layer sl.components {
-  .sl-tag { display: inline-flex; align-items: center; gap: 4px; height: 20px; padding: 0 7px; border: 1px solid var(--sl-border); border-radius: var(--sl-r-xs); font-size: var(--sl-fs-caption); font-weight: 600; letter-spacing: var(--sl-track-caps); text-transform: uppercase; color: var(--sl-text-2); background: var(--sl-surface); white-space: nowrap; }
+  .sl-tag { display: inline-flex; align-items: center; gap: 4px; height: 20px; padding: 0 7px; border: 1px solid var(--sl-border); border-radius: var(--sl-r-xs); font-size: var(--sl-fs-caption); font-weight: 600; letter-spacing: var(--sl-track-caps); text-transform: uppercase; color: var(--sl-text-2); background: var(--sl-surface); white-space: nowrap; max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
   .sl-tag--solid { background: var(--sl-inverse); color: var(--sl-on-inverse); border-color: var(--sl-inverse); }
   .sl-tag--ok { color: var(--sl-ok); background: var(--sl-ok-bg); border-color: transparent; }
   .sl-tag--warn { color: var(--sl-warn); background: var(--sl-warn-bg); border-color: transparent; }

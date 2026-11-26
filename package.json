@@ -30,11 +30,20 @@
   ],
   "scripts": {
     "build": "node scripts/build-css.js && vite build",
-    "test": "vitest run"
+    "test": "vitest run",
+    "storybook": "storybook dev -p 6006 --no-open",
+    "build-storybook": "storybook build -o storybook-static --quiet",
+    "test:e2e": "playwright test",
+    "test:all": "npm run build && npm test && npm run build-storybook && playwright test"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.14.1",
+    "@playwright/test": "^1.65.1",
+    "@storybook/html-vite": "^10.6.9",
     "happy-dom": "^21.0.4",
+    "http-server": "^14.1.1",
     "lightningcss": "^1.33.0",
+    "storybook": "^10.6.9",
     "vite": "^8.3.8",
     "vitest": "^5.1.2"
   }
