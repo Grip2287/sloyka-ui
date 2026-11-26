@@ -1,0 +1,2 @@
+@layer sl.reset, sl.tokens, sl.base, sl.components;
+@import "./core.css";
