@@ -2,7 +2,9 @@
 // Хранятся в references/<slug>/: reference.json (описание и статус) и source/ (загруженные файлы).
 import { mkdirSync, readdirSync, readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { join, resolve, extname, basename } from 'node:path';
-import { slugify } from './template-store.js';
+import { slugify, templateCSS } from './template-store.js';
+import { createTemplateApi } from './template-api.js';
+import { themeFromFacts, toHex } from './reference-analyze.js';
 
 const MAX_BYTES = 25 * 1024 * 1024;
 const EXT = new Set(['.png', '.jpg', '.jpeg', '.webp', '.gif', '.svg', '.pdf', '.html', '.htm', '.zip', '.fig', '.txt', '.md', '.css']);
@@ -15,8 +17,26 @@ const safeName = n => {
   return { name: stem + ext, ext };
 };
 
-export function createReferenceApi(dir) {
+/** Сразу после добавления: быстрый разбор → шаблон с названием референса в templates/. */
+async function autoTemplate({ name, slug, url, palette, base, templatesDir, analyze }) {
+  let facts = null;
+  if (url) {
+    mkdirSync(join(base, 'shots'), { recursive: true });
+    facts = await analyze(url, { shot: join(base, 'shots', 'page-1440.png') });
+  } else if (palette && (toHex(palette.bg) || toHex(palette.accent))) {
+    facts = { bg: palette.bg, accent: palette.accent };
+  }
+  if (!facts) return { facts: null, template: null };
+  const draft = { name, theme: themeFromFacts(facts), components: {} };
+  let tslug = slug;
+  for (let i = 2; existsSync(join(templatesDir, tslug + '.json')); i++) tslug = `${slug}-${i}`;
+  const saved = await createTemplateApi(templatesDir)('POST', tslug, { name, draft, css: templateCSS(draft, name) });
+  return { facts, template: saved.status === 200 ? { slug: tslug, name } : null };
+}
+
+export function createReferenceApi(dir, { templatesDir = join(dir, '..', 'templates'), analyze } = {}) {
   const root = resolve(dir);
+  const runAnalyze = analyze || (async (...a) => (await import('./reference-analyze.js')).analyzeUrl(...a));
   const list = () => (existsSync(root) ? readdirSync(root, { withFileTypes: true })
     .filter(d => d.isDirectory() && existsSync(join(root, d.name, 'reference.json')))
     .map(d => JSON.parse(readFileSync(join(root, d.name, 'reference.json'), 'utf8')))
@@ -56,7 +76,14 @@ export function createReferenceApi(dir) {
       writeFileSync(join(base, 'source', n), f.buf);
       names.push(n);
     }
-    const meta = { slug, name, url, note, files: names, status: 'new', createdAt: new Date().toISOString(), components: [] };
+    const meta = { slug, name, url, note, files: names, status: 'new', createdAt: new Date().toISOString(), components: [], template: null };
+    try {
+      const auto = await autoTemplate({ name, slug, url, palette: body?.palette, base, templatesDir, analyze: runAnalyze });
+      meta.template = auto.template;
+      meta.auto = auto.facts;
+    } catch (e) {
+      meta.autoError = `Не удалось автоматически снять стиль: ${String(e?.message || e).slice(0, 200)}`;
+    }
     writeFileSync(join(base, 'reference.json'), JSON.stringify(meta, null, 2) + '\n');
     return { status: 200, json: meta };
   };

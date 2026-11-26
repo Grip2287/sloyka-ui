@@ -14,6 +14,9 @@ description: Разбор референсов для библиотеки Sloyk
 - `references/<slug>/source/` — загруженные файлы. `references/<slug>/shots/` — твои скриншоты. `references/<slug>/notes.md` — твой разбор.
 - `src/references/<slug>/ref.css` — стиль референса. `src/references/<slug>/<Имя>.stories.js` — истории.
 
+## Что уже сделано автоматически
+При добавлении в Storybook референс сразу получает **шаблон с тем же названием**: `templates/<slug>.css|json`, а в `reference.json` это поле `template`, с фактами в поле `auto`. Скриншот сайта лежит в `shots/page-1440.png`. Шаблон содержит только тему (цвета, скругление, размеры). При полном разборе **уточни этот же шаблон**: поправь тему и добавь примерки компонентов в `draft.components`, перегенерируй CSS через `templateCSS` из `.storybook/template-store.js`. Название не меняй.
+
 ## Порядок
 1. **Найди новые:** все `references/*/reference.json` со `status: "new"` (или тот, который назвал пользователь). Поставь `working`.
 2. **Сними источник.**

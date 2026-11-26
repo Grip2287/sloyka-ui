@@ -2,6 +2,35 @@
 // Разбор делает Claude (скилл sloyka-references): «разбери референсы».
 import { slHydrateIcons } from '../icons.js';
 import { toast } from '../components/toast/toast.js';
+import { saveDraft } from '../../.storybook/template-store.js';
+
+const TEMPLATE_STORY = '/?path=/story/основа-мой-шаблон--template';
+
+/** Палитра картинки: самый частый цвет → фон, самый заметный насыщенный → главный цвет. */
+async function paletteFromImage(file) {
+  const bmp = await createImageBitmap(file);
+  const c = document.createElement('canvas');
+  c.width = 80; c.height = Math.max(1, Math.round(80 * bmp.height / bmp.width));
+  const ctx = c.getContext('2d', { willReadFrequently: true });
+  ctx.drawImage(bmp, 0, 0, c.width, c.height);
+  const px = ctx.getImageData(0, 0, c.width, c.height).data;
+  const buckets = new Map();
+  for (let i = 0; i < px.length; i += 4) {
+    if (px[i + 3] < 200) continue;
+    const key = [px[i] >> 4, px[i + 1] >> 4, px[i + 2] >> 4].join(',');
+    const b = buckets.get(key) || { n: 0, r: 0, g: 0, bl: 0 };
+    b.n++; b.r += px[i]; b.g += px[i + 1]; b.bl += px[i + 2];
+    buckets.set(key, b);
+  }
+  const total = [...buckets.values()].reduce((s, b) => s + b.n, 0) || 1;
+  const cols = [...buckets.values()].map(b => {
+    const r = b.r / b.n, g = b.g / b.n, bl = b.bl / b.n, mx = Math.max(r, g, bl), mn = Math.min(r, g, bl);
+    return { n: b.n, sat: mx ? (mx - mn) / mx : 0, css: `rgb(${Math.round(r)}, ${Math.round(g)}, ${Math.round(bl)})` };
+  });
+  const bg = cols.sort((a, b) => b.n - a.n)[0];
+  const accent = cols.filter(x => x.sat > 0.35 && x.n / total > 0.005).sort((a, b) => b.n * b.sat - a.n * a.sat)[0];
+  return { bg: bg?.css, accent: accent?.css };
+}
 
 const HIDE = { table: { disable: true } };
 const API = '/__sloyka/references';
@@ -23,7 +52,9 @@ function card(r) {
     <dl class="sl-kv">${r.url ? `<dt>Ссылка</dt><dd><a class="sl-link" href="${esc(r.url)}" target="_blank" rel="noopener noreferrer">${esc(r.url)}</a></dd>` : ''}
       ${r.files?.length ? `<dt>Файлы</dt><dd>${r.files.map(esc).join(', ')}</dd>` : ''}
       ${r.note ? `<dt>Что нравится</dt><dd>${esc(r.note)}</dd>` : ''}
-      <dt>Добавлен</dt><dd>${new Date(r.createdAt).toLocaleString('ru-RU')}</dd></dl>
+      <dt>Добавлен</dt><dd>${new Date(r.createdAt).toLocaleString('ru-RU')}</dd>
+      <dt>Шаблон</dt><dd>${r.template ? `<b>${esc(r.template.name)}</b> · templates/${esc(r.template.slug)}.css` : `<span class="sl-muted">${esc(r.autoError || 'не создан')}</span>`}</dd></dl>
+    ${r.template ? `<div class="row"><button class="sl-btn sl-btn--sm" data-open-tpl="${esc(r.template.slug)}"><i data-ic="layers"></i>Открыть в «Мой шаблон»</button></div>` : ''}
     ${comps ? `<div class="sl-card__foot"><div class="row">${comps}</div></div>` : ''}</article>`;
 }
 
@@ -61,6 +92,13 @@ export const Add = {
     root.addEventListener('change', e => {
       if (e.target.name === 'files') root.querySelector('[data-picked]').textContent = [...e.target.files].map(f => f.name).join(', ') || 'Перетащите файлы сюда или выберите';
     });
+    root.addEventListener('click', async e => {
+      const b = e.target.closest('[data-open-tpl]');
+      if (!b) return;
+      const j = await fetch(`/__sloyka/templates/${b.dataset.openTpl}`).then(r => r.json());
+      saveDraft({ ...j.draft, name: j.name });
+      window.open(TEMPLATE_STORY, '_blank', 'noopener');
+    });
     root.addEventListener('dragover', e => { if (e.target.closest('[data-drop]')) e.preventDefault(); });
     root.addEventListener('drop', e => {
       const zone = e.target.closest('[data-drop]');
@@ -75,15 +113,21 @@ export const Add = {
       const f = e.target, btn = f.querySelector('[type=submit]');
       btn.setAttribute('aria-busy', 'true'); btn.disabled = true;
       try {
-        const files = await Promise.all([...f.files.files].map(async x => ({ name: x.name, data: await toBase64(x) })));
-        const r = await fetch(API, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name: f.name.value, url: f.url.value, note: f.note.value, files }) });
+        const list = [...f.files.files];
+        const files = await Promise.all(list.map(async x => ({ name: x.name, data: await toBase64(x) })));
+        // без ссылки шаблон строится по палитре первой картинки
+        const img = list.find(x => /^image\/(png|jpe?g|webp|gif)$/.test(x.type));
+        const palette = !f.url.value && img ? await paletteFromImage(img).catch(() => null) : null;
+        btn.lastChild.textContent = f.url.value ? 'Снимаю стиль с сайта…' : 'Сохраняю…';
+        const r = await fetch(API, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name: f.name.value, url: f.url.value, note: f.note.value, files, palette }) });
         const j = await r.json().catch(() => ({}));
         if (!r.ok) throw new Error(j.error || 'Не удалось добавить');
-        toast('Напишите Claude «разбери референсы».', { title: `«${j.name}» добавлен`, type: 'ok' });
+        if (j.template) toast(`Шаблон «${j.template.name}» уже готов: templates/${j.template.slug}.css. Для разбора по компонентам напишите Claude «разбери референсы».`, { title: `«${j.name}» добавлен`, type: 'ok', duration: 9000 });
+        else toast(`${j.autoError || 'Шаблон не создан: добавьте ссылку или картинку.'} Напишите Claude «разбери референсы».`, { title: `«${j.name}» добавлен`, type: 'warn', duration: 9000 });
         await load();
       } catch (err) {
         toast(err.message, { type: 'crit' });
-        btn.removeAttribute('aria-busy'); btn.disabled = false;
+        btn.removeAttribute('aria-busy'); btn.disabled = false; btn.lastChild.textContent = 'Добавить референс';
       }
     });
     view(root, st);
