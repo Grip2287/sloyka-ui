@@ -1,6 +1,6 @@
 // Мини-API для `npm run storybook`: сохранить шаблон файлами в templates/ и прочитать сохранённые.
 // В собранном Storybook (storybook-static) API нет — там шаблон можно только скачать или скопировать.
-import { mkdirSync, readdirSync, readFileSync, writeFileSync, existsSync } from 'node:fs';
+import { mkdirSync, readdirSync, readFileSync, writeFileSync, existsSync, unlinkSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 
 const SLUG = /^[a-z0-9][a-z0-9-]{0,39}$/;
@@ -28,6 +28,11 @@ export function createTemplateApi(dir) {
       writeFileSync(file + '.json', JSON.stringify(meta, null, 2) + '\n');
       writeFileSync(file + '.css', css);
       return { status: 200, json: { ok: true, slug, files: [`templates/${slug}.css`, `templates/${slug}.json`] } };
+    }
+    if (method === 'DELETE') {
+      if (!existsSync(file + '.json') && !existsSync(file + '.css')) return { status: 404, json: { error: 'Нет такого шаблона' } };
+      for (const ext of ['.json', '.css']) if (existsSync(file + ext)) unlinkSync(file + ext);
+      return { status: 200, json: { ok: true, slug } };
     }
     return { status: 405, json: { error: 'Метод не поддерживается' } };
   };

@@ -27,6 +27,20 @@ describe('template api', () => {
     expect(existsSync(join(dir, '..', 'x.css'))).toBe(false);
   });
 
+  it('deletes both files of a template', async () => {
+    await api('POST', 'template-3', { name: 'Шаблон 3', draft: { components: {} }, css: '/* 3 */' });
+    const r = await api('DELETE', 'template-3');
+    expect(r.status).toBe(200);
+    expect(existsSync(join(dir, 'template-3.css'))).toBe(false);
+    expect(existsSync(join(dir, 'template-3.json'))).toBe(false);
+    expect((await api('GET', '')).json).toEqual([]);
+  });
+
+  it('delete: unknown → 404, unsafe name → 400', async () => {
+    expect((await api('DELETE', 'nope')).status).toBe(404);
+    expect((await api('DELETE', '../x')).status).toBe(400);
+  });
+
   it('rejects bodies without draft/css', async () => {
     expect((await api('POST', 'template-2', { name: 'x' })).status).toBe(400);
   });
