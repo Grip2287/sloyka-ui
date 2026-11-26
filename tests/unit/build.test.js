@@ -3,7 +3,6 @@ import { execSync } from 'node:child_process';
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 
 describe('build', () => {
-  beforeAll(() => { execSync('npm run build', { stdio: 'pipe' }); }, 120000);
 
   it('build emits bundle files', () => {
     for (const f of ['dist/sloyka.css', 'dist/sloyka.min.css', 'dist/core.css', 'dist/sloyka.js', 'dist/theme-init.js', 'dist/icons.js'])

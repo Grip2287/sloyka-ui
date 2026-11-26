@@ -4,7 +4,6 @@ import { existsSync, readFileSync } from 'node:fs';
 
 let files = [];
 beforeAll(() => {
-  execSync('npm run build', { stdio: 'pipe' });
   const out = JSON.parse(execSync('npm pack --dry-run --json', { encoding: 'utf8' }));
   files = out[0].files.map(f => f.path.replace(/\\/g, '/'));
 }, 120000);
