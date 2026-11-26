@@ -80,6 +80,12 @@
   </div>
 ```
 
+### Песочница
+
+```html
+<div><button class="sl-btn sl-btn--primary">Сохранить</button></div>
+```
+
 ## 02 · Поля ввода
 
 Поле с подписью, с ошибкой, поиск, выпадающий список, многострочное, строка сообщения с кнопкой отправки.
@@ -95,6 +101,12 @@
   </div>
   <label class="sl-field"><span class="sl-label">Текст оповещения</span><textarea class="sl-textarea">Внимание. Проверка системы оповещения.</textarea><span class="sl-hint">До 500 символов</span></label>
   <div class="sl-compose"><input class="sl-input" placeholder="Сообщение в канал «Дежурная смена»…"><button class="sl-btn sl-btn--icon sl-btn--primary" aria-label="Отправить"><i data-ic="arrow-right"></i></button></div>
+```
+
+### Песочница
+
+```html
+<label class="sl-field" style="max-width:360px"><span class="sl-label">Имя пользователя</span><input class="sl-input" placeholder="Введите логин" value=""></label>
 ```
 
 ## 03 · Переключатели
@@ -141,6 +153,12 @@
   </div>
 ```
 
+### Песочница
+
+```html
+<div class="row"><span class="sl-tag">Администратор</span><span class="sl-count sl-count--solid">4</span><span class="sl-chip">Администратор <span class="sl-count">4</span></span></div>
+```
+
 ## 05 · Статусы
 
 Точка + подпись капсом: на связи, предупреждение, нет связи, отключён, офлайн (полая точка). Обычный текстовый статус и плашка «Система в норме».
@@ -160,6 +178,12 @@
     <span class="sl-status sl-status--warn sl-status--plain">Повышенная нагрузка</span>
     <span class="sl-pill"><span class="sl-status sl-status--ok">В норме</span></span>
   </div>
+```
+
+### Песочница
+
+```html
+<span class="sl-status sl-status--ok">На связи</span>
 ```
 
 ## 06 · Карточка объекта
@@ -193,6 +217,15 @@
   </div>
 ```
 
+### Песочница
+
+```html
+<article class="sl-card sl-card--interactive" data-accent="ok" style="max-width:380px">
+      <div class="sl-card__head"><div><div class="sl-card__title">Камера КПП-1</div><div class="sl-card__sub">Видео · Модель V-200</div></div><span class="sl-tag">2 устройства</span></div>
+      <dl class="sl-kv"><dt>Адрес</dt><dd>10.20.6.88:18080</dd><dt>На карте</dt><dd>размещена</dd><dt>Последний ответ</dt><dd>10:33</dd></dl>
+      <div class="sl-card__foot"><span class="sl-status sl-status--ok">На связи</span></div></article>
+```
+
 ## 07 · Карточка показателя
 
 Нагрузка процессора, памяти, диска: значение, оценка, полоса заполнения.
@@ -205,6 +238,12 @@
     <div class="sl-card"><span class="sl-caps">Память</span><div class="sl-card__head"><span class="sl-metric__value">78,2%</span><span class="sl-status sl-status--warn sl-status--plain">Повышенная</span></div><div class="sl-progress sl-progress--warn"><span style="width:78%"></span></div><span class="sl-hint">Доступно 3,4 из 15,7 ГБ</span></div>
     <div class="sl-card"><span class="sl-caps">Диск</span><div class="sl-card__head"><span class="sl-metric__value">93,4%</span><span class="sl-status sl-status--crit sl-status--plain">Критическая</span></div><div class="sl-progress sl-progress--crit"><span style="width:93%"></span></div><span class="sl-hint">Свободно 61 из 931 ГБ</span></div>
   </div>
+```
+
+### Песочница
+
+```html
+<div class="sl-card" style="max-width:340px"><span class="sl-caps">Память</span><div class="sl-card__head"><span class="sl-metric__value">78%</span><span class="sl-status sl-status--plain sl-status--warn">Повышенная</span></div><div class="sl-progress sl-progress--warn"><span style="width:78%"></span></div><span class="sl-hint">Доступно 3,4 из 15,7 ГБ</span></div>
 ```
 
 ## 08 · Карточки-ссылки и шаги
@@ -237,6 +276,12 @@
     <div class="sl-banner__item"><span>Группа «Дежурные силы» не подключена к оповещению</span><button class="sl-btn sl-btn--sm">Подключить группу</button></div>
     <div class="sl-banner__item"><span>Периметр объекта не нанесён на карту</span><button class="sl-btn sl-btn--sm">Открыть карту</button></div></div>
   <div class="sl-banner sl-banner--crit"><div class="sl-banner__title"><i data-ic="alert"></i>Сценарии недоступны</div><div class="sl-banner__text">Причина: устройства не привязаны к периметру объекта.</div></div>
+```
+
+### Песочница
+
+```html
+<div class="sl-banner sl-banner--warn"><div class="sl-banner__title"><i data-ic="alert"></i>План строится, но без части рекомендаций</div><div class="sl-banner__item"><span>Группа «Дежурные силы» не подключена к оповещению</span><button class="sl-btn sl-btn--sm">Подключить группу</button></div></div>
 ```
 
 ## 10 · Сводка цифрами
@@ -467,6 +512,12 @@
   <button class="sl-btn" data-demo-toast="warn">Предупреждение</button>
   <button class="sl-btn" data-demo-toast="crit">Ошибка</button>
 </div>
+```
+
+### Песочница
+
+```html
+<div class="sl-toast" style="--c:var(--sl-ok)"><i data-ic="check" class="sl-toast__icon"></i><div class="sl-toast__body"><span class="sl-toast__title">Устройство добавлено</span><span class="sl-toast__text">Камера КПП-2 появится на карте после размещения.</span></div><button class="sl-btn sl-btn--icon sl-btn--sm sl-btn--ghost" aria-label="Закрыть"><i data-ic="x"></i></button></div>
 ```
 
 ## 23 · Карточка входа

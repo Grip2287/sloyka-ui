@@ -30,3 +30,25 @@ export const Default = {
     </article>
   </div>`,
 };
+
+export const Playground = {
+  name: 'Песочница',
+  args: { title: 'Камера КПП-1', subtitle: 'Видео · Модель V-200', accent: 'ok', tag: '2 устройства', rows: 'Адрес: 10.20.6.88:18080\nНа карте: размещена\nПоследний ответ: 10:33', status: 'На связи', interactive: true },
+  argTypes: {
+    title: { name: 'Заголовок', control: 'text' },
+    subtitle: { name: 'Подзаголовок', control: 'text' },
+    accent: { name: 'Полоса слева', control: 'inline-radio', options: ['ok', 'warn', 'crit', 'off', 'нет'] },
+    tag: { name: 'Тег справа', control: 'text' },
+    rows: { name: 'Строки «название: значение»', control: 'text' },
+    status: { name: 'Статус внизу', control: 'text' },
+    interactive: { name: 'Подъём при наведении', control: 'boolean' },
+  },
+  render: a => {
+    const rows = a.rows.split('\n').filter(Boolean).map(r => { const [k, ...v] = r.split(':'); return `<dt>${k.trim()}</dt><dd>${v.join(':').trim()}</dd>`; }).join('');
+    const st = { ok: 'sl-status--ok', warn: 'sl-status--warn', crit: 'sl-status--crit' }[a.accent] || '';
+    return `<article class="sl-card${a.interactive ? ' sl-card--interactive' : ''}"${a.accent !== 'нет' ? ` data-accent="${a.accent}"` : ''} style="max-width:380px">
+      <div class="sl-card__head"><div><div class="sl-card__title">${a.title}</div>${a.subtitle ? `<div class="sl-card__sub">${a.subtitle}</div>` : ''}</div>${a.tag ? `<span class="sl-tag">${a.tag}</span>` : ''}</div>
+      ${rows ? `<dl class="sl-kv">${rows}</dl>` : ''}
+      ${a.status ? `<div class="sl-card__foot"><span class="sl-status ${st}">${a.status}</span></div>` : ''}</article>`;
+  },
+};

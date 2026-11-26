@@ -20,3 +20,18 @@ export const Default = {
     <span class="sl-pill"><span class="sl-status sl-status--ok">В норме</span></span>
   </div>`,
 };
+
+export const Playground = {
+  name: 'Песочница',
+  args: { text: 'На связи', kind: 'ok', style: 'капсом', note: '' },
+  argTypes: {
+    text: { name: 'Текст', control: 'text' },
+    kind: { name: 'Состояние', control: 'inline-radio', options: ['ok', 'warn', 'crit', 'off', 'hollow'] },
+    style: { name: 'Начертание', control: 'inline-radio', options: ['капсом', 'обычный'] },
+    note: { name: 'Пояснение', control: 'text' },
+  },
+  render: a => {
+    const cls = ['sl-status', ['ok', 'warn', 'crit'].includes(a.kind) && `sl-status--${a.kind}`, a.kind === 'hollow' && 'sl-status--hollow', a.style === 'обычный' && 'sl-status--plain'].filter(Boolean).join(' ');
+    return `<span class="${cls}">${a.text}${a.note ? ` <span class="sl-status__note">· ${a.note}</span>` : ''}</span>`;
+  },
+};

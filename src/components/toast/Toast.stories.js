@@ -24,3 +24,14 @@ export const Live = {
   <button class="sl-btn" data-demo-toast="crit">Ошибка</button>
 </div>`,
 };
+
+export const Playground = {
+  name: 'Песочница',
+  args: { kind: 'ok', title: 'Устройство добавлено', text: 'Камера КПП-2 появится на карте после размещения.' },
+  argTypes: {
+    kind: { name: 'Вид', control: 'inline-radio', options: ['ok', 'warn', 'crit', 'info'] },
+    title: { name: 'Заголовок', control: 'text' },
+    text: { name: 'Текст', control: 'text' },
+  },
+  render: a => `<div class="sl-toast" style="--c:var(--sl-${a.kind === 'info' ? 'text-2' : a.kind})"><i data-ic="${{ ok: 'check', warn: 'alert', crit: 'alert', info: 'info' }[a.kind]}" class="sl-toast__icon"></i><div class="sl-toast__body"><span class="sl-toast__title">${a.title}</span><span class="sl-toast__text">${a.text}</span></div><button class="sl-btn sl-btn--icon sl-btn--sm sl-btn--ghost" aria-label="Закрыть"><i data-ic="x"></i></button></div>`,
+};

@@ -13,7 +13,7 @@ for (const [, m] of mods) {
   parts.push(`## ${title.split('/').pop()}`, '', parameters?.docs?.description?.component || '', '');
   for (const [name, story] of Object.entries(m)) {
     if (name === 'default' || !story.render) continue;
-    parts.push(`### ${story.name || name}`, '', '```html', story.render().trim(), '```', '');
+    parts.push(`### ${story.name || name}`, '', '```html', story.render({ ...(m.default.args || {}), ...(story.args || {}) }).trim(), '```', '');
   }
 }
 writeFileSync('plugin/skills/sloyka/components.md', parts.join('\n'));

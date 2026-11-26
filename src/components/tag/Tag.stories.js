@@ -22,3 +22,15 @@ export const Default = {
     <span class="sl-chip"><i data-ic="bell"></i>Голосовое оповещение</span>
   </div>`,
 };
+
+export const Playground = {
+  name: 'Песочница',
+  args: { text: 'Администратор', kind: 'обычный', count: 4, countSolid: true },
+  argTypes: {
+    text: { name: 'Текст тега', control: 'text' },
+    kind: { name: 'Вид тега', control: 'inline-radio', options: ['обычный', 'solid', 'ok', 'warn', 'crit'] },
+    count: { name: 'Счётчик', control: { type: 'number', min: 0 } },
+    countSolid: { name: 'Счётчик залитый', control: 'boolean' },
+  },
+  render: a => `<div class="row"><span class="sl-tag${a.kind !== 'обычный' ? ' sl-tag--' + a.kind : ''}">${a.text}</span><span class="sl-count${a.countSolid ? ' sl-count--solid' : ''}">${a.count}</span><span class="sl-chip">${a.text} <span class="sl-count">${a.count}</span></span></div>`,
+};
