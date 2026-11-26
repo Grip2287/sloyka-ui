@@ -61,4 +61,21 @@
   .sl-image--r-lg { border-radius: var(--sl-r-lg); }
 
   .sl-form { display: grid; gap: var(--sl-3); margin: 0; }
+
+  /* Кнопки: направление группы и состояние «идёт операция» */
+  .sl-btn-group--row { flex-direction: row; }
+  .sl-btn-group--row .sl-btn + .sl-btn { border-top: 0; border-left: 1px solid var(--sl-border-soft); }
+  .sl-btn[aria-busy="true"] { cursor: progress; position: relative; }
+  a.sl-btn { text-decoration: none; }
+  a.sl-btn[aria-disabled="true"] { pointer-events: none; }
+  .sl-btn[aria-busy="true"]::after { content: ""; width: 12px; height: 12px; border: 2px solid currentColor; border-right-color: transparent; border-radius: 50%; animation: sl-spin .8s linear infinite; }
+  @keyframes sl-spin { to { rotate: 360deg; } }
+  @media (prefers-reduced-motion: reduce) { .sl-btn[aria-busy="true"]::after { animation-duration: 3s; } }
+
+  /* Поля: ошибка у списка и многострочного поля */
+  .sl-select[aria-invalid="true"], .sl-textarea[aria-invalid="true"] { border-color: var(--sl-crit); }
+
+  /* Группа радиокнопок */
+  .sl-radiogroup { display: flex; flex-direction: column; gap: var(--sl-2); }
+  .sl-radiogroup--row { flex-direction: row; flex-wrap: wrap; gap: var(--sl-5); }
 }

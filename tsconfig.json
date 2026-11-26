@@ -10,5 +10,5 @@
     "isolatedModules": true,
     "noEmit": true
   },
-  "include": ["src/react"]
+  "include": ["src/react", "tests/unit/react/elements.test.tsx"]
 }
