@@ -1,7 +1,7 @@
 // Сгенерировано из одобренного прототипа (docs/sloyka-source/redesign/index.html).
 export default {
   title: 'Компоненты/12 · Раскрывающиеся разделы',
-  tags: ["autodocs", "progressive"],
+  tags: ["autodocs", "progressive", "ref-base"],
   parameters: {"docs": {"description": {"component": "Разделы панели редактирования: стрелка поворачивается, содержимое раскрывается."}}, "progressiveText": ["Название, адрес, периметр объекта."]},
 };
 

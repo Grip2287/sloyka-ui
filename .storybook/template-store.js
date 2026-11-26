@@ -35,7 +35,9 @@ export const COMPONENTS = {
 /** Номер в заголовке истории → ключ компонента. */
 export function componentFromTitle(title = '') {
   if (title.startsWith('Каркас/')) return 'shell';
-  const n = title.match(/Компоненты\/(\d\d)/)?.[1];
+  // «Компоненты/01 · Кнопки» и истории референсов «Референсы/<Имя>/01 · Кнопки»
+  const n = title.match(/(?:Компоненты|Референсы\/[^/]+)\/(\d\d)/)?.[1];
+  if (!n) return null;
   return Object.keys(COMPONENTS).find(k => COMPONENTS[k].label.startsWith(n + ' ')) || null;
 }
 

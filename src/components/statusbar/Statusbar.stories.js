@@ -1,7 +1,7 @@
 // Сгенерировано из одобренного прототипа (docs/sloyka-source/redesign/index.html).
 export default {
   title: 'Компоненты/17 · Строка состояния и плавающие кнопки',
-  tags: ["autodocs"],
+  tags: ["autodocs", "ref-base"],
   parameters: {"docs": {"description": {"component": "Часы и «Система в норме» поверх карты, выбор подсистемы, кнопка нижней панели «Силы и средства»."}}},
 };
 

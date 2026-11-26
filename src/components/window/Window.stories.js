@@ -1,7 +1,7 @@
 // Сгенерировано из одобренного прототипа (docs/sloyka-source/redesign/index.html).
 export default {
   title: 'Компоненты/20 · Плавающее окно',
-  tags: ["autodocs"],
+  tags: ["autodocs", "ref-base"],
   parameters: {"docs": {"description": {"component": "Окно поверх карты (чат смены): заголовок с иконкой и закрытием, панель кнопок, содержимое, строка ввода."}}},
 };
 

@@ -1,7 +1,7 @@
 // Сгенерировано из одобренного прототипа (docs/sloyka-source/redesign/index.html).
 export default {
   title: 'Компоненты/09 · Баннеры',
-  tags: ["autodocs"],
+  tags: ["autodocs", "ref-base"],
   parameters: {"docs": {"description": {"component": "Сообщение о состоянии раздела: штатно, предупреждение со списком причин и действиями, ошибка."}}},
 };
 

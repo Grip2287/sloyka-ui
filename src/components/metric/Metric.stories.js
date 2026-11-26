@@ -1,7 +1,7 @@
 // Сгенерировано из одобренного прототипа (docs/sloyka-source/redesign/index.html).
 export default {
   title: 'Компоненты/07 · Карточка показателя',
-  tags: ["autodocs"],
+  tags: ["autodocs", "ref-base"],
   parameters: {"docs": {"description": {"component": "Нагрузка процессора, памяти, диска: значение, оценка, полоса заполнения."}}},
 };
 

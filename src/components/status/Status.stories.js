@@ -1,7 +1,7 @@
 // Сгенерировано из одобренного прототипа (docs/sloyka-source/redesign/index.html).
 export default {
   title: 'Компоненты/05 · Статусы',
-  tags: ["autodocs"],
+  tags: ["autodocs", "ref-base"],
   parameters: {"docs": {"description": {"component": "Точка + подпись капсом: на связи, предупреждение, нет связи, отключён, офлайн (полая точка). Обычный текстовый статус и плашка «Система в норме»."}}},
 };
 

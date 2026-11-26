@@ -1,7 +1,7 @@
 // Сгенерировано из одобренного прототипа (docs/sloyka-source/redesign/index.html).
 export default {
   title: 'Компоненты/01 · Кнопки',
-  tags: ["autodocs"],
+  tags: ["autodocs", "ref-base"],
   parameters: {"docs": {"description": {"component": "Основная (тёмная), обычная, без рамки, капсом, иконочные, малые, опасное действие, недоступная, группа кнопок карты."}}},
 };
 

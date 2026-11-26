@@ -1,7 +1,7 @@
 // Сгенерировано из одобренного прототипа (docs/sloyka-source/redesign/index.html).
 export default {
   title: 'Компоненты/15 · Заголовок страницы и панель фильтров',
-  tags: ["autodocs"],
+  tags: ["autodocs", "ref-base"],
   parameters: {"docs": {"description": {"component": "Заголовок раздела капсом с линией, ряд фильтров слева и главное действие справа, подзаголовок секции."}}},
 };
 

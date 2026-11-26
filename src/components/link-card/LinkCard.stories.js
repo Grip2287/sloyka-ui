@@ -1,7 +1,7 @@
 // Сгенерировано из одобренного прототипа (docs/sloyka-source/redesign/index.html).
 export default {
   title: 'Компоненты/08 · Карточки-ссылки и шаги',
-  tags: ["autodocs"],
+  tags: ["autodocs", "ref-base"],
   parameters: {"docs": {"description": {"component": "Раздел помощи: иконка, заголовок, описание, стрелка. Шаги «С чего начать» с номерами."}}},
 };
 

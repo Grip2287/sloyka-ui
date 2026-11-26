@@ -1,7 +1,7 @@
 // Каркас админки: полное меню ≥1200, рейл 768–1199, выезжающее меню <768.
 export default {
   title: 'Каркас/Админка',
-  tags: ['progressive'],
+  tags: ['progressive', "ref-base"],
   parameters: { layout: 'fullscreen', pair: false, progressiveText: ['Устройства', 'Журнал изменений'],
     docs: { description: { component: 'Верхняя панель, боковое меню и основная область. Сузьте окно, чтобы увидеть рейл и выезжающее меню.' } } },
 };

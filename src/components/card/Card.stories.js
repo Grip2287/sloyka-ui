@@ -1,7 +1,7 @@
 // Сгенерировано из одобренного прототипа (docs/sloyka-source/redesign/index.html).
 export default {
   title: 'Компоненты/06 · Карточка объекта',
-  tags: ["autodocs"],
+  tags: ["autodocs", "ref-base"],
   parameters: {"docs": {"description": {"component": "Цветная полоса слева по статусу, параметры «название — значение», статус внизу. Вариант для пользователя с иконкой и тегом."}}},
 };
 

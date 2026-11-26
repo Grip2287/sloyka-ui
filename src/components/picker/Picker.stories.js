@@ -1,7 +1,7 @@
 // Сгенерировано из одобренного прототипа (docs/sloyka-source/redesign/index.html).
 export default {
   title: 'Компоненты/19 · Выбор из плиток',
-  tags: ["autodocs"],
+  tags: ["autodocs", "ref-base"],
   parameters: {"docs": {"description": {"component": "Всплывающая панель выбора подсистемы: выбранная плитка инвертирована, недоступные с пометкой."}}},
 };
 

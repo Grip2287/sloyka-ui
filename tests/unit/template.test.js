@@ -15,6 +15,7 @@ describe('template store', () => {
     expect(componentFromTitle('Компоненты/24 · Боковое меню: полное и рейл')).toBe('nav');
     expect(componentFromTitle('Каркас/Админка')).toBe('shell');
     expect(componentFromTitle('Основа/Токены')).toBe(null);
+    expect(componentFromTitle('Референсы/Тёмная CRM/06 · Карточка объекта')).toBe('card');
   });
 
   it('component CSS: scale → zoom, radius → radius tokens, defaults → nothing', () => {

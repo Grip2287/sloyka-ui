@@ -1,7 +1,7 @@
 // Сгенерировано из одобренного прототипа (docs/sloyka-source/redesign/index.html).
 export default {
   title: 'Компоненты/04 · Теги и счётчики',
-  tags: ["autodocs"],
+  tags: ["autodocs", "ref-base"],
   parameters: {"docs": {"description": {"component": "Тег роли, тег-количество, цветные теги, счётчики в группах и меню, «чип» с числом."}}},
 };
 

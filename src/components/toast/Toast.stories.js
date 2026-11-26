@@ -1,7 +1,7 @@
 // Сгенерировано из одобренного прототипа (docs/sloyka-source/redesign/index.html).
 export default {
   title: 'Компоненты/22 · Уведомления и подсказка',
-  tags: ["autodocs"],
+  tags: ["autodocs", "ref-base"],
   parameters: {"docs": {"description": {"component": "Всплывающие уведомления: успех, предупреждение, ошибка. Тёмная подсказка при наведении."}}},
 };
 

@@ -1,7 +1,7 @@
 // Сгенерировано из одобренного прототипа (docs/sloyka-source/redesign/index.html).
 export default {
   title: 'Компоненты/24 · Боковое меню: полное и рейл',
-  tags: ["autodocs", "progressive"],
+  tags: ["autodocs", "progressive", "ref-base"],
   parameters: {"docs": {"description": {"component": "Одно и то же меню. Слева полное (широкие экраны), справа узкий рейл с иконками и подписями (планшет). На телефоне выезжает по кнопке — см. отдельные скриншоты shell-*."}}, "progressiveText": ["Пользователи", "Устройства"]},
 };
 

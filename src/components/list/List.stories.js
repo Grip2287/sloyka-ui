@@ -1,7 +1,7 @@
 // Сгенерировано из одобренного прототипа (docs/sloyka-source/redesign/index.html).
 export default {
   title: 'Компоненты/11 · Список с группами',
-  tags: ["autodocs", "progressive"],
+  tags: ["autodocs", "progressive", "ref-base"],
   parameters: {"docs": {"description": {"component": "Сворачиваемая группа со счётчиком, строки с названием и статусом, выбранная строка (инверсия), стрелка у строк с подробностями."}}, "progressiveText": ["Камера КПП-1", "Шлюз-04"]},
 };
 

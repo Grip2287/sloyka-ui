@@ -5,6 +5,9 @@ import { slHydrateIcons } from '../src/icons.js';
 import { slNavHTML } from './nav-data.js';
 import { COMPONENTS, componentFromTitle, componentCSS, addComponent, addTheme } from './template-store.js';
 
+// Стили референсов: src/references/<slug>/ref.css, всё внутри [data-ref="<slug>"]
+import.meta.glob('../src/references/*/ref.css', { eager: true });
+
 const DEMO = { ok: ['Устройство добавлено', 'Камера КПП-2 появится на карте после размещения.'], warn: ['Связь нестабильна', 'Шлюз-04 отвечает с задержкой.'], crit: ['Не удалось загрузить журнал', 'Проверьте соединение и обновите страницу.'] };
 document.addEventListener('click', e => { const b = e.target.closest('[data-demo-toast]'); if (b) { const [title, text] = DEMO[b.dataset.demoToast]; toast(text, { title, type: b.dataset.demoToast }); } });
 
@@ -107,6 +110,12 @@ export default {
         view.dataset.theme = t;
         finish(view);
       } else view = stage(content, t);
+
+      // история референса: компоненты рисуются в его «шкурке»
+      if (ctx.parameters.ref) {
+        view.dataset.ref = ctx.parameters.ref;
+        view.querySelectorAll('.sb-stage').forEach(s => { s.dataset.ref = ctx.parameters.ref; });
+      }
 
       const bar = templateBar(ctx);
       const style = tweakStyle(ctx);
