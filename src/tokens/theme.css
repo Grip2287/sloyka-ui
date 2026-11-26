@@ -1,1 +1,91 @@
-/* src/tokens/theme.css */
+/* Цвета тем. Тема ставится атрибутом data-theme на любом предке; без него — по системе. */
+@layer sl.tokens {
+:root, [data-theme="light"] {
+  --sl-bg:            #e9ebee;
+  --sl-bg-sunken:     #f3f4f6;
+  --sl-surface:       #ffffff;
+  --sl-surface-2:     #f6f7f8;
+  --sl-surface-hover: #eef0f2;
+  --sl-rail:          #d9dde2;
+  --sl-text:          #15171b;
+  --sl-text-2:        #4b515a;
+  --sl-text-3:        #626973;
+  --sl-border:        #d7dbe0;
+  --sl-border-soft:   #e6e8eb;
+  --sl-border-strong: #878e98;
+  --sl-inverse:       #16181c;
+  --sl-on-inverse:    #ffffff;
+  --sl-focus:         #16181c;
+  --sl-ok:            #2e8b4a;
+  --sl-ok-bg:         #e8f4ec;
+  --sl-warn:          #b8730f;
+  --sl-warn-bg:       #fbf1e2;
+  --sl-crit:          #c8382e;
+  --sl-crit-bg:       #fbeae8;
+  --sl-off:           #8a919b;
+  --sl-shadow-1:      0 1px 2px rgba(20, 24, 30, .06);
+  --sl-shadow-2:      0 6px 20px rgba(20, 24, 30, .12), 0 1px 3px rgba(20, 24, 30, .08);
+  --sl-backdrop:      rgba(20, 24, 30, .45);
+  color-scheme: light;
+}
+
+[data-theme="dark"] {
+  --sl-bg:            #0c0e11;
+  --sl-bg-sunken:     #0f1115;
+  --sl-surface:       #15181c;
+  --sl-surface-2:     #1a1d22;
+  --sl-surface-hover: #21252b;
+  --sl-rail:          #111317;
+  --sl-text:          #eef0f2;
+  --sl-text-2:        #b4bac2;
+  --sl-text-3:        #8d949e;
+  --sl-border:        #2a2e35;
+  --sl-border-soft:   #20242a;
+  --sl-border-strong: #6a717c;
+  --sl-inverse:       #eef0f2;
+  --sl-on-inverse:    #0c0e11;
+  --sl-focus:         #eef0f2;
+  --sl-ok:            #5cc27f;
+  --sl-ok-bg:         #142419;
+  --sl-warn:          #e2a33f;
+  --sl-warn-bg:       #2a2214;
+  --sl-crit:          #ec6a5f;
+  --sl-crit-bg:       #2c1715;
+  --sl-off:           #6c737d;
+  --sl-shadow-1:      0 1px 2px rgba(0, 0, 0, .3);
+  --sl-shadow-2:      0 10px 28px rgba(0, 0, 0, .5), 0 1px 3px rgba(0, 0, 0, .4);
+  --sl-backdrop:      rgba(0, 0, 0, .6);
+  color-scheme: dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --sl-bg:            #0c0e11;
+    --sl-bg-sunken:     #0f1115;
+    --sl-surface:       #15181c;
+    --sl-surface-2:     #1a1d22;
+    --sl-surface-hover: #21252b;
+    --sl-rail:          #111317;
+    --sl-text:          #eef0f2;
+    --sl-text-2:        #b4bac2;
+    --sl-text-3:        #8d949e;
+    --sl-border:        #2a2e35;
+    --sl-border-soft:   #20242a;
+    --sl-border-strong: #6a717c;
+    --sl-inverse:       #eef0f2;
+    --sl-on-inverse:    #0c0e11;
+    --sl-focus:         #eef0f2;
+    --sl-ok:            #5cc27f;
+    --sl-ok-bg:         #142419;
+    --sl-warn:          #e2a33f;
+    --sl-warn-bg:       #2a2214;
+    --sl-crit:          #ec6a5f;
+    --sl-crit-bg:       #2c1715;
+    --sl-off:           #6c737d;
+    --sl-shadow-1:      0 1px 2px rgba(0, 0, 0, .3);
+    --sl-shadow-2:      0 10px 28px rgba(0, 0, 0, .5), 0 1px 3px rgba(0, 0, 0, .4);
+    --sl-backdrop:      rgba(0, 0, 0, .6);
+    color-scheme: dark;
+  }
+}
+}

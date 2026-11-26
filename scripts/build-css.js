@@ -6,13 +6,15 @@ import { join } from 'node:path';
 
 const targets = { chrome: 111 << 16, safari: (16 << 16) | (4 << 8), firefox: 113 << 16 };
 const out = 'dist';
+const LAYERS = '@layer sl.reset, sl.tokens, sl.base, sl.components;';
 rmSync(out, { recursive: true, force: true });
 mkdirSync(join(out, 'components'), { recursive: true });
 mkdirSync(join(out, 'fonts'), { recursive: true });
 
 const build = (filename, dest, minify = false) => {
   const { code } = bundle({ filename, minify, targets });
-  writeFileSync(join(out, dest), code);
+  // порядок слоёв объявляем явно в начале каждого файла: так стили сайта вне слоёв всегда сильнее
+  writeFileSync(join(out, dest), `${LAYERS}\n${code}`);
 };
 
 build('src/index.css', 'sloyka.css');

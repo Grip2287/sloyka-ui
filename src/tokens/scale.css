@@ -1,1 +1,29 @@
-/* src/tokens/scale.css */
+/* Размеры, отступы, радиусы, высоты, анимации. */
+@layer sl.tokens {
+:root {
+  --sl-font: Inter, "Segoe UI", system-ui, -apple-system, sans-serif;
+  /* размеры: панель плотная, но не мельче 11px */
+  --sl-fs-caption: 11px;   /* подписи капсом */
+  --sl-fs-small:   12px;
+  --sl-fs-body:    13px;
+  --sl-fs-strong:  14px;
+  --sl-fs-title:   16px;   /* заголовок окна/страницы капсом */
+  --sl-fs-h1:      20px;
+  --sl-track-caps: .08em;
+  /* отступы — сетка 4px */
+  --sl-1: 4px; --sl-2: 8px; --sl-3: 12px; --sl-4: 16px; --sl-5: 20px; --sl-6: 24px; --sl-8: 32px;
+  /* «обтекаемость»: было 2–4px */
+  --sl-r-xs: 5px;    /* теги, бейджи */
+  --sl-r-sm: 7px;    /* кнопки, поля */
+  --sl-r-md: 10px;   /* карточки, меню */
+  --sl-r-lg: 14px;   /* окна, панели, модалки */
+  --sl-r-full: 999px;
+  /* высоты контролов */
+  --sl-h-sm: 28px; --sl-h-md: 34px; --sl-h-lg: 40px;
+  --sl-dur: .16s; --sl-ease: cubic-bezier(.2, .7, .2, 1);
+}
+
+@media (max-width: 767px) {
+  :root { --sl-fs-caption: 12px; --sl-fs-small: 13px; --sl-fs-body: 14px; --sl-fs-strong: 15px; --sl-h-md: 40px; --sl-h-sm: 34px; }
+}
+}

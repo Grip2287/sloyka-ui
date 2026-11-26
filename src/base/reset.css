@@ -1,1 +1,6 @@
-/* src/base/reset.css */
+@layer sl.reset {
+  *, *::before, *::after { box-sizing: border-box; }
+  :where(button, input, select, textarea) { font: inherit; color: inherit; }
+  :where(h1, h2, h3, h4, p, dl, dd, figure) { margin: 0; }
+  :where(img, svg, video) { display: block; max-width: 100%; }
+}
