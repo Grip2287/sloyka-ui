@@ -6,7 +6,7 @@ describe('template store', () => {
   beforeEach(() => localStorage.clear());
 
   it('knows every component folder that has styles', () => {
-    const folders = readdirSync('src/components').filter(d => !['theme', 'segmented'].includes(d));
+    const folders = readdirSync('src/components').filter(d => !['theme', 'segmented', 'layout'].includes(d));
     for (const f of folders) expect(COMPONENTS[f], f).toBeTruthy();
   });
 

@@ -10,8 +10,13 @@ describe('build', () => {
   });
 
   it('does not emit 0.1.x css outputs', () => {
-    for (const f of ['dist/sloyka.css', 'dist/sloyka.min.css', 'dist/core.css', 'dist/components'])
+    for (const f of ['dist/sloyka.css', 'dist/sloyka.min.css', 'dist/core.css'])
       expect(existsSync(f), f).toBe(false);
+    // dist/components теперь содержит React-модули; css там быть не должно
+    const css = existsSync('dist/components')
+      ? readdirSync('dist/components', { recursive: true }).filter(f => String(f).endsWith('.css'))
+      : [];
+    expect(css).toEqual([]);
   });
 
   it('bundle starts with layer order', () => {

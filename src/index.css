@@ -14,6 +14,7 @@
 @import "./components/modal/modal.css";
 @import "./components/nav/nav.css";
 @import "./components/page/page.css";
+@import "./components/layout/layout.css";
 @import "./components/picker/picker.css";
 @import "./components/segmented/segmented.css";
 @import "./components/shell/shell.css";
