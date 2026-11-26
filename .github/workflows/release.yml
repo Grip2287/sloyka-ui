@@ -1,18 +1,27 @@
 name: Release
+# Запускается только после успешного CI на main: непроверенный код не публикуется.
 on:
-  push: { branches: [main] }
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+    branches: [main]
 permissions: { contents: write, packages: write, pull-requests: write }
+concurrency: { group: release, cancel-in-progress: false }
 jobs:
   release:
+    if: github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with: { ref: '${{ github.event.workflow_run.head_sha }}' }
       - uses: actions/setup-node@v4
         with: { node-version: 22, registry-url: 'https://npm.pkg.github.com', scope: '@grip2287' }
-      - run: npm ci && npm run build
-      # Changesets: открывает PR «Version Packages»; после его слияния публикует новую версию в GitHub Packages.
+      - run: npm ci && npm run build && npm test
+      # Changesets открывает PR «Version Packages»; после его слияния публикует новую версию в GitHub Packages.
+      # Чтобы на этом PR тоже запускался CI, добавьте секрет CHANGESETS_TOKEN (личный токен с repo):
+      # PR, открытый встроенным GITHUB_TOKEN, проверки не запускает.
       - uses: changesets/action@v1
         with: { publish: npx changeset publish }
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.CHANGESETS_TOKEN || secrets.GITHUB_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

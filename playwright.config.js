@@ -13,7 +13,7 @@ export default defineConfig({
   ],
   projects: [
     { name: 'stories' , testMatch: /stories\.spec/ },
-    { name: 'layers', testMatch: /layers\.spec/ },
+    { name: 'layers', testMatch: /(layers|plain)\.spec/ },
     { name: 'behaviour', testMatch: /behaviour\.spec/ },
     { name: 'no-js', testMatch: /nojs\.spec/, use: { javaScriptEnabled: false } },
   ],

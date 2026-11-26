@@ -21,6 +21,7 @@ it('npm pack excludes sources, tests and stories', () => {
 
 it('every export path exists after build', () => {
   const pkg = JSON.parse(readFileSync('package.json', 'utf8'));
+  expect(pkg.exports['./core.css'], 'core.css exported').toBe('./dist/core.css');
   for (const [key, target] of Object.entries(pkg.exports)) {
     const probe = target.replace('*', key.includes('components') ? 'button' : 'inter-latin-400-normal').replace(/^\.\//, '');
     const path = key.includes('fonts') ? probe + '.woff2' : probe;

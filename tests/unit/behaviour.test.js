@@ -100,6 +100,25 @@ describe('sl-modal', () => {
   });
 });
 
+describe('sl-modal pointer', () => {
+  it('does not close when a press starts inside and is released on the backdrop', async () => {
+    mount('<div><button data-sl-open="m2">open</button><sl-modal id="m2"><dialog class="sl-modal"><input id="i"></dialog></sl-modal></div>');
+    document.querySelector('[data-sl-open]').click(); await tick();
+    const dlg = document.querySelector('#m2 dialog');
+    document.getElementById('i').dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }));
+    dlg.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    expect(dlg.open).toBe(true);
+  });
+  it('closes when press and release are both on the backdrop', async () => {
+    mount('<div><button data-sl-open="m3">open</button><sl-modal id="m3"><dialog class="sl-modal"><input></dialog></sl-modal></div>');
+    document.querySelector('[data-sl-open]').click(); await tick();
+    const dlg = document.querySelector('#m3 dialog');
+    dlg.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }));
+    dlg.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    expect(dlg.open).toBe(false);
+  });
+});
+
 describe('toast', () => {
   beforeEach(() => { document.body.innerHTML = ''; vi.useRealTimers(); });
   it('creates a live region if missing', () => {

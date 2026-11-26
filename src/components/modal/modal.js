@@ -6,8 +6,13 @@ export class SlModal extends HTMLElement {
   connectedCallback() {
     if (this.wired) return;
     this.wired = true;
+    // Закрываем по фону, только если нажатие и началось, и закончилось на фоне:
+    // иначе выделение текста в поле с отпусканием над фоном закрыло бы форму.
+    this.addEventListener('pointerdown', e => { this.downOnBackdrop = e.target === this.dialog; });
     this.addEventListener('click', e => {
-      if (e.target.closest('[data-sl-close]') || e.target === this.dialog) this.close();
+      if (e.target.closest('[data-sl-close]')) this.close();
+      else if (e.target === this.dialog && this.downOnBackdrop) this.close();
+      this.downOnBackdrop = false;
     });
   }
 

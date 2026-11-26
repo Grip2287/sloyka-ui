@@ -22,7 +22,8 @@
     "./components/*.css": "./dist/components/*.css",
     "./theme-init": "./dist/theme-init.js",
     "./icons": "./dist/icons.js",
-    "./fonts/*": "./dist/fonts/*"
+    "./fonts/*": "./dist/fonts/*",
+    "./core.css": "./dist/core.css"
   },
   "scripts": {
     "build": "node scripts/build-css.js && vite build",

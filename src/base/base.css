@@ -1,6 +1,9 @@
 @layer sl.base {
-  :where(.sl-root, [data-theme]) { font-family: var(--sl-font); font-size: var(--sl-fs-body); line-height: 1.4; color: var(--sl-text); -webkit-font-smoothing: antialiased; }
-  :where(body.sl-root, html[data-theme] body) { margin: 0; background: var(--sl-bg); }
+  /* База действует на всю страницу, даже без класса и без атрибута темы */
+  :where(:root, .sl-root, [data-theme]) { font-family: var(--sl-font); font-size: var(--sl-fs-body); line-height: 1.4; color: var(--sl-text); -webkit-font-smoothing: antialiased; }
+  :where(body) { margin: 0; background: var(--sl-bg); }
+  /* Блок со своей темой рисует свой фон, иначе светлый текст окажется на светлом фоне страницы */
+  :where([data-theme]:not(html)) { background: var(--sl-bg); color: var(--sl-text); }
   .sl-ic { width: 16px; height: 16px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
   .sl-caps { font-size: var(--sl-fs-caption); font-weight: 600; letter-spacing: var(--sl-track-caps); text-transform: uppercase; color: var(--sl-text-3); }
   .sl-muted { color: var(--sl-text-3); }
