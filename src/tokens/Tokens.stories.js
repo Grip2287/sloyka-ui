@@ -1,4 +1,4 @@
-export default { title: 'Основа/Токены', parameters: { docs: { description: { component: 'Цвета, размеры текста и радиусы. Меняются только здесь — компоненты берут всё из токенов.' } } } };
+export default { title: 'Основа/Токены', argTypes: { slScale: { table: { disable: true } }, slRadius: { table: { disable: true } } }, parameters: { docs: { description: { component: 'Цвета, размеры текста и радиусы. Меняются только здесь — компоненты берут всё из токенов.' } } } };
 const COLORS = ['bg', 'surface', 'surface-2', 'surface-hover', 'rail', 'text', 'text-2', 'text-3', 'border', 'border-soft', 'border-strong', 'inverse', 'on-inverse', 'ok', 'ok-bg', 'warn', 'warn-bg', 'crit', 'crit-bg', 'off'];
 export const Colors = {
   name: 'Цвета',

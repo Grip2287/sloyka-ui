@@ -12,7 +12,8 @@
     "registry": "https://npm.pkg.github.com"
   },
   "files": [
-    "dist"
+    "dist",
+    "templates"
   ],
   "main": "./dist/sloyka.js",
   "exports": {
@@ -23,7 +24,8 @@
     "./theme-init": "./dist/theme-init.js",
     "./icons": "./dist/icons.js",
     "./fonts/*": "./dist/fonts/*",
-    "./core.css": "./dist/core.css"
+    "./core.css": "./dist/core.css",
+    "./templates/*": "./templates/*"
   },
   "scripts": {
     "build": "node scripts/build-css.js && vite build",

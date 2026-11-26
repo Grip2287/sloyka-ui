@@ -6,7 +6,7 @@
   .sl-toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
   .sl-toolbar .sl-search { width: 260px; }
   .sl-toolbar .sl-select { width: auto; min-width: 160px; }
-  .sl-toolbar__end { margin-left: auto; display: flex; gap: 8px; align-items: center; }
+  .sl-toolbar__end { margin-left: auto; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
   @media (max-width: 767px) {
     .sl-toolbar .sl-search, .sl-toolbar .sl-select { width: 100%; }
     .sl-toolbar__end { margin-left: 0; width: 100%; }

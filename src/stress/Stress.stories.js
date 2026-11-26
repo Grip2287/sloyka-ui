@@ -1,5 +1,5 @@
 // Проверка длинных слов: ничего не должно вылезать за экран.
-export default { title: 'Проверки/Длинный текст', parameters: { pair: false } };
+export default { title: 'Проверки/Длинный текст', argTypes: { slScale: { table: { disable: true } }, slRadius: { table: { disable: true } } }, parameters: { pair: false } };
 const W = 'Высококвалифицированныйспециалист';
 const MAIL = 'very.long.email.address@example-company.ru';
 export const LongText = {
