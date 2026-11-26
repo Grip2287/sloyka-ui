@@ -1,6 +1,6 @@
 {
   "name": "@grip2287/sloyka",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Sloyka — библиотека компонентов операторской панели: светлая и тёмная тема, адаптив.",
   "license": "UNLICENSED",
   "type": "module",
