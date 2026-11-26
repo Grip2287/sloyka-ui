@@ -8,11 +8,18 @@ beforeAll(() => {
   files = out[0].files.map(f => f.path.replace(/\\/g, '/'));
 }, 120000);
 
+it('package identity', () => {
+  const pkg = JSON.parse(readFileSync('package.json', 'utf8'));
+  expect(pkg.name).toBe('sloyka');
+  expect(pkg.license).toBe('MIT');
+  expect(pkg.publishConfig).toBeUndefined();
+});
+
 it('npm pack contains public entry points', () => {
-  for (const f of ['dist/sloyka.css', 'dist/sloyka.min.css', 'dist/core.css', 'dist/sloyka.js', 'dist/theme-init.js', 'dist/icons.js', 'README.md'])
+  for (const f of ['dist/index.js', 'dist/index.d.ts', 'dist/styles.css', 'README.md', 'LICENSE'])
     expect(files, f).toContain(f);
-  expect(files.some(f => /^dist\/components\/.+\.css$/.test(f))).toBe(true);
   expect(files.some(f => /^dist\/fonts\/.+\.woff2$/.test(f))).toBe(true);
+  expect(files.some(f => /^templates\/.+/.test(f))).toBe(true);
 });
 
 it('npm pack excludes sources, tests and stories', () => {
@@ -21,10 +28,9 @@ it('npm pack excludes sources, tests and stories', () => {
 
 it('every export path exists after build', () => {
   const pkg = JSON.parse(readFileSync('package.json', 'utf8'));
-  expect(pkg.exports['./core.css'], 'core.css exported').toBe('./dist/core.css');
   for (const [key, target] of Object.entries(pkg.exports)) {
-    const probe = target.replace('*', key.includes('components') ? 'button' : key.includes('templates') ? 'README.md' : 'inter-latin-400-normal').replace(/^\.\//, '');
-    const path = key.includes('fonts') ? probe + '.woff2' : probe;
+    const t = typeof target === 'string' ? target : target.import;
+    const path = t.replace('*', 'README.md').replace(/^\.\//, '');
     expect(existsSync(path), `${key} → ${path}`).toBe(true);
   }
 });
