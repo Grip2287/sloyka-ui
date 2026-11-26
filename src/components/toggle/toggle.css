@@ -1,0 +1,14 @@
+/* Sloyka · toggle */
+@layer sl.components {
+  .sl-switch { display: inline-flex; align-items: center; gap: 10px; cursor: pointer; font-size: var(--sl-fs-body); }
+  .sl-switch input { appearance: none; width: 34px; height: 20px; margin: 0; border-radius: var(--sl-r-full); background: var(--sl-border-strong); position: relative; cursor: pointer; transition: background var(--sl-dur); }
+  .sl-switch input::after { content: ""; position: absolute; top: 3px; left: 3px; width: 14px; height: 14px; border-radius: 50%; background: var(--sl-surface); box-shadow: var(--sl-shadow-1); transition: transform var(--sl-dur) var(--sl-ease); }
+  .sl-switch input:checked { background: var(--sl-inverse); }
+  .sl-switch input:checked::after { transform: translateX(14px); background: var(--sl-on-inverse); }
+  .sl-check { display: inline-flex; align-items: center; gap: 10px; cursor: pointer; }
+  .sl-check input { appearance: none; width: 18px; height: 18px; margin: 0; border: 1.5px solid var(--sl-border-strong); border-radius: 5px; background: var(--sl-surface); display: grid; place-content: center; cursor: pointer; }
+  .sl-check input[type="radio"] { border-radius: 50%; }
+  .sl-check input:checked { background: var(--sl-inverse); border-color: var(--sl-inverse); }
+  .sl-check input[type="checkbox"]:checked::after { content: ""; width: 9px; height: 5px; border: 2px solid var(--sl-on-inverse); border-top: 0; border-right: 0; rotate: -45deg; translate: 0 -1px; }
+  .sl-check input[type="radio"]:checked::after { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--sl-on-inverse); }
+}

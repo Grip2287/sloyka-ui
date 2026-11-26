@@ -1,0 +1,18 @@
+/* Sloyka · nav */
+@layer sl.components {
+  .sl-nav { display: flex; flex-direction: column; gap: 2px; width: 232px; padding: 12px 10px; background: var(--sl-rail); }
+  .sl-nav__section { padding: 14px 10px 6px; }
+  .sl-nav__item { position: relative; flex: none; display: flex; align-items: center; gap: 10px; height: 36px; padding: 0 10px; border-radius: var(--sl-r-sm); color: var(--sl-text-2); text-decoration: none; font-size: var(--sl-fs-body); font-weight: 500; cursor: pointer; transition: background var(--sl-dur), color var(--sl-dur); }
+  .sl-nav__item:hover { background: color-mix(in srgb, var(--sl-surface) 60%, transparent); color: var(--sl-text); }
+  .sl-nav__item[aria-current="page"] { background: var(--sl-surface); color: var(--sl-text); font-weight: 600; box-shadow: var(--sl-shadow-1); }
+  .sl-nav__item[aria-current="page"]::before { content: ""; position: absolute; left: -10px; top: 8px; bottom: 8px; width: 3px; border-radius: 0 3px 3px 0; background: var(--sl-inverse); }
+  .sl-nav__item .sl-count { margin-left: auto; }
+  .sl-nav__label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .sl-rail, .sl-nav--rail { width: 100px; padding: 10px 8px; align-items: stretch; }
+  .sl-nav--rail .sl-nav__section { height: 1px; margin: 8px 10px; padding: 0; background: var(--sl-border); font-size: 0; }
+  .sl-nav--rail .sl-nav__item { flex-direction: column; justify-content: center; gap: 5px; height: auto; min-height: 56px; padding: 8px 2px; text-align: center; }
+  .sl-nav--rail .sl-nav__label { max-width: 100%; font-size: 11px; font-weight: 500; white-space: normal; overflow-wrap: anywhere; line-height: 1.2; }
+  .sl-nav--rail .sl-nav__item[aria-current="page"]::before { left: -8px; }
+  .sl-nav--rail .sl-nav__item .sl-count { position: absolute; top: 4px; right: 8px; min-width: 16px; height: 16px; font-size: 10px; }
+  .sl-nav--rail .sl-ic { width: 18px; height: 18px; }
+}

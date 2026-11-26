@@ -1,0 +1,11 @@
+/* Sloyka · menu */
+@layer sl.components {
+  .sl-menu { min-width: 220px; padding: 6px; border: 1px solid var(--sl-border-soft); border-radius: var(--sl-r-md); background: var(--sl-surface); box-shadow: var(--sl-shadow-2); }
+  .sl-menu__head { padding: 8px 10px 10px; margin-bottom: 4px; border-bottom: 1px solid var(--sl-border-soft); }
+  .sl-menu__item { display: flex; align-items: center; gap: 10px; width: 100%; height: 34px; padding: 0 10px; border: 0; border-radius: var(--sl-r-sm); background: transparent; color: var(--sl-text); font: 400 var(--sl-fs-body)/1 var(--sl-font); text-align: left; cursor: pointer; }
+  .sl-menu__item:hover { background: var(--sl-surface-hover); }
+  .sl-menu__item .sl-ic { color: var(--sl-text-3); }
+  .sl-menu__sep { height: 1px; margin: 4px 0; background: var(--sl-border-soft); }
+  .sl-menu__item--danger { color: var(--sl-crit); }
+  .sl-menu__item--danger .sl-ic { color: currentColor; }
+}

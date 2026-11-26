@@ -1,0 +1,5 @@
+/* Sloyka · login */
+@layer sl.components {
+  .sl-login { display: grid; gap: 16px; width: 340px; max-width: 100%; padding: 26px; border: 1px solid var(--sl-border-soft); border-radius: var(--sl-r-lg); background: var(--sl-surface); box-shadow: var(--sl-shadow-2); }
+  .sl-login__foot { padding-top: 14px; border-top: 1px solid var(--sl-border-soft); text-align: center; font-size: var(--sl-fs-caption); letter-spacing: var(--sl-track-caps); text-transform: uppercase; color: var(--sl-text-3); }
+}

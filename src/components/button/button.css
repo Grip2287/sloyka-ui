@@ -1,0 +1,20 @@
+/* Sloyka · button */
+@layer sl.components {
+  .sl-btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: var(--sl-h-md); padding: 0 14px; border: 1px solid var(--sl-border); border-radius: var(--sl-r-sm); background: var(--sl-surface); color: var(--sl-text); font: 500 var(--sl-fs-body)/1 var(--sl-font); cursor: pointer; white-space: nowrap; transition: background var(--sl-dur), border-color var(--sl-dur), transform var(--sl-dur) var(--sl-ease); box-shadow: var(--sl-shadow-1); }
+  .sl-btn:hover { background: var(--sl-surface-hover); border-color: var(--sl-border-strong); }
+  .sl-btn:active { transform: scale(.97); }
+  .sl-btn--primary { background: var(--sl-inverse); color: var(--sl-on-inverse); border-color: var(--sl-inverse); font-weight: 600; }
+  .sl-btn--primary:hover { background: var(--sl-inverse); opacity: .88; border-color: var(--sl-inverse); }
+  .sl-btn--ghost { background: transparent; border-color: transparent; box-shadow: none; color: var(--sl-text-2); }
+  .sl-btn--danger { color: var(--sl-crit); }
+  .sl-btn--caps { font-size: var(--sl-fs-small); font-weight: 600; letter-spacing: var(--sl-track-caps); text-transform: uppercase; }
+  .sl-btn--sm { height: var(--sl-h-sm); padding: 0 10px; font-size: var(--sl-fs-small); }
+  .sl-btn--lg { height: var(--sl-h-lg); padding: 0 20px; }
+  .sl-btn--block { width: 100%; }
+  .sl-btn--icon { width: var(--sl-h-md); padding: 0; }
+  .sl-btn--icon.sl-btn--sm { width: var(--sl-h-sm); }
+  .sl-btn:disabled, .sl-btn[aria-disabled="true"] { opacity: .45; cursor: not-allowed; transform: none; }
+  .sl-btn-group { display: inline-flex; flex-direction: column; border: 1px solid var(--sl-border); border-radius: var(--sl-r-sm); background: var(--sl-surface); box-shadow: var(--sl-shadow-1); overflow: hidden; }
+  .sl-btn-group .sl-btn { border: 0; border-radius: 0; box-shadow: none; }
+  .sl-btn-group .sl-btn + .sl-btn { border-top: 1px solid var(--sl-border-soft); }
+}

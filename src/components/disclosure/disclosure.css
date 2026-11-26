@@ -1,0 +1,9 @@
+/* Sloyka · disclosure */
+@layer sl.components {
+  .sl-disclosure { border-bottom: 1px solid var(--sl-border-soft); }
+  .sl-disclosure > summary { list-style: none; display: flex; align-items: center; gap: 8px; padding: 12px 4px; cursor: pointer; }
+  .sl-disclosure > summary::-webkit-details-marker { display: none; }
+  .sl-disclosure > summary .sl-ic { color: var(--sl-text-3); transition: rotate var(--sl-dur) var(--sl-ease); }
+  .sl-disclosure[open] > summary .sl-ic { rotate: 90deg; }
+  .sl-disclosure__body { padding: 0 4px 14px 28px; color: var(--sl-text-2); }
+}

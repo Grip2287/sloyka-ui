@@ -1,0 +1,9 @@
+/* Sloyka · toast */
+@layer sl.components {
+  .sl-toast { display: flex; align-items: flex-start; gap: 10px; width: 340px; max-width: 100%; padding: 12px 12px 12px 14px; border: 1px solid var(--sl-border-soft); border-radius: var(--sl-r-md); background: var(--sl-surface); box-shadow: var(--sl-shadow-2); }
+  .sl-toast__icon { color: var(--c, var(--sl-text-2)); margin-top: 1px; }
+  .sl-toast__body { flex: 1; display: grid; gap: 2px; }
+  .sl-toast__title { font-weight: 600; }
+  .sl-toast__text { color: var(--sl-text-2); font-size: var(--sl-fs-small); }
+  .sl-tooltip { display: inline-block; padding: 6px 9px; border-radius: var(--sl-r-xs); background: var(--sl-inverse); color: var(--sl-on-inverse); font-size: var(--sl-fs-small); box-shadow: var(--sl-shadow-2); }
+}

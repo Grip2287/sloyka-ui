@@ -1,0 +1,7 @@
+/* Sloyka · stats */
+@layer sl.components {
+  .sl-stats { display: grid; grid-template-columns: repeat(4, 1fr); padding: 10px 4px; border-radius: var(--sl-r-md); background: var(--sl-surface-2); }
+  .sl-stat { display: grid; justify-items: center; gap: 2px; }
+  .sl-stat__value { display: flex; align-items: center; gap: 6px; font-size: var(--sl-fs-strong); font-weight: 600; font-variant-numeric: tabular-nums; }
+  .sl-stat__value::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--c, var(--sl-off)); }
+}

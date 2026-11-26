@@ -1,0 +1,7 @@
+/* Sloyka · empty */
+@layer sl.components {
+  .sl-empty { display: grid; justify-items: center; gap: 8px; padding: 32px 20px; text-align: center; color: var(--sl-text-3); }
+  .sl-empty .sl-ic { width: 28px; height: 28px; }
+  .sl-empty__title { color: var(--sl-text); font-weight: 500; }
+  .sl-dropzone { border: 1.5px dashed var(--sl-border-strong); border-radius: var(--sl-r-md); background: var(--sl-surface-2); }
+}

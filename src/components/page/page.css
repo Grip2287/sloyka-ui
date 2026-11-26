@@ -1,0 +1,15 @@
+/* Sloyka · page */
+@layer sl.components {
+  .sl-page-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-bottom: 14px; border-bottom: 1px solid var(--sl-border); }
+  .sl-page-title { margin: 0; font-size: var(--sl-fs-h1); font-weight: 600; letter-spacing: .04em; text-transform: uppercase; }
+  .sl-section-title { margin: 0; font-size: var(--sl-fs-small); font-weight: 600; letter-spacing: var(--sl-track-caps); text-transform: uppercase; color: var(--sl-text-2); }
+  .sl-toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+  .sl-toolbar .sl-search { width: 260px; }
+  .sl-toolbar .sl-select { width: auto; min-width: 160px; }
+  .sl-toolbar__end { margin-left: auto; display: flex; gap: 8px; align-items: center; }
+  @media (max-width: 767px) {
+    .sl-toolbar .sl-search, .sl-toolbar .sl-select { width: 100%; }
+    .sl-toolbar__end { margin-left: 0; width: 100%; }
+    .sl-toolbar__end .sl-btn { flex: 1; }
+  }
+}

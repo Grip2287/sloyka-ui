@@ -1,0 +1,11 @@
+/* Sloyka · tag */
+@layer sl.components {
+  .sl-tag { display: inline-flex; align-items: center; gap: 4px; height: 20px; padding: 0 7px; border: 1px solid var(--sl-border); border-radius: var(--sl-r-xs); font-size: var(--sl-fs-caption); font-weight: 600; letter-spacing: var(--sl-track-caps); text-transform: uppercase; color: var(--sl-text-2); background: var(--sl-surface); white-space: nowrap; }
+  .sl-tag--solid { background: var(--sl-inverse); color: var(--sl-on-inverse); border-color: var(--sl-inverse); }
+  .sl-tag--ok { color: var(--sl-ok); background: var(--sl-ok-bg); border-color: transparent; }
+  .sl-tag--warn { color: var(--sl-warn); background: var(--sl-warn-bg); border-color: transparent; }
+  .sl-tag--crit { color: var(--sl-crit); background: var(--sl-crit-bg); border-color: transparent; }
+  .sl-count { display: inline-grid; place-items: center; min-width: 20px; height: 20px; padding: 0 6px; border-radius: var(--sl-r-full); background: var(--sl-surface-hover); color: var(--sl-text-2); font-size: var(--sl-fs-caption); font-weight: 600; font-variant-numeric: tabular-nums; }
+  .sl-count--solid { background: var(--sl-inverse); color: var(--sl-on-inverse); }
+  .sl-chip { display: inline-flex; align-items: center; gap: 6px; height: var(--sl-h-sm); padding: 0 10px; border: 1px solid var(--sl-border); border-radius: var(--sl-r-full); font-size: var(--sl-fs-small); font-weight: 500; background: var(--sl-surface); }
+}

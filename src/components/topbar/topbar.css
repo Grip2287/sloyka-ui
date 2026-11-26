@@ -1,0 +1,8 @@
+/* Sloyka · topbar */
+@layer sl.components {
+  .sl-topbar { display: flex; align-items: center; gap: 12px; height: 56px; padding: 0 16px; background: var(--sl-surface); border-bottom: 1px solid var(--sl-border-soft); }
+  .sl-topbar__title { font-size: var(--sl-fs-small); font-weight: 600; letter-spacing: var(--sl-track-caps); text-transform: uppercase; color: var(--sl-text-3); }
+  .sl-topbar__end { margin-left: auto; display: flex; gap: 8px; }
+  .sl-brand { display: flex; align-items: center; gap: 8px; font-weight: 700; letter-spacing: .06em; }
+  .sl-brand__mark { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 9px; background: var(--sl-inverse); color: var(--sl-on-inverse); font-size: 13px; }
+}

@@ -1,0 +1,9 @@
+/* Sloyka · banner */
+@layer sl.components {
+  .sl-banner { --c: var(--sl-ok); --b: var(--sl-ok-bg); display: grid; gap: 8px; padding: 14px 18px; border-radius: var(--sl-r-md); background: var(--b); border: 1px solid color-mix(in srgb, var(--c) 30%, transparent); }
+  .sl-banner--warn { --c: var(--sl-warn); --b: var(--sl-warn-bg); }
+  .sl-banner--crit { --c: var(--sl-crit); --b: var(--sl-crit-bg); }
+  .sl-banner__title { display: flex; align-items: center; gap: 8px; color: var(--c); font-weight: 600; font-size: var(--sl-fs-strong); }
+  .sl-banner__text { color: var(--sl-text-2); }
+  .sl-banner__item { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-top: 8px; border-top: 1px solid color-mix(in srgb, var(--c) 20%, transparent); }
+}

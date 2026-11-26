@@ -1,0 +1,8 @@
+/* Sloyka · link-card */
+@layer sl.components {
+  .sl-link-card { display: grid; grid-template-columns: auto 1fr auto; gap: 12px; align-items: start; }
+  .sl-link-card .sl-ic--lg { width: 22px; height: 22px; color: var(--sl-text-2); }
+  .sl-step { display: grid; gap: 10px; }
+  .sl-step__num { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: var(--sl-inverse); color: var(--sl-on-inverse); font-weight: 600; font-size: var(--sl-fs-small); }
+  .sl-steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
+}

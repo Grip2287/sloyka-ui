@@ -1,0 +1,8 @@
+/* Sloyka · metric */
+@layer sl.components {
+  .sl-metric__value { font-size: 22px; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .sl-progress { height: 6px; border-radius: var(--sl-r-full); background: var(--sl-surface-hover); overflow: hidden; }
+  .sl-progress > span { display: block; height: 100%; border-radius: inherit; background: var(--sl-text-2); }
+  .sl-progress--warn > span { background: var(--sl-warn); }
+  .sl-progress--crit > span { background: var(--sl-crit); }
+}

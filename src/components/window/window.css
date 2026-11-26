@@ -1,0 +1,9 @@
+/* Sloyka · window */
+@layer sl.components {
+  .sl-window { display: flex; flex-direction: column; width: 360px; max-width: 100%; border: 1px solid var(--sl-border-soft); border-radius: var(--sl-r-lg); background: var(--sl-surface); box-shadow: var(--sl-shadow-2); overflow: hidden; }
+  .sl-window__head { display: flex; align-items: center; gap: 8px; height: 46px; padding: 0 8px 0 14px; border-bottom: 1px solid var(--sl-border-soft); }
+  .sl-window__title { flex: 1; font-size: var(--sl-fs-small); font-weight: 600; letter-spacing: var(--sl-track-caps); text-transform: uppercase; }
+  .sl-window__bar { display: flex; justify-content: space-between; gap: 8px; padding: 8px 12px; border-bottom: 1px solid var(--sl-border-soft); background: var(--sl-surface-2); }
+  .sl-window__body { flex: 1; padding: 14px; min-height: 120px; color: var(--sl-text-3); }
+  .sl-window__foot { padding: 10px 12px; border-top: 1px solid var(--sl-border-soft); }
+}

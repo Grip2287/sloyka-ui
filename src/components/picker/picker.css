@@ -1,0 +1,10 @@
+/* Sloyka · picker */
+@layer sl.components {
+  .sl-picker { display: grid; gap: 10px; width: 560px; max-width: 100%; padding: 12px; border: 1px solid var(--sl-border-soft); border-radius: var(--sl-r-lg); background: var(--sl-surface); box-shadow: var(--sl-shadow-2); }
+  .sl-picker__grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 8px; }
+  .sl-tile { display: grid; gap: 3px; min-height: 52px; padding: 10px 12px; border: 1px solid var(--sl-border); border-radius: var(--sl-r-sm); background: var(--sl-surface); color: var(--sl-text); text-align: left; font: 600 var(--sl-fs-small)/1.2 var(--sl-font); letter-spacing: var(--sl-track-caps); text-transform: uppercase; cursor: pointer; transition: border-color var(--sl-dur), background var(--sl-dur); }
+  .sl-tile:hover { border-color: var(--sl-border-strong); }
+  .sl-tile[aria-pressed="true"] { background: var(--sl-inverse); color: var(--sl-on-inverse); border-color: var(--sl-inverse); }
+  .sl-tile:disabled { opacity: .5; cursor: not-allowed; }
+  .sl-tile small { font-weight: 400; letter-spacing: 0; text-transform: none; color: var(--sl-text-3); }
+}
