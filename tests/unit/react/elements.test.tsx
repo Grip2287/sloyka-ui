@@ -35,6 +35,15 @@ const DROP = ['id', 'aria-describedby', 'aria-labelledby'];
 const same = (container: HTMLElement, expected: string, drop: string[] = DROP) =>
   expect(norm(container.innerHTML, drop)).toBe(norm(withIcons(expected), drop));
 
+/*
+ * Принятые отклонения разметки от историй 0.1.x (решение контроллера, так задумано):
+ *  - Switch: у input добавлен role="switch" (скринридер объявляет тумблер, а не флажок).
+ *  - Search и Compose: у input есть aria-label по умолчанию ("Поиск" / "Сообщение"): в 0.1.x имя было только у placeholder.
+ *  - Compose: у кнопки отправки type="button", чтобы не отправлять внешнюю форму; отправку делает onSend.
+ *  - Segmented: хост div[role="group"] вместо кастомного <sl-segmented> (React не регистрирует элемент); кнопки с type="button",
+ *    aria-pressed всегда true/false и roving tabindex (0 у выбранной, -1 у остальных); CSS работает по классам и не меняется.
+ *  - Field: aria-labelledby/aria-describedby и id связывают подпись, пояснение и ошибку; в сравнении они отбрасываются (DROP).
+ */
 describe('Button', () => {
   it('parity: primary + icon', () => {
     same(render(<Button variant="primary" icon="plus">Добавить устройство</Button>).container,
@@ -67,9 +76,24 @@ describe('Button', () => {
     expect(on).not.toHaveBeenCalled();
   });
   it('iconOnly without aria-label warns', () => {
-    render(<Button iconOnly icon="x" {...({} as { 'aria-label': string })} />);
+    // @ts-expect-error iconOnly требует aria-label
+    render(<Button iconOnly icon="x" />);
     expect(warn).toHaveBeenCalledTimes(1);
     expect(String(warn.mock.calls[0][0])).toContain('Sloyka · Button');
+  });
+  it('iconOnly with children is a type error and children are not rendered', () => {
+    // @ts-expect-error у iconOnly нет children
+    const { container } = render(<Button iconOnly icon="x" aria-label="Закрыть">Текст</Button>);
+    expect(container.textContent).toBe('');
+  });
+  it.each([['disabled', { disabled: true }], ['busy', { busy: true }]] as const)('%s link is inert: no href, not focusable', (_n, p) => {
+    const { container } = render(<Button href="/x" variant="primary" {...p}>Go</Button>);
+    const a = container.querySelector('a')!;
+    expect(a.hasAttribute('href')).toBe(false);
+    expect(a.getAttribute('tabindex')).toBe('-1');
+    expect(a.getAttribute('role')).toBe('link');
+    expect(a.getAttribute('aria-disabled')).toBe('true');
+    expect(a.className).toBe('sl-btn sl-btn--primary');
   });
   it('href renders a link without <button>, keeps classes', () => {
     const { container } = render(<Button href="/x" variant="primary" icon="plus">Go</Button>);
@@ -78,13 +102,12 @@ describe('Button', () => {
     expect(a.getAttribute('href')).toBe('/x');
     expect(a.className).toBe('sl-btn sl-btn--primary');
   });
-  it('href + linkAs + external + busy', () => {
+  it('href + linkAs + external', () => {
     const L = ({ href, className, children, ...r }: any) => <a data-router href={href} className={className} {...r}>{children}</a>;
-    const { container } = render(<Button href="/x" linkAs={L} external busy>Go</Button>);
+    const { container } = render(<Button href="/x" linkAs={L} external>Go</Button>);
     const a = container.querySelector('a')!;
     expect(a.hasAttribute('data-router')).toBe(true);
     expect(a.getAttribute('target')).toBe('_blank');
-    expect(a.getAttribute('aria-busy')).toBe('true');
   });
   it('bad variant -> default + warning', () => {
     const { container } = render(<Button variant={'neon' as any}>x</Button>);

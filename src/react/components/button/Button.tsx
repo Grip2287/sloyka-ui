@@ -58,10 +58,18 @@ function ButtonImpl(props: ButtonProps) {
     </>
   );
   const off = Boolean(disabled || busy);
+  if (href !== undefined && off) {
+    // Недоступная ссылка: без href она не фокусируется и не переходит по Enter.
+    return (
+      <a className={className} role="link" aria-disabled="true" aria-busy={busy ? 'true' : undefined} aria-label={label} tabIndex={-1}>
+        {inner}
+      </a>
+    );
+  }
   if (href !== undefined) {
     return <>{renderLink({
       href, linkAs, external, className, children: inner,
-      aria: { 'aria-label': label, 'aria-busy': busy ? 'true' : undefined, 'aria-disabled': off ? 'true' : undefined },
+      aria: { 'aria-label': label },
     })}</>;
   }
   return (
