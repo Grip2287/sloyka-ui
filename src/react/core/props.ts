@@ -1,7 +1,14 @@
 // Vite и Next заменяют process.env.NODE_ENV при сборке приложения.
 declare const process: { env: { NODE_ENV?: string } } | undefined;
 
-export const isDev = (): boolean => typeof process === 'undefined' || process.env.NODE_ENV !== 'production';
+export const isDev = (): boolean => {
+  // Обращение именно к process.env.NODE_ENV: бандлер подставляет литерал, в браузере без process — catch.
+  try {
+    return process!.env.NODE_ENV !== 'production';
+  } catch {
+    return true;
+  }
+};
 
 const seen = new Set<string>();
 

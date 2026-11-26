@@ -95,3 +95,14 @@ describe('Icon', () => {
     expect(mod.ICON_PATHS).toEqual(SL_ICONS);
   });
 });
+
+describe('production', () => {
+  afterEach(() => vi.unstubAllEnvs());
+  it('NODE_ENV=production — pick и checkChildren не предупреждают', () => {
+    vi.stubEnv('NODE_ENV', 'production');
+    expect(pick('Modal', 'size', 'xl', ['sm'] as const, 'sm')).toBe('sm');
+    const M: any = () => null; M.__sloyka = { name: 'Modal', allowed: 'none' };
+    checkChildren(M, <div />);
+    expect(warn).not.toHaveBeenCalled();
+  });
+});
