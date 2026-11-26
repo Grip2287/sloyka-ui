@@ -1,4 +1,4 @@
-import type { KeyboardEvent, ReactNode } from 'react';
+import type { KeyboardEvent, MouseEvent, ReactNode } from 'react';
 import { defineMeta, cx, pick } from '../../core';
 import { Icon } from '../../icons';
 
@@ -39,7 +39,13 @@ function TableImpl<Row>({ columns, rows, rowKey, empty, stack = true, onRowClick
     typeof rowKey === 'function' ? rowKey(row) : String((row as Record<string, unknown>)[rowKey]);
   const cell = (row: Row, c: TableColumn<Row>): ReactNode =>
     c.render ? c.render(row) : String((row as Record<string, unknown>)[c.key] ?? '');
+  const onClickRow = (row: Row) => (e: MouseEvent<HTMLTableRowElement>) => {
+    const hit = (e.target as Element).closest('button, a, input, select, textarea, [role="button"]');
+    if (hit && hit !== e.currentTarget && e.currentTarget.contains(hit)) return;
+    onRowClick?.(row);
+  };
   const onKey = (row: Row) => (e: KeyboardEvent<HTMLTableRowElement>) => {
+    if (e.target !== e.currentTarget) return; // клавиши внутри ячейки (кнопка, ссылка) — не наши
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
       onRowClick?.(row);
@@ -61,7 +67,7 @@ function TableImpl<Row>({ columns, rows, rowKey, empty, stack = true, onRowClick
           ) : rows.map((row) => (
             <tr key={keyOf(row)} className={onRowClick ? 'sl-table__row--click' : undefined}
               tabIndex={onRowClick ? 0 : undefined}
-              onClick={onRowClick ? () => onRowClick(row) : undefined}
+              onClick={onRowClick ? onClickRow(row) : undefined}
               onKeyDown={onRowClick ? onKey(row) : undefined}>
               {columns.map((c) => (
                 <td key={c.key} data-label={stack ? c.title : undefined} className={colClass(c as TableColumn<unknown>) || undefined}>

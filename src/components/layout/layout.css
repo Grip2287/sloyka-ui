@@ -90,5 +90,6 @@
   .sl-banner__item > span { min-width: 0; overflow-wrap: anywhere; }
   @media (max-width: 767px) {
     .sl-table--stack .sl-table__r, .sl-table--stack .sl-table__c { text-align: inherit; }
+    .sl-table--stack .sl-table__min { width: auto; white-space: normal; }
   }
 }

@@ -385,6 +385,21 @@ describe('Table', () => {
     expect(onRowClick).toHaveBeenCalledTimes(3);
     expect(onRowClick).toHaveBeenCalledWith(EVENTS[0]);
   });
+  it('Button inside a clickable row: Enter and click do not trigger onRowClick', () => {
+    const onRowClick = vi.fn();
+    const onBtn = vi.fn();
+    const cols = [{ key: 'user', title: 'Кто', render: () => <Button size="sm" onClick={onBtn}>Открыть</Button> }];
+    const { container } = render(<Table columns={cols} rows={EVENTS} rowKey="id" onRowClick={onRowClick} />);
+    const btn = container.querySelector('tbody button')!;
+    const ev = new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true });
+    btn.dispatchEvent(ev);
+    expect(ev.defaultPrevented).toBe(false);
+    fireEvent.click(btn);
+    expect(onBtn).toHaveBeenCalledTimes(1);
+    expect(onRowClick).not.toHaveBeenCalled();
+    fireEvent.click(container.querySelector('tbody td')!);
+    expect(onRowClick).toHaveBeenCalledTimes(1);
+  });
   it('without onRowClick rows are not focusable', () => {
     const { container } = render(<Table columns={COLS} rows={EVENTS} rowKey="id" />);
     expect(container.querySelector('tbody tr')!.hasAttribute('tabindex')).toBe(false);
