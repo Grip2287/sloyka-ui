@@ -30,7 +30,8 @@
     "storybook": "storybook dev -p 6006 --no-open",
     "build-storybook": "storybook build -o storybook-static --quiet",
     "test:e2e": "playwright test",
-    "test:all": "npm run build && npm test && npm run build-storybook && playwright test"
+    "test:all": "npm run build && npm test && npm run build-storybook && playwright test",
+    "gen:docs": "node scripts/gen-components-md.js"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.14.1",
