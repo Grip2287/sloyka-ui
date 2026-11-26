@@ -11,11 +11,14 @@ jobs:
   release:
     if: github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push'
     runs-on: ubuntu-latest
+    # тот же образ, что в CI: в нём есть браузер для тестов разбора референсов
+    container: mcr.microsoft.com/playwright:v1.65.1-noble
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with: { ref: '${{ github.event.workflow_run.head_sha }}' }
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with: { node-version: 22, registry-url: 'https://npm.pkg.github.com', scope: '@grip2287' }
+      - run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
       - run: npm ci && npm run build && npm test
       # Changesets открывает PR «Version Packages»; после его слияния публикует новую версию в GitHub Packages.
       # Чтобы на этом PR тоже запускался CI, добавьте секрет CHANGESETS_TOKEN (личный токен с repo):
