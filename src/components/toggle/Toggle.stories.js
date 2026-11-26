@@ -20,3 +20,25 @@ export const Default = {
     <label class="sl-check"><input type="radio" name="r">Единой площадью</label>
   </div>`,
 };
+
+export const Playground = {
+  name: 'Песочница',
+  args: { options: 'Без зон, Рабочий, Всё', selected: 3, block: false, switchLabel: 'Зоны охраны', switchOn: true, checkLabel: 'Запомнить', checkOn: true, kind: 'checkbox' },
+  argTypes: {
+    options: { name: 'Сегменты через запятую', control: 'text' },
+    selected: { name: 'Выбран сегмент №', control: { type: 'number', min: 1 } },
+    block: { name: 'Сегменты на всю ширину', control: 'boolean' },
+    switchLabel: { name: 'Подпись тумблера', control: 'text' },
+    switchOn: { name: 'Тумблер включён', control: 'boolean' },
+    checkLabel: { name: 'Подпись флажка', control: 'text' },
+    checkOn: { name: 'Флажок отмечен', control: 'boolean' },
+    kind: { name: 'Флажок или радиокнопка', control: 'inline-radio', options: ['checkbox', 'radio'] },
+  },
+  render: a => {
+    const opts = a.options.split(',').map(s => s.trim()).filter(Boolean);
+    const seg = opts.map((o, i) => `<button${i + 1 === a.selected ? ' aria-pressed="true"' : ''}>${o}</button>`).join('');
+    return `<div class="col"><sl-segmented class="sl-segmented${a.block ? ' sl-segmented--block' : ''}">${seg}</sl-segmented>
+      <div class="row" style="gap:24px"><label class="sl-switch"><input type="checkbox"${a.switchOn ? ' checked' : ''}>${a.switchLabel}</label>
+      <label class="sl-check"><input type="${a.kind}" name="pg"${a.checkOn ? ' checked' : ''}>${a.checkLabel}</label></div></div>`;
+  },
+};

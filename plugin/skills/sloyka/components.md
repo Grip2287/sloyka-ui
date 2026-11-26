@@ -48,6 +48,44 @@
   </main></sl-shell>
 ```
 
+### Песочница
+
+```html
+<sl-shell class="sl-shell">
+  <header class="sl-topbar">
+    <button class="sl-btn sl-btn--icon sl-btn--ghost sl-shell__toggle" aria-label="Меню" aria-expanded="false" aria-controls="sl-nav" data-sl-nav-toggle><i data-ic="menu"></i></button>
+    <span class="sl-brand"><span class="sl-brand__mark">S</span><span class="sl-brand__text">SLOYKA</span></span>
+    <span class="sl-topbar__title" style="margin-left:12px">Панель администрирования</span>
+    <div class="sl-topbar__end">
+      <button class="sl-btn sl-btn--sm"><i data-ic="arrow-left"></i><span class="sl-hide-sm">Мониторинг</span></button>
+      <sl-theme-toggle><button class="sl-btn sl-btn--sm sl-btn--icon" aria-label="Тёмная тема"><i data-ic="moon"></i></button></sl-theme-toggle>
+      <button class="sl-btn sl-btn--sm"><i data-ic="user"></i><span class="sl-hide-sm">ОД 12</span></button>
+      <button class="sl-btn sl-btn--sm sl-btn--icon sl-btn--danger" aria-label="Выйти"><i data-ic="power"></i></button>
+    </div>
+  </header>
+  <nav class="sl-nav sl-shell__nav" id="sl-nav" aria-label="Разделы" data-nav></nav>
+  <div class="sl-shell__backdrop" data-sl-nav-close></div>
+  <main class="sl-shell__main">
+    <div class="sl-page-head"><h1 class="sl-page-title">Устройства</h1></div>
+    <div class="sl-toolbar">
+      <label class="sl-search"><i data-ic="search"></i><input class="sl-input" placeholder="Поиск по названию и адресу"></label>
+      <select class="sl-select" aria-label="Все классы"><option>Все классы</option></select>
+      <select class="sl-select" aria-label="Все состояния"><option>Все состояния</option></select>
+      <div class="sl-toolbar__end"><button class="sl-btn sl-btn--primary"><i data-ic="plus"></i>Добавить устройство</button></div>
+    </div>
+    <div class="sl-banner sl-banner--warn"><div class="sl-banner__title"><i data-ic="alert"></i>2 устройства не размещены на карте</div></div>
+    <div class="sl-grid"><article class="sl-card" data-accent="ok"><div><div class="sl-card__title">Устройство 1</div><div class="sl-card__sub">Класс · Модель</div></div><dl class="sl-kv"><dt>Адрес</dt><dd>10.0.0.1:9100</dd></dl></article><article class="sl-card" data-accent="warn"><div><div class="sl-card__title">Устройство 2</div><div class="sl-card__sub">Класс · Модель</div></div><dl class="sl-kv"><dt>Адрес</dt><dd>10.0.0.2:9100</dd></dl></article><article class="sl-card" data-accent="crit"><div><div class="sl-card__title">Устройство 3</div><div class="sl-card__sub">Класс · Модель</div></div><dl class="sl-kv"><dt>Адрес</dt><dd>10.0.0.3:9100</dd></dl></article></div>
+    <h2 class="sl-section-title">Журнал изменений</h2>
+    <div class="sl-table-wrap"><table class="sl-table sl-table--stack">
+      <thead><tr><th>Время</th><th>Пользователь</th><th>Действие</th><th>Подробности</th></tr></thead>
+      <tbody>
+        <tr><td data-label="Время">14.11.2026, 21:19</td><td data-label="Пользователь"><b>ivanov</b></td><td data-label="Действие"><span class="sl-status">Изменение</span></td><td data-label="Подробности">Камера КПП-1: изменён адрес</td></tr>
+        <tr><td data-label="Время">02.11.2026, 18:41</td><td data-label="Пользователь"><b>ivanov</b></td><td data-label="Действие"><span class="sl-status sl-status--ok">Создание</span></td><td data-label="Подробности">Создано устройство «Шлюз-04»</td></tr>
+        <tr><td data-label="Время">02.11.2026, 18:40</td><td data-label="Пользователь"><b>petrov</b></td><td data-label="Действие"><span class="sl-status sl-status--crit">Удаление</span></td><td data-label="Подробности">Удалено устройство «Шлюз-03»</td></tr>
+      </tbody></table></div>
+  </main></sl-shell>
+```
+
 ## 01 · Кнопки
 
 Основная (тёмная), обычная, без рамки, капсом, иконочные, малые, опасное действие, недоступная, группа кнопок карты.
@@ -128,6 +166,14 @@
     <label class="sl-check"><input type="radio" name="r" checked>По приборам</label>
     <label class="sl-check"><input type="radio" name="r">Единой площадью</label>
   </div>
+```
+
+### Песочница
+
+```html
+<div class="col"><sl-segmented class="sl-segmented"><button>Без зон</button><button>Рабочий</button><button aria-pressed="true">Всё</button></sl-segmented>
+      <div class="row" style="gap:24px"><label class="sl-switch"><input type="checkbox" checked>Зоны охраны</label>
+      <label class="sl-check"><input type="checkbox" name="pg" checked>Запомнить</label></div></div>
 ```
 
 ## 04 · Теги и счётчики
@@ -264,6 +310,12 @@
   </div>
 ```
 
+### Песочница
+
+```html
+<a class="sl-card sl-card--interactive sl-link-card" href="#" style="max-width:420px"><i data-ic="bell" class="sl-ic--lg"></i><div><div class="sl-card__title">Работа с тревогой</div><div class="sl-card__sub">Принять, выполнить план, снять, оповестить.</div></div><i data-ic="chevron-right"></i></a>
+```
+
 ## 09 · Баннеры
 
 Сообщение о состоянии раздела: штатно, предупреждение со списком причин и действиями, ошибка.
@@ -284,6 +336,12 @@
 <div class="sl-banner sl-banner--warn"><div class="sl-banner__title"><i data-ic="alert"></i>План строится, но без части рекомендаций</div><div class="sl-banner__item"><span>Группа «Дежурные силы» не подключена к оповещению</span><button class="sl-btn sl-btn--sm">Подключить группу</button></div></div>
 ```
 
+### Песочница
+
+```html
+<div class="sl-banner sl-banner--crit"><div class="sl-banner__title"><i data-ic="alert"></i>План строится, но без части рекомендаций</div><div class="sl-banner__item"><span>Группа «Дежурные силы» не подключена к оповещению</span><button class="sl-btn sl-btn--sm">Подключить группу</button></div></div>
+```
+
 ## 10 · Сводка цифрами
 
 Счётчики над списком: онлайн, предупреждения, офлайн, всего.
@@ -297,6 +355,16 @@
     <div class="sl-stat"><span class="sl-stat__value">1</span><span class="sl-caps">Офлайн</span></div>
     <div class="sl-stat"><span class="sl-stat__value">11</span><span class="sl-caps">Всего</span></div>
   </div>
+```
+
+### Песочница
+
+```html
+<div class="sl-stats" style="max-width:420px">
+    <div class="sl-stat"><span class="sl-stat__value" style="--c:var(--sl-ok)">10</span><span class="sl-caps">Онлайн</span></div>
+    <div class="sl-stat"><span class="sl-stat__value" style="--c:var(--sl-warn)">0</span><span class="sl-caps">Предупр.</span></div>
+    <div class="sl-stat"><span class="sl-stat__value">1</span><span class="sl-caps">Офлайн</span></div>
+    <div class="sl-stat"><span class="sl-stat__value">11</span><span class="sl-caps">Всего</span></div></div>
 ```
 
 ## 11 · Список с группами
@@ -320,6 +388,12 @@
   </div>
 ```
 
+### Песочница
+
+```html
+<div class="panel sl-list" style="max-width:380px"><sl-group class="sl-group"><button class="sl-group__head"><i data-ic="chevron-down"></i>Комплексные средства<span class="sl-count sl-count--solid">4</span></button><div class="sl-row"><div class="sl-row__main"><span class="sl-row__title">Камера КПП-1</span><span class="sl-status sl-status--ok">Онлайн</span></div><i data-ic="chevron-right"></i></div><div class="sl-row" aria-current="true"><div class="sl-row__main"><span class="sl-row__title">Шлюз-2</span><span class="sl-status sl-status--ok">Онлайн</span></div><i data-ic="chevron-right"></i></div><div class="sl-row"><div class="sl-row__main"><span class="sl-row__title">Датчик периметра</span><span class="sl-status sl-status--warn">Предупреждение</span></div><i data-ic="chevron-right"></i></div><div class="sl-row"><div class="sl-row__main"><span class="sl-row__title">Шлюз-04</span><span class="sl-status sl-status--hollow">Офлайн</span></div><i data-ic="chevron-right"></i></div></sl-group></div>
+```
+
 ## 12 · Раскрывающиеся разделы
 
 Разделы панели редактирования: стрелка поворачивается, содержимое раскрывается.
@@ -333,6 +407,12 @@
     <details class="sl-disclosure"><summary><i data-ic="chevron-right"></i><span class="sl-caps">Зоны охраны</span></summary></details>
     <details class="sl-disclosure" style="border:0"><summary><i data-ic="chevron-right"></i><span class="sl-caps">Палитра</span></summary></details>
   </div>
+```
+
+### Песочница
+
+```html
+<div class="panel" style="padding:4px 14px;max-width:420px"><details class="sl-disclosure" open><summary><i data-ic="chevron-right"></i><span class="sl-caps">Объект</span></summary><div class="sl-disclosure__body">Название, адрес, периметр объекта.</div></details><details class="sl-disclosure"><summary><i data-ic="chevron-right"></i><span class="sl-caps">Состав объекта</span></summary><div class="sl-disclosure__body">Название, адрес, периметр объекта.</div></details><details class="sl-disclosure"><summary><i data-ic="chevron-right"></i><span class="sl-caps">Зоны охраны</span></summary><div class="sl-disclosure__body">Название, адрес, периметр объекта.</div></details><details class="sl-disclosure"><summary><i data-ic="chevron-right"></i><span class="sl-caps">Палитра</span></summary><div class="sl-disclosure__body">Название, адрес, периметр объекта.</div></details></div>
 ```
 
 ## 13 · Таблица
@@ -353,6 +433,12 @@
     <tbody><tr><td colspan="4"><div class="sl-empty"><i data-ic="pulse"></i>Событий нет</div></td></tr></tbody></table></div>
 ```
 
+### Песочница
+
+```html
+<div class="sl-table-wrap"><table class="sl-table sl-table--stack"><thead><tr><th>Время</th><th>Пользователь</th><th>Событие</th><th>Подробности</th></tr></thead><tbody><tr><td data-label="Время">26.11.2026, 11:04</td><td data-label="Пользователь">ivanov</td><td data-label="Событие"><span class="sl-status sl-status--ok">Вход</span></td><td data-label="Подробности">Chrome · Windows</td></tr><tr><td data-label="Время">26.11.2026, 10:40</td><td data-label="Пользователь">admin</td><td data-label="Событие"><span class="sl-status sl-status--crit">Ошибка входа</span></td><td data-label="Подробности">Пользователь не найден</td></tr><tr><td data-label="Время">26.11.2026, 09:49</td><td data-label="Пользователь">petrov</td><td data-label="Событие"><span class="sl-status">Изменение</span></td><td data-label="Подробности">Яндекс Браузер</td></tr></tbody></table></div>
+```
+
 ## 14 · Пустое состояние и загрузка файла
 
 Пунктирная зона: что сделать и кнопка действия.
@@ -361,6 +447,12 @@
 
 ```html
 <div class="sl-dropzone sl-empty"><i data-ic="upload"></i><div class="sl-empty__title">Карты не загружены</div><div>Загрузите файл карты (.mbtiles или .zip с плитками) — она появится без интернета.</div><button class="sl-btn sl-btn--primary"><i data-ic="plus"></i>Загрузить карту</button></div>
+```
+
+### Песочница
+
+```html
+<div class="sl-empty sl-dropzone"><i data-ic="upload"></i><div class="sl-empty__title">Карты не загружены</div><div>Загрузите файл карты — она появится без интернета.</div><button class="sl-btn sl-btn--primary"><i data-ic="plus"></i>Загрузить карту</button></div>
 ```
 
 ## 15 · Заголовок страницы и панель фильтров
@@ -380,6 +472,17 @@
   <h2 class="sl-section-title">Использование ресурсов сервера</h2>
 ```
 
+### Песочница
+
+```html
+<div class="col">
+    <div class="sl-page-head"><h1 class="sl-page-title">Устройства</h1><span class="lbl">Сервер работает 31 мин</span></div>
+    <div class="sl-toolbar"><label class="sl-search"><i data-ic="search"></i><input class="sl-input" placeholder="Поиск по названию и адресу"></label>
+      <select class="sl-select" aria-label="Все классы"><option>Все классы</option></select><select class="sl-select" aria-label="Все состояния"><option>Все состояния</option></select>
+      <div class="sl-toolbar__end"><button class="sl-btn sl-btn--primary"><i data-ic="plus"></i>Добавить устройство</button></div></div>
+    <h2 class="sl-section-title">Использование ресурсов сервера</h2></div>
+```
+
 ## 16 · Верхняя панель админки
 
 Знак продукта (заглушка), название раздела, справа переход, тема, аккаунт, выход.
@@ -393,6 +496,20 @@
     <span class="sl-topbar__title">Панель администрирования</span>
     <div class="sl-topbar__end"><button class="sl-btn sl-btn--sm"><i data-ic="arrow-left"></i><span class="sl-hide-sm">Мониторинг</span></button><button class="sl-btn sl-btn--sm sl-btn--icon" aria-label="Тёмная тема"><i data-ic="moon"></i></button><button class="sl-btn sl-btn--sm" aria-label="ОД 12 — аккаунт"><i data-ic="user"></i><span class="sl-hide-sm">ОД 12</span></button><button class="sl-btn sl-btn--sm sl-btn--icon sl-btn--danger" aria-label="Выйти"><i data-ic="power"></i></button></div>
   </header>
+```
+
+### Песочница
+
+```html
+<header class="sl-topbar" style="border-radius:var(--sl-r-md)">
+    <span class="sl-brand"><span class="sl-brand__mark">S</span><span class="sl-brand__text">SLOYKA</span></span>
+    <span class="sl-topbar__title" style="margin-left:12px">Панель администрирования</span>
+    <div class="sl-topbar__end">
+      <button class="sl-btn sl-btn--sm"><i data-ic="arrow-left"></i><span class="sl-hide-sm">Мониторинг</span></button>
+      <button class="sl-btn sl-btn--sm sl-btn--icon" aria-label="Тёмная тема"><i data-ic="moon"></i></button>
+      <button class="sl-btn sl-btn--sm" aria-label="ОД 12 — аккаунт"><i data-ic="user"></i><span class="sl-hide-sm">ОД 12</span></button>
+      <button class="sl-btn sl-btn--sm sl-btn--icon sl-btn--danger" aria-label="Выйти"><i data-ic="power"></i></button>
+    </div></header>
 ```
 
 ## 17 · Строка состояния и плавающие кнопки
@@ -409,6 +526,13 @@
   <div class="row"><button class="sl-dock-btn">Силы и средства<i data-ic="chevron-up"></i></button></div>
 ```
 
+### Песочница
+
+```html
+<div class="col"><div class="row" style="align-items:flex-start"><div class="sl-statusbar"><div><span class="sl-caps">Астрономическое</span><strong>11:04:18</strong></div><div><span class="sl-caps">Оперативное</span><strong>11:04:18 · 26 ноя 2026</strong></div><div><span class="sl-caps">Система</span><span class="sl-status sl-status--ok">В норме</span></div></div></div>
+    <div class="row"><button class="sl-dock-btn">Силы и средства<i data-ic="chevron-up"></i></button></div></div>
+```
+
 ## 18 · Меню аккаунта
 
 Имя и роль, пункты с иконками, разделитель, выход красным.
@@ -423,6 +547,14 @@
     <div class="sl-menu__sep"></div>
     <button class="sl-menu__item sl-menu__item--danger"><i data-ic="power"></i>Выйти</button>
   </div>
+```
+
+### Песочница
+
+```html
+<div class="sl-menu" style="width:260px"><div class="sl-menu__head"><div class="sl-card__title">ОД</div><div class="sl-card__sub">Администратор</div></div>
+    <button class="sl-menu__item"><i data-ic="user"></i>Профиль</button><button class="sl-menu__item"><i data-ic="moon"></i>Тёмная тема</button>
+    <div class="sl-menu__sep"></div><button class="sl-menu__item sl-menu__item--danger"><i data-ic="power"></i>Выйти</button></div>
 ```
 
 ## 19 · Выбор из плиток
@@ -445,6 +577,12 @@
   </div>
 ```
 
+### Песочница
+
+```html
+<div class="sl-picker"><span class="sl-caps">Подсистема</span><div class="sl-picker__grid"><button class="sl-tile">Центр</button><button class="sl-tile" aria-pressed="true">Видеонаблюдение</button><button class="sl-tile" disabled>Связь<small>В разработке</small></button><button class="sl-tile">Периметр</button></div></div>
+```
+
 ## 20 · Плавающее окно
 
 Окно поверх карты (чат смены): заголовок с иконкой и закрытием, панель кнопок, содержимое, строка ввода.
@@ -458,6 +596,16 @@
     <div class="sl-window__body">Сообщений пока нет</div>
     <div class="sl-window__foot"><div class="sl-compose"><input class="sl-input" placeholder="Сообщение…"><button class="sl-btn sl-btn--icon sl-btn--primary" aria-label="Отправить"><i data-ic="arrow-right"></i></button></div></div>
   </section>
+```
+
+### Песочница
+
+```html
+<section class="sl-window" style="width:360px">
+    <div class="sl-window__head"><i data-ic="chat"></i><span class="sl-window__title">Чат смены</span><button class="sl-btn sl-btn--icon sl-btn--sm sl-btn--ghost" aria-label="Закрыть"><i data-ic="x"></i></button></div>
+    <div class="sl-window__bar"><span class="sl-chip">На линии <span class="sl-count">1</span></span><button class="sl-btn sl-btn--sm">Голосовое оповещение</button></div>
+    <div class="sl-window__body">Сообщений пока нет</div>
+    <div class="sl-window__foot"><div class="sl-compose"><input class="sl-input" placeholder="Сообщение…"><button class="sl-btn sl-btn--icon sl-btn--primary" aria-label="Отправить"><i data-ic="arrow-right"></i></button></div></div></section>
 ```
 
 ## 21 · Модальное окно
@@ -487,6 +635,15 @@
   <div class="sl-modal__body"><label class="sl-field"><span class="sl-label">Название</span><input class="sl-input" placeholder="Например, Камера КПП-2"></label></div>
   <div class="sl-modal__foot"><button class="sl-btn sl-btn--ghost" data-sl-close>Отмена</button><button class="sl-btn sl-btn--primary" data-sl-close>Добавить</button></div>
 </dialog></sl-modal>
+```
+
+### Песочница
+
+```html
+<div style="display:grid;grid-template-columns:minmax(0,420px);justify-content:center;padding:28px;border-radius:var(--sl-r-lg);background:var(--sl-backdrop)"><div class="sl-modal" role="dialog" aria-label="Новое устройство">
+    <div class="sl-modal__head"><span class="sl-modal__title">Новое устройство</span><button class="sl-btn sl-btn--icon sl-btn--sm sl-btn--ghost" aria-label="Закрыть"><i data-ic="x"></i></button></div>
+    <div class="sl-modal__body"><label class="sl-field"><span class="sl-label">Название</span><input class="sl-input"></label><label class="sl-field"><span class="sl-label">Адрес</span><input class="sl-input"></label><label class="sl-switch"><input type="checkbox" checked>Принимать данные</label></div>
+    <div class="sl-modal__foot"><button class="sl-btn sl-btn--ghost">Отмена</button><button class="sl-btn sl-btn--primary">Добавить</button></div></div></div>
 ```
 
 ## 22 · Уведомления и подсказка
@@ -538,6 +695,18 @@
   </div>
 ```
 
+### Песочница
+
+```html
+<div style="display:grid;grid-template-columns:minmax(0,340px);justify-content:center;justify-items:center;gap:18px;padding:12px 0">
+    <span class="sl-brand" style="font-size:20px"><span class="sl-brand__mark" style="width:40px;height:40px;border-radius:12px;font-size:18px">S</span>SLOYKA</span>
+    <form class="sl-login" onsubmit="return false">
+      <label class="sl-field"><span class="sl-label">Имя пользователя</span><input class="sl-input" placeholder="Введите логин"></label>
+      <label class="sl-field"><span class="sl-label">Пароль</span><input class="sl-input" type="password" placeholder="Введите пароль"></label>
+      <button class="sl-btn sl-btn--primary sl-btn--caps sl-btn--lg sl-btn--block">Войти</button>
+      <div class="sl-login__foot">Название организации</div></form></div>
+```
+
 ## 24 · Боковое меню: полное и рейл
 
 Одно и то же меню. Слева полное (широкие экраны), справа узкий рейл с иконками и подписями (планшет). На телефоне выезжает по кнопке — см. отдельные скриншоты shell-*.
@@ -549,4 +718,10 @@
     <nav class="sl-nav" style="border-radius:var(--sl-r-lg)" data-nav></nav>
     <nav class="sl-nav sl-nav--rail" style="border-radius:var(--sl-r-lg)" data-nav></nav>
   </div>
+```
+
+### Песочница
+
+```html
+<nav class="sl-nav" style="border-radius:var(--sl-r-lg)"><div class="sl-nav__section sl-caps">Управление</div><a class="sl-nav__item" href="#"><i data-ic="users"></i><span class="sl-nav__label">Пользователи</span></a><a class="sl-nav__item" href="#"><i data-ic="login"></i><span class="sl-nav__label">Журнал входов</span></a><div class="sl-nav__section sl-caps">Интеграции</div><a class="sl-nav__item" href="#" aria-current="page"><i data-ic="plug"></i><span class="sl-nav__label">Устройства</span></a><a class="sl-nav__item" href="#"><i data-ic="map"></i><span class="sl-nav__label">Карты</span></a><a class="sl-nav__item" href="#"><i data-ic="pulse"></i><span class="sl-nav__label">Логи системы</span><span class="sl-count sl-count--solid">3</span></a></nav>
 ```

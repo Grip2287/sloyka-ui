@@ -25,3 +25,33 @@ export const Playground = {
   },
   render: a => `<div class="sl-banner${a.kind !== 'ok' ? ' sl-banner--' + a.kind : ''}"><div class="sl-banner__title"><i data-ic="${a.kind === 'ok' ? 'check' : 'alert'}"></i>${a.title}</div>${a.action ? `<div class="sl-banner__item"><span>${a.text}</span><button class="sl-btn sl-btn--sm">${a.action}</button></div>` : `<div class="sl-banner__text">${a.text}</div>`}</div>`,
 };
+
+export const Test = {
+  args:{
+    kind:"crit",
+    title:"План строится, но без части рекомендаций",
+    text:"Группа «Дежурные силы» не подключена к оповещению",
+    action:"Подключить группу"
+  },
+  name:"Песочница",
+  argTypes:{
+    kind:{
+      name:"Вид",
+      control:"inline-radio",
+      options:["ok", "warn", "crit"]
+    },
+    title:{
+      name:"Заголовок",
+      control:"text"
+    },
+    text:{
+      name:"Текст",
+      control:"text"
+    },
+    action:{
+      name:"Кнопка (пусто — без неё)",
+      control:"text"
+    }
+  },
+  render:a => `<div class="sl-banner${a.kind !== "ok" ? " sl-banner--" + a.kind : ""}"><div class="sl-banner__title"><i data-ic="${a.kind === "ok" ? "check" : "alert"}"></i>${a.title}</div>${a.action ? `<div class="sl-banner__item"><span>${a.text}</span><button class="sl-btn sl-btn--sm">${a.action}</button></div>` : `<div class="sl-banner__text">${a.text}</div>`}</div>`
+};

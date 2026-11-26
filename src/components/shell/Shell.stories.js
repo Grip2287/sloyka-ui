@@ -46,3 +46,23 @@ export const Default = {
       </tbody></table></div>
   </main></sl-shell>`,
 };
+
+export const Playground = {
+  name: 'Песочница',
+  args: { brand: 'SLOYKA', title: 'Устройства', banner: '2 устройства не размещены на карте', cards: 3 },
+  argTypes: {
+    brand: { name: 'Название продукта', control: 'text' },
+    title: { name: 'Заголовок страницы', control: 'text' },
+    banner: { name: 'Баннер (пусто — нет)', control: 'text' },
+    cards: { name: 'Карточек', control: { type: 'range', min: 0, max: 9, step: 1 } },
+  },
+  render: a => {
+    const base = Default.render();
+    const cards = Array.from({ length: a.cards }, (_, i) => `<article class="sl-card" data-accent="${['ok', 'warn', 'crit', 'off'][i % 4]}"><div><div class="sl-card__title">Устройство ${i + 1}</div><div class="sl-card__sub">Класс · Модель</div></div><dl class="sl-kv"><dt>Адрес</dt><dd>10.0.0.${i + 1}:9100</dd></dl></article>`).join('');
+    return base
+      .replace('<span class="sl-brand__text">SLOYKA</span>', `<span class="sl-brand__text">${a.brand}</span>`)
+      .replace('<h1 class="sl-page-title">Устройства</h1>', `<h1 class="sl-page-title">${a.title}</h1>`)
+      .replace(/<div class="sl-banner sl-banner--warn">[\s\S]*?<\/div><\/div>/, a.banner ? `<div class="sl-banner sl-banner--warn"><div class="sl-banner__title"><i data-ic="alert"></i>${a.banner}</div></div>` : '')
+      .replace(/<div class="sl-grid">[\s\S]*?<\/article>\n    <\/div>/, `<div class="sl-grid">${cards}</div>`);
+  },
+};

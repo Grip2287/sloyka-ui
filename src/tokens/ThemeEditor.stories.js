@@ -50,18 +50,18 @@ const preview = `
   <div class="sl-list panel" style="max-width:380px"><div class="sl-row" aria-current="true"><div class="sl-row__main"><span class="sl-row__title">Шлюз-2</span><span class="sl-status sl-status--ok">Онлайн</span></div></div><div class="sl-row"><div class="sl-row__main"><span class="sl-row__title">Шлюз-04</span><span class="sl-status sl-status--hollow">Офлайн</span></div></div></div>`;
 
 export const Editor = {
-  name: 'Редактор темы',
-  args: { accentLight: '#16181c', accentDark: '#eef0f2', bgLight: '#e9ebee', bgDark: '#0c0e11', radius: 7, fontSize: 13, controlHeight: 34 },
-  argTypes: {
-    accentLight: { name: 'Главный цвет · светлая', control: 'color' },
-    accentDark: { name: 'Главный цвет · тёмная', control: 'color' },
-    bgLight: { name: 'Фон страницы · светлая', control: 'color' },
-    bgDark: { name: 'Фон страницы · тёмная', control: 'color' },
-    radius: { name: 'Скругление кнопок и полей, px', control: { type: 'range', min: 0, max: 16, step: 1 } },
-    fontSize: { name: 'Основной текст, px', control: { type: 'range', min: 12, max: 16, step: 1 } },
-    controlHeight: { name: 'Высота кнопок и полей, px', control: { type: 'range', min: 28, max: 44, step: 2 } },
+  name:'Редактор темы',
+  args:{ accentLight: '#16181c', accentDark: "#f9f9f9", bgLight: '#e9ebee', bgDark: '#0c0e11', radius: 9, fontSize: 13, controlHeight: 34 },
+  argTypes:{
+    accentLight:{ name: 'Главный цвет · светлая', control: 'color' },
+    accentDark:{ name: 'Главный цвет · тёмная', control: 'color' },
+    bgLight:{ name: 'Фон страницы · светлая', control: 'color' },
+    bgDark:{ name: 'Фон страницы · тёмная', control: 'color' },
+    radius:{ name: 'Скругление кнопок и полей, px', control: { type: 'range', min: 0, max: 16, step: 1 } },
+    fontSize:{ name: 'Основной текст, px', control: { type: 'range', min: 12, max: 16, step: 1 } },
+    controlHeight:{ name: 'Высота кнопок и полей, px', control: { type: 'range', min: 28, max: 44, step: 2 } },
   },
-  render: a => {
+  render:a => {
     const scoped = css(a).replace(/:root, \[data-theme="light"\]/g, '[data-theme="light"] .sb-tune').replace(/\[data-theme="dark"\] \{/g, '[data-theme="dark"] .sb-tune {').replace(/@media[\s\S]*?\n}\n/, '').replace(/^:root \{/m, '.sb-tune {');
     return `<style>${scoped}</style>
 <div class="sb-tune" style="display:grid;gap:16px;padding:16px;border-radius:var(--sl-r-lg);background:var(--sl-bg);font-size:var(--sl-fs-body)">${preview}</div>

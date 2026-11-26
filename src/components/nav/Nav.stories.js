@@ -12,3 +12,19 @@ export const Default = {
     <nav class="sl-nav sl-nav--rail" style="border-radius:var(--sl-r-lg)" data-nav></nav>
   </div>`,
 };
+
+export const Playground = {
+  name: 'Песочница',
+  args: { mode: 'полное', items: 'Управление\nusers: Пользователи\nlogin: Журнал входов\nИнтеграции\nplug: Устройства\nmap: Карты\npulse: Логи системы | 3', current: 'Устройства' },
+  argTypes: {
+    mode: { name: 'Вид меню', control: 'inline-radio', options: ['полное', 'рейл'] },
+    items: { name: 'Строки: раздел, или «иконка: пункт | счётчик»', control: 'text' },
+    current: { name: 'Текущий пункт', control: 'text' },
+  },
+  render: a => `<nav class="sl-nav${a.mode === 'рейл' ? ' sl-nav--rail' : ''}" style="border-radius:var(--sl-r-lg)">${a.items.split('\n').filter(Boolean).map(r => {
+    if (!r.includes(':')) return `<div class="sl-nav__section sl-caps">${r.trim()}</div>`;
+    const [ic, rest] = [r.slice(0, r.indexOf(':')).trim(), r.slice(r.indexOf(':') + 1)];
+    const [label, n] = rest.split('|').map(s => s.trim());
+    return `<a class="sl-nav__item" href="#"${label === a.current ? ' aria-current="page"' : ''}><i data-ic="${ic}"></i><span class="sl-nav__label">${label}</span>${n ? `<span class="sl-count sl-count--solid">${n}</span>` : ''}</a>`;
+  }).join('')}</nav>`,
+};

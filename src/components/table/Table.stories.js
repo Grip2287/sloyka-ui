@@ -17,3 +17,25 @@ export const Default = {
   <div class="sl-table-wrap"><table class="sl-table"><thead><tr><th>Время</th><th>Категория</th><th>Уровень</th><th>Сообщение</th></tr></thead>
     <tbody><tr><td colspan="4"><div class="sl-empty"><i data-ic="pulse"></i>Событий нет</div></td></tr></tbody></table></div>`,
 };
+
+export const Playground = {
+  name: 'Песочница',
+  args: { columns: 'Время, Пользователь, Событие, Подробности', rows: '26.11.2026, 11:04 | ivanov | ok:Вход | Chrome · Windows\n26.11.2026, 10:40 | admin | crit:Ошибка входа | Пользователь не найден\n26.11.2026, 09:49 | petrov | off:Изменение | Яндекс Браузер', stack: true, empty: false },
+  argTypes: {
+    columns: { name: 'Колонки через запятую', control: 'text' },
+    rows: { name: 'Строки: ячейки через |, статус как «ok:Текст»', control: 'text' },
+    stack: { name: 'На телефоне — карточками', control: 'boolean' },
+    empty: { name: 'Пустая таблица', control: 'boolean' },
+  },
+  render: a => {
+    const cols = a.columns.split(',').map(s => s.trim());
+    const cell = (v, i) => {
+      const m = v.match(/^(ok|warn|crit|off):(.*)$/);
+      const inner = m ? `<span class="sl-status${m[1] !== 'off' ? ' sl-status--' + m[1] : ''}">${m[2]}</span>` : v;
+      return `<td data-label="${cols[i] || ''}">${inner}</td>`;
+    };
+    const body = a.empty ? `<tr><td colspan="${cols.length}"><div class="sl-empty"><i data-ic="pulse"></i>Событий нет</div></td></tr>`
+      : a.rows.split('\n').filter(Boolean).map(r => `<tr>${r.split('|').map(s => s.trim()).map(cell).join('')}</tr>`).join('');
+    return `<div class="sl-table-wrap"><table class="sl-table${a.stack ? ' sl-table--stack' : ''}"><thead><tr>${cols.map(c => `<th>${c}</th>`).join('')}</tr></thead><tbody>${body}</tbody></table></div>`;
+  },
+};

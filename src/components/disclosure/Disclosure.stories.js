@@ -14,3 +14,14 @@ export const Default = {
     <details class="sl-disclosure" style="border:0"><summary><i data-ic="chevron-right"></i><span class="sl-caps">Палитра</span></summary></details>
   </div>`,
 };
+
+export const Playground = {
+  name: 'Песочница',
+  args: { sections: 'Объект\nСостав объекта\nЗоны охраны\nПалитра', body: 'Название, адрес, периметр объекта.', openFirst: true },
+  argTypes: {
+    sections: { name: 'Разделы, по строке', control: 'text' },
+    body: { name: 'Текст внутри раздела', control: 'text' },
+    openFirst: { name: 'Первый раздел открыт', control: 'boolean' },
+  },
+  render: a => `<div class="panel" style="padding:4px 14px;max-width:420px">${a.sections.split('\n').filter(Boolean).map((s, i) => `<details class="sl-disclosure"${i === 0 && a.openFirst ? ' open' : ''}><summary><i data-ic="chevron-right"></i><span class="sl-caps">${s}</span></summary><div class="sl-disclosure__body">${a.body}</div></details>`).join('')}</div>`,
+};
