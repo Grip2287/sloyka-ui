@@ -17,3 +17,14 @@ export const Default = {
     <div class="sl-modal__foot"><button class="sl-btn sl-btn--ghost">Отмена</button><button class="sl-btn sl-btn--primary">Добавить</button></div>
   </div></div>`,
 };
+
+export const Live = {
+  name: 'Открыть по кнопке',
+  parameters: { pair: false },
+  render: () => `<button class="sl-btn sl-btn--primary" data-sl-open="demo-modal"><i data-ic="plus"></i>Добавить устройство</button>
+<sl-modal id="demo-modal"><dialog class="sl-modal" aria-labelledby="dm-title">
+  <div class="sl-modal__head"><span class="sl-modal__title" id="dm-title">Новое устройство</span><button class="sl-btn sl-btn--icon sl-btn--sm sl-btn--ghost" aria-label="Закрыть" data-sl-close><i data-ic="x"></i></button></div>
+  <div class="sl-modal__body"><label class="sl-field"><span class="sl-label">Название</span><input class="sl-input" placeholder="Например, Камера КПП-2"></label></div>
+  <div class="sl-modal__foot"><button class="sl-btn sl-btn--ghost" data-sl-close>Отмена</button><button class="sl-btn sl-btn--primary" data-sl-close>Добавить</button></div>
+</dialog></sl-modal>`,
+};

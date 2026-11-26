@@ -5,4 +5,6 @@
   .sl-modal__title { font-size: var(--sl-fs-title); font-weight: 600; letter-spacing: .04em; text-transform: uppercase; }
   .sl-modal__body { display: grid; gap: 14px; padding: 16px 20px; }
   .sl-modal__foot { display: flex; justify-content: flex-end; gap: 8px; padding: 14px 20px; border-top: 1px solid var(--sl-border-soft); background: var(--sl-surface-2); }
+  dialog.sl-modal { padding: 0; border: 0; color: var(--sl-text); max-height: calc(100dvh - 32px); }
+  dialog.sl-modal::backdrop { background: var(--sl-backdrop); }
 }

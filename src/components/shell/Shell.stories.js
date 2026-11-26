@@ -15,7 +15,7 @@ export const Default = {
     <span class="sl-topbar__title" style="margin-left:12px">Панель администрирования</span>
     <div class="sl-topbar__end">
       <button class="sl-btn sl-btn--sm"><i data-ic="arrow-left"></i><span class="sl-hide-sm">Мониторинг</span></button>
-      <button class="sl-btn sl-btn--sm sl-btn--icon" aria-label="Тема" data-sl-theme-toggle><i data-ic="moon"></i></button>
+      <sl-theme-toggle><button class="sl-btn sl-btn--sm sl-btn--icon" aria-label="Тёмная тема"><i data-ic="moon"></i></button></sl-theme-toggle>
       <button class="sl-btn sl-btn--sm"><i data-ic="user"></i><span class="sl-hide-sm">ОД 12</span></button>
       <button class="sl-btn sl-btn--sm sl-btn--icon sl-btn--danger" aria-label="Выйти"><i data-ic="power"></i></button>
     </div>

@@ -14,6 +14,7 @@ export default defineConfig({
   projects: [
     { name: 'stories' , testMatch: /stories\.spec/ },
     { name: 'layers', testMatch: /layers\.spec/ },
+    { name: 'behaviour', testMatch: /behaviour\.spec/ },
     { name: 'no-js', testMatch: /nojs\.spec/, use: { javaScriptEnabled: false } },
   ],
 });

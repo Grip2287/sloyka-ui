@@ -8,9 +8,9 @@ export default {
 export const Default = {
   name: 'Переключатели',
   render: () => `<div class="col">
-    <div class="sl-segmented sl-segmented--block"><button>Без зон</button><button>Рабочий</button><button aria-pressed="true">Всё</button></div>
-    <div class="sl-segmented"><button>Схема</button><button aria-pressed="true">Спутник</button></div>
-    <div class="sl-segmented"><button>Авто</button><button>Оба</button><button aria-pressed="true">Подавление</button><button>Обнаружение</button><button>Скрыть</button></div>
+    <sl-segmented class="sl-segmented sl-segmented--block"><button>Без зон</button><button>Рабочий</button><button aria-pressed="true">Всё</button></sl-segmented>
+    <sl-segmented class="sl-segmented"><button>Схема</button><button aria-pressed="true">Спутник</button></sl-segmented>
+    <sl-segmented class="sl-segmented"><button>Авто</button><button>Оба</button><button aria-pressed="true">Подавление</button><button>Обнаружение</button><button>Скрыть</button></sl-segmented>
   </div>
   <div class="row" style="gap:24px">
     <label class="sl-switch"><input type="checkbox" checked>Зоны охраны</label>

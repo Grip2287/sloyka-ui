@@ -6,4 +6,7 @@
   .sl-toast__title { font-weight: 600; }
   .sl-toast__text { color: var(--sl-text-2); font-size: var(--sl-fs-small); }
   .sl-tooltip { display: inline-block; padding: 6px 9px; border-radius: var(--sl-r-xs); background: var(--sl-inverse); color: var(--sl-on-inverse); font-size: var(--sl-fs-small); box-shadow: var(--sl-shadow-2); }
+  .sl-toast-region { position: fixed; right: var(--sl-4); bottom: var(--sl-4); z-index: 100; display: grid; gap: var(--sl-2); width: min(360px, calc(100vw - 2 * var(--sl-4))); }
+  .sl-toast-region .sl-toast { width: 100%; animation: sl-toast-in var(--sl-dur) var(--sl-ease); }
+  @keyframes sl-toast-in { from { opacity: 0; transform: translateY(8px); } }
 }

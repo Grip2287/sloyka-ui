@@ -24,10 +24,6 @@
     "./icons": "./dist/icons.js",
     "./fonts/*": "./dist/fonts/*"
   },
-  "sideEffects": [
-    "*.css",
-    "./dist/sloyka.js"
-  ],
   "scripts": {
     "build": "node scripts/build-css.js && vite build",
     "test": "vitest run",

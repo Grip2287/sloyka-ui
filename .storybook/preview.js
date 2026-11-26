@@ -1,6 +1,9 @@
 import '../src/index.css';
 import './preview.css';
-import '../src/index.js';
+import { toast } from '../src/index.js';
+
+const DEMO = { ok: ['Устройство добавлено', 'Камера КПП-2 появится на карте после размещения.'], warn: ['Связь нестабильна', 'Шлюз-04 отвечает с задержкой.'], crit: ['Не удалось загрузить журнал', 'Проверьте соединение и обновите страницу.'] };
+document.addEventListener('click', e => { const b = e.target.closest('[data-demo-toast]'); if (b) { const [title, text] = DEMO[b.dataset.demoToast]; toast(text, { title, type: b.dataset.demoToast }); } });
 import { slHydrateIcons } from '../src/icons.js';
 import { slNavHTML } from './nav-data.js';
 

@@ -14,3 +14,13 @@ export const Default = {
     <span><span class="sl-tooltip">Переключить тему</span></span>
   </div>`,
 };
+
+export const Live = {
+  name: 'Показать уведомление',
+  parameters: { pair: false },
+  render: () => `<div class="row">
+  <button class="sl-btn" data-demo-toast="ok">Успех</button>
+  <button class="sl-btn" data-demo-toast="warn">Предупреждение</button>
+  <button class="sl-btn" data-demo-toast="crit">Ошибка</button>
+</div>`,
+};

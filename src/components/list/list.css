@@ -14,4 +14,5 @@
   .sl-row__title { font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .sl-row > .sl-ic { color: var(--sl-text-3); }
   .sl-row:is([aria-selected="true"], [aria-current="true"]) > .sl-ic { color: inherit; }
+  .sl-group[data-collapsed] > :not(.sl-group__head) { display: none; }
 }
