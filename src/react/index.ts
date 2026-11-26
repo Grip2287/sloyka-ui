@@ -1,2 +1,2 @@
-// Точка входа библиотеки Sloyka 1.0 (React). Компоненты добавляются в следующих задачах.
-export {};
+export { Icon } from './icons';
+export type { IconName, IconProps } from './icons';
