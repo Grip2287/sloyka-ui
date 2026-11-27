@@ -3,7 +3,8 @@ import { render } from '@testing-library/react';
 import { Fragment } from 'react';
 import { defineMeta, pick, checkChildren, cx, resetWarnings } from '../../../src/react/core';
 import { Icon } from '../../../src/react/icons';
-import { SL_ICONS } from '../../../src/icons.js';
+
+const SL_ICON_NAMES = ['search', 'chevron-down', 'chevron-up', 'chevron-right', 'plus', 'minus', 'x', 'arrow-left', 'arrow-right', 'refresh', 'moon', 'sun', 'power', 'user', 'users', 'layers', 'map', 'panel', 'chat', 'edit', 'grid', 'filter', 'bell', 'shield', 'plug', 'server', 'journal', 'login', 'pulse', 'help', 'check', 'alert', 'info', 'upload', 'maximize', 'menu', 'key', 'target', 'wrench', 'camera', 'phone'];
 
 let warn: ReturnType<typeof vi.spyOn>;
 beforeEach(() => { resetWarnings(); warn = vi.spyOn(console, 'warn').mockImplementation(() => {}); });
@@ -97,9 +98,10 @@ describe('Icon', () => {
     const { container } = render(<Icon name="plus" size={20} />);
     expect(container.querySelector('svg')!.getAttribute('width')).toBe('20');
   });
-  it('набор иконок совпадает с 0.1.x', async () => {
+  // Пути сверены с 0.1.x (src/icons.js) до удаления слоя 0.1; здесь стережём состав набора.
+  it('набор иконок — те же 41 имя, что в 0.1.x', async () => {
     const mod = await import('../../../src/react/icons');
-    expect(mod.ICON_PATHS).toEqual(SL_ICONS);
+    expect(Object.keys(mod.ICON_PATHS).sort()).toEqual(SL_ICON_NAMES.slice().sort());
   });
 });
 

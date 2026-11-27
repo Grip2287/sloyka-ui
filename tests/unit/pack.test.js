@@ -23,7 +23,7 @@ it('npm pack contains public entry points', () => {
 });
 
 it('npm pack excludes sources, tests and stories', () => {
-  expect(files.filter(f => /^(src|tests|\.storybook)\//.test(f) || f.endsWith('.stories.js'))).toEqual([]);
+  expect(files.filter(f => /^(src|tests|\.storybook)\//.test(f) || /\.stories\.(js|tsx)$/.test(f))).toEqual([]);
 });
 
 it('every export path exists after build', () => {

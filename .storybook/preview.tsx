@@ -3,10 +3,12 @@ import './preview.css';
 import type { ReactNode } from 'react';
 import type { Decorator, Preview } from '@storybook/react-vite';
 import { ToastProvider, useToast } from '../src/react';
-import { COMPONENTS, componentFromTitle, componentCSS, addComponent, addTheme } from './template-store.js';
+import { COMPONENTS as COMPONENT_MAP, componentFromTitle, componentCSS, addComponent, addTheme } from './template-store.js';
 
 // Стили референсов: src/references/<slug>/ref.css, всё внутри [data-ref="<slug>"]
 import.meta.glob('../src/references/*/ref.css', { eager: true });
+
+const COMPONENTS: Record<string, { label: string }> = COMPONENT_MAP;
 
 export const TEMPLATE_STORY = '/?path=/story/основа-мой-шаблон--template';
 
@@ -63,7 +65,7 @@ const withStage: Decorator = (Story, ctx) => {
   }
 
   const key = componentFromTitle(ctx.title);
-  const css = key ? componentCSS(key, { scale: ctx.args.slScale ?? 100, radius: ctx.args.slRadius ?? -1 }, '.sb-tweak ') : '';
+  const css = key ? componentCSS(key, { scale: Number(ctx.args.slScale ?? 100), radius: Number(ctx.args.slRadius ?? -1) }, '.sb-tweak ') : '';
   const hasBar = Boolean(key) || ctx.title === 'Основа/Редактор темы';
   return (
     <ToastProvider>
