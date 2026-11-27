@@ -21,19 +21,16 @@ jobs:
         with: { node-version: 22, registry-url: 'https://registry.npmjs.org' }
       - run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
       - run: npm ci && npm run build && npm test
-      # Заметки к выпуску: сравнение с манифестом последней опубликованной версии (если она есть).
-      - name: Release notes
+      # Манифест последней опубликованной версии — для заметок «Что нового и где лежит».
+      # Лежит вне репозитория: changesets/action сбрасывает рабочую копию перед `version`.
+      - name: Previous manifest
         run: |
-          if ls .changeset/*.md 2>/dev/null | grep -qv README; then
-            PREV=""
-            if TARBALL=$(npm view sloyka dist.tarball 2>/dev/null) && [ -n "$TARBALL" ]; then
-              mkdir -p /tmp/prev && curl -sL "$TARBALL" | tar -xz -C /tmp/prev
-              [ -f /tmp/prev/package/components.json ] && PREV="--prev /tmp/prev/package/components.json"
-            fi
-            node scripts/release-notes.js $PREV --next components.json --changeset
-          fi
+          if TARBALL=$(npm view sloyka dist.tarball 2>/dev/null) && [ -n "$TARBALL" ]; then
+            mkdir -p /tmp/prev && curl -sL "$TARBALL" | tar -xz -C /tmp/prev && ls /tmp/prev/package/components.json
+          else echo "sloyka ещё не опубликован — первый выпуск"; fi
       - uses: changesets/action@v1
         with:
+          version: npm run version:release
           publish: npx changeset publish
           createGithubReleases: true
         env:

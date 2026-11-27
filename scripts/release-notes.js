@@ -1,7 +1,8 @@
 // Заметки к выпуску «Что нового и где лежит»: сравнивает два манифеста components.json.
 // Использование:
 //   node scripts/release-notes.js --prev old.json --next components.json            → markdown в stdout
-//   node scripts/release-notes.js --prev old.json --next components.json --changeset → дописать в .changeset/*.md
+//   node scripts/release-notes.js --changelog [--prev old.json]                    → вставить в CHANGELOG.md под текущую версию
+// В выпуске запускается после `changeset version` (npm run version:release).
 // --prev можно не указывать (первый выпуск).
 import { readFileSync, readdirSync, writeFileSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
@@ -119,19 +120,19 @@ export function renderNotes(prev, next, sources = {}) {
   return lines.join('\n');
 }
 
-/** Дописывает (или заменяет) блок заметок в каждом ожидающем changeset. Возвращает число файлов. */
-export function writeToChangesets(notes, dir = '.changeset') {
-  let n = 0;
-  for (const f of readdirSync(dir).filter(f => f.endsWith('.md') && f !== 'README.md')) {
-    const path = join(dir, f);
-    const text = readFileSync(path, 'utf8');
-    const start = text.indexOf(MARK_START);
-    const end = text.indexOf(MARK_END);
-    const body = start >= 0 && end > start ? text.slice(0, start) + notes + text.slice(end + MARK_END.length) : `${text.trimEnd()}\n\n${notes}\n`;
-    writeFileSync(path, body);
-    n++;
-  }
-  return n;
+/** Вставляет блок заметок под заголовок «## <version>» в CHANGELOG (повторный запуск заменяет блок). */
+export function insertIntoChangelog(notes, version, file = 'CHANGELOG.md') {
+  const text = readFileSync(file, 'utf8');
+  const head = `## ${version}`;
+  const at = text.indexOf(head);
+  if (at < 0) throw new Error(`release-notes: в ${file} нет заголовка «${head}»`);
+  const bodyStart = at + head.length;
+  const nextHead = text.indexOf('\n## ', bodyStart);
+  let section = text.slice(bodyStart, nextHead < 0 ? text.length : nextHead);
+  const s = section.indexOf(MARK_START), e = section.indexOf(MARK_END);
+  if (s >= 0 && e > s) section = section.slice(0, s) + notes + section.slice(e + MARK_END.length);
+  else section = `${section.trimEnd()}\n\n${notes}\n`;
+  writeFileSync(file, text.slice(0, bodyStart) + section + (nextHead < 0 ? '' : text.slice(nextHead)));
 }
 
 if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) {
@@ -140,6 +141,9 @@ if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) {
   const prev = prevPath && existsSync(prevPath) ? JSON.parse(readFileSync(prevPath, 'utf8')) : null;
   const next = JSON.parse(readFileSync(arg('--next') ?? 'components.json', 'utf8'));
   const notes = renderNotes(prev, next, findSources());
-  if (process.argv.includes('--changeset')) console.log(`release-notes: обновлено changeset-файлов: ${writeToChangesets(notes)}`);
-  else console.log(notes);
+  if (process.argv.includes('--changelog')) {
+    const { version } = JSON.parse(readFileSync('package.json', 'utf8'));
+    insertIntoChangelog(notes, version);
+    console.log(`release-notes: CHANGELOG.md ${version}${prev ? '' : ' (первый выпуск)'}`);
+  } else console.log(notes);
 }

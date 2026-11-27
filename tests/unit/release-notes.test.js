@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { mkdtempSync, writeFileSync, readFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { diffManifests, renderNotes, storyId, writeToChangesets } from '../../scripts/release-notes.js';
+import { diffManifests, renderNotes, storyId, insertIntoChangelog } from '../../scripts/release-notes.js';
 
 const btn = (props, allowed = 'none') => ({ name: 'Button', n: '01', group: 'Кнопки', import: 'sloyka', allowed, props });
 const manifest = (components, templates = []) => ({ name: 'sloyka', version: 'x', groups: [], components, templates });
@@ -56,16 +56,17 @@ describe('release notes', () => {
     expect(first).toContain('**01 · Кнопки:** Button');
   });
 
-  it('writes into changesets idempotently', () => {
-    const dir = mkdtempSync(join(tmpdir(), 'cs-'));
-    writeFileSync(join(dir, 'a.md'), "---\n'sloyka': major\n---\n\nReact 1.0\n");
-    writeFileSync(join(dir, 'README.md'), 'readme');
-    expect(writeToChangesets('<!-- release-notes:start -->\nA\n<!-- release-notes:end -->', dir)).toBe(1);
-    writeToChangesets('<!-- release-notes:start -->\nB\n<!-- release-notes:end -->', dir);
-    const text = readFileSync(join(dir, 'a.md'), 'utf8');
-    expect(text).toContain('React 1.0');
-    expect(text).toContain('\nB\n');
+  it('inserts notes under the version heading in CHANGELOG idempotently', () => {
+    const dir = mkdtempSync(join(tmpdir(), 'cl-'));
+    const file = join(dir, 'CHANGELOG.md');
+    writeFileSync(file, '# sloyka\n\n## 1.1.0\n\n### Minor Changes\n\n- abc: новое\n\n## 1.0.0\n\n- старое\n');
+    insertIntoChangelog('<!-- release-notes:start -->\nA\n<!-- release-notes:end -->', '1.1.0', file);
+    insertIntoChangelog('<!-- release-notes:start -->\nB\n<!-- release-notes:end -->', '1.1.0', file);
+    const text = readFileSync(file, 'utf8');
+    expect(text).toContain('- abc: новое');
+    expect(text.indexOf('\nB\n')).toBeGreaterThan(text.indexOf('## 1.1.0'));
+    expect(text.indexOf('\nB\n')).toBeLessThan(text.indexOf('## 1.0.0'));
     expect(text).not.toContain('\nA\n');
-    expect(readFileSync(join(dir, 'README.md'), 'utf8')).toBe('readme');
+    expect(() => insertIntoChangelog('x', '9.9.9', file)).toThrow(/9\.9\.9/);
   });
 });
