@@ -86,7 +86,7 @@ export interface PageProps {
 function PageImpl({ width, children }: PageProps) {
   checkChildren(PageImpl as unknown as SloykaMarked, children);
   const w = pick('Page', 'width', width, WIDTHS, 'default');
-  return <main className={cx('sl-rpage', `sl-rpage--${w}`)}>{children}</main>;
+  return <div className={cx('sl-rpage', `sl-rpage--${w}`)}>{children}</div>;
 }
 export const Page = defineMeta(PageImpl, {
   n: '00', group: 'Основа', name: 'Page', allowed: 'any',

@@ -57,6 +57,13 @@ describe('checkChildren', () => {
     checkChildren({ __sloyka: { name: 'X', allowed: 'none' } } as any, <Ok />);
     expect(warn).toHaveBeenCalledTimes(1);
   });
+  it('готовая разметка Sloyka (host-элемент с классом sl-*) пропускается — так приходят серверные дети', () => {
+    run(<div className="sl-card sl-card--interactive" />);
+    run(<span className="foo sl-tag" />);
+    expect(warn).not.toHaveBeenCalled();
+    run(<div className="slider" />);
+    expect(warn).toHaveBeenCalledTimes(1);
+  });
   it('нативный тег — предупреждение со списком разрешённого', () => {
     run(<div />);
     expect(warn).toHaveBeenCalledWith('Sloyka · Modal: <div> недопустим внутри, разрешено: Button');

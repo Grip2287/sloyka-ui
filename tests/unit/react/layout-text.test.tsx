@@ -56,6 +56,10 @@ describe('Stack / Grid / Page', () => {
     expect(c.classList.contains('sl-grid--gap-5')).toBe(true);
     expect(c.classList.contains('sl-grid')).toBe(true);
   });
+  it('Page рисует div, а не main: ориентир main принадлежит Shell', () => {
+    const el = render(<Page>x</Page>).container.firstElementChild!;
+    expect(el.tagName).toBe('DIV');
+  });
   it('Page widths', () => {
     expect(render(<Page width="wide">x</Page>).container.firstElementChild!.className).toContain('sl-rpage--wide');
     expect(render(<Page>x</Page>).container.firstElementChild!.className).toContain('sl-rpage--default');

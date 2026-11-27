@@ -22,7 +22,12 @@ function walk(owner: string, allowed: Exclude<SloykaMeta['allowed'], 'any'>, nod
       return;
     }
     let found: string | undefined;
-    if (typeof type === 'string') found = type;
+    if (typeof type === 'string') {
+      // Серверные Sloyka-дети приходят в клиентский контейнер готовыми host-элементами с классом sl-* — это допустимый вывод Sloyka.
+      const cls = (child.props as { className?: unknown }).className;
+      if (typeof cls === 'string' && cls.split(/\s+/).some((c) => c.startsWith('sl-'))) return;
+      found = type;
+    }
     else if (type && (typeof type === 'function' || typeof type === 'object')) {
       found = (type as Partial<SloykaMarked>).__sloyka?.name;
     }

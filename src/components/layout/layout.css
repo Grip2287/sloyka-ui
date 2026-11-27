@@ -92,4 +92,26 @@
     .sl-table--stack .sl-table__r, .sl-table--stack .sl-table__c { text-align: inherit; }
     .sl-table--stack .sl-table__min { width: auto; white-space: normal; }
   }
+
+  /* Заголовок страницы, верхняя панель, вход */
+  .sl-page-head__aside { font-size: 11px; color: var(--sl-text-3); }
+  .sl-topbar__sep { width: 1px; height: 24px; background: var(--sl-border); }
+  .sl-shell .sl-topbar__sep { display: none; }
+  .sl-login-wrap { display: grid; grid-template-columns: minmax(0, 340px); justify-content: center; justify-items: center; gap: 18px; padding: 12px 0; }
+  .sl-login-wrap > .sl-brand { font-size: 20px; }
+  .sl-login-wrap > .sl-brand .sl-brand__mark { width: 40px; height: 40px; border-radius: 12px; font-size: 18px; }
+  .sl-login-wrap > .sl-brand .sl-brand__text { display: inline; }
+
+  /* Модальное окно: ширины */
+  .sl-modal--sm { width: 360px; }
+  .sl-modal--lg { width: 640px; }
+
+  /* Уведомления и подсказка */
+  .sl-toast--ok { --c: var(--sl-ok); }
+  .sl-toast--warn { --c: var(--sl-warn); }
+  .sl-toast--crit { --c: var(--sl-crit); }
+  .sl-toast--info { --c: var(--sl-text-2); }
+  .sl-toast__icon { display: inline-flex; }
+  .sl-tooltip-host { position: relative; display: inline-flex; }
+  .sl-tooltip-host > .sl-tooltip { position: absolute; z-index: 50; bottom: calc(100% + 6px); left: 50%; translate: -50% 0; white-space: nowrap; pointer-events: none; }
 }
