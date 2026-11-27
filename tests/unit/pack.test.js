@@ -1,6 +1,7 @@
 import { it, expect, beforeAll } from 'vitest';
 import { execSync } from 'node:child_process';
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync } from 'node:fs';
+import { sep } from 'node:path';
 
 let files = [];
 beforeAll(() => {
@@ -16,7 +17,9 @@ it('package identity', () => {
 });
 
 it('npm pack contains public entry points', () => {
-  for (const f of ['dist/index.js', 'components.json', 'dist/index.d.ts', 'dist/styles.css', 'README.md', 'LICENSE'])
+  for (const f of ['dist/index.js', 'components.json', 'dist/index.d.ts', 'dist/styles.css', 'README.md', 'LICENSE',
+    'bin/sloyka-check.js', 'dist/check/index.js', 'dist/check/index.d.ts', 'dist/check/cli.js', 'dist/check/rules.js', 'dist/check/analyze.js',
+    'dist/check/scan-jsx.js', 'dist/check/scan-css.js', 'dist/check/eslint.js', 'dist/check/stylelint.js'])
     expect(files, f).toContain(f);
   expect(files.some(f => /^dist\/fonts\/.+\.woff2$/.test(f))).toBe(true);
   expect(files.some(f => /^templates\/.+/.test(f))).toBe(true);
@@ -33,4 +36,17 @@ it('every export path exists after build', () => {
     const path = t.replace('*', 'README.md').replace(/^\.\//, '');
     expect(existsSync(path), `${key} → ${path}`).toBe(true);
   }
+});
+
+
+it('@babel/parser belongs to the CLI only, not to the component bundle', () => {
+  const pkg = JSON.parse(readFileSync('package.json', 'utf8'));
+  expect(Object.keys(pkg.dependencies)).toEqual(['@babel/parser']);
+  expect(pkg.bin['sloyka-check']).toBe('bin/sloyka-check.js');
+  expect(pkg.peerDependenciesMeta).toEqual({ eslint: { optional: true }, stylelint: { optional: true } });
+  const bundle = readdirSync('dist', { recursive: true })
+    .map(f => String(f).split(sep).join('/'))
+    .filter(f => (f.endsWith('.js') || f.endsWith('.d.ts')) && !f.startsWith('check/'));
+  expect(bundle.length).toBeGreaterThan(10);
+  for (const f of bundle) expect(readFileSync(`dist/${f}`, 'utf8'), f).not.toMatch(/@babel\/parser|from ['"](eslint|stylelint)/);
 });

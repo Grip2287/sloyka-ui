@@ -1,0 +1,108 @@
+// Публичный вход sloyka/check: checkProject(dir) обходит папку и применяет правила.
+import { readdirSync, readFileSync, existsSync, statSync } from 'node:fs';
+import { join, relative, resolve, sep } from 'node:path';
+import { RULE_IDS, loadManifest } from './rules.js';
+import { scanJsx } from './scan-jsx.js';
+import { scanCss } from './scan-css.js';
+
+export { RULE_IDS };
+
+export const SKIP_DIRS = new Set(['node_modules', 'dist', 'build', '.next', 'storybook-static', '.git']);
+const JS_EXT = new Set(['.js', '.jsx', '.ts', '.tsx', '.mjs', '.cjs', '.mts', '.cts']);
+// Форматы, которые мы не умеем разбирать: пропускаем с предупреждением, чтобы их не приняли за проверенные.
+const UNSUPPORTED_EXT = new Set(['.mdx', '.vue', '.svelte', '.astro', '.html', '.scss', '.sass', '.less', '.styl']);
+export const ALLOW_FILE_NAME = 'sloyka.allow.json';
+
+export class AllowFileError extends Error {}
+
+const posix = p => p.split(sep).join('/');
+const extOf = name => (name.lastIndexOf('.') > 0 ? name.slice(name.lastIndexOf('.')).toLowerCase() : '');
+
+/** Простой glob: ** (любая глубина), * (внутри папки), ? (один символ). */
+export function globToRegExp(glob) {
+  let re = '';
+  const g = glob.replace(/^\.\//, '');
+  for (let i = 0; i < g.length; i++) {
+    const c = g[i];
+    if (c === '*' && g[i + 1] === '*') {
+      if (g[i + 2] === '/') { re += '(?:.*/)?'; i += 2; } else { re += '.*'; i += 1; }
+    } else if (c === '*') re += '[^/]*';
+    else if (c === '?') re += '[^/]';
+    else re += c.replace(/[.+^${}()|[\]\\]/g, '\\$&');
+  }
+  return new RegExp(`^${re}$`);
+}
+
+export function loadAllow(file) {
+  let data;
+  try {
+    data = JSON.parse(readFileSync(file, 'utf8'));
+  } catch (e) {
+    throw new AllowFileError(`${ALLOW_FILE_NAME}: не удалось прочитать ${file}: ${e.message}`);
+  }
+  const list = data && data.ignore === undefined ? [] : data && data.ignore;
+  if (!Array.isArray(list)) throw new AllowFileError(`${ALLOW_FILE_NAME}: поле "ignore" должно быть массивом`);
+  return list.map((entry, i) => {
+    const where = `${ALLOW_FILE_NAME}: ignore[${i}]`;
+    if (!entry || typeof entry.path !== 'string' || !entry.path) throw new AllowFileError(`${where}: нужен "path" (glob)`);
+    if (typeof entry.reason !== 'string' || !entry.reason.trim()) throw new AllowFileError(`${where}: нужна непустая "reason" (причина исключения)`);
+    if (entry.rules !== undefined) {
+      if (!Array.isArray(entry.rules)) throw new AllowFileError(`${where}: "rules" должен быть массивом`);
+      for (const r of entry.rules) if (!RULE_IDS.includes(r)) throw new AllowFileError(`${where}: неизвестное правило "${r}" (есть: ${RULE_IDS.join(', ')})`);
+    }
+    return { re: globToRegExp(entry.path), rules: entry.rules, reason: entry.reason.trim() };
+  });
+}
+
+function* files(dir, root = dir) {
+  for (const d of readdirSync(dir, { withFileTypes: true }).sort((a, b) => (a.name < b.name ? -1 : 1))) {
+    if (d.isDirectory()) {
+      if (!SKIP_DIRS.has(d.name)) yield* files(join(dir, d.name), root);
+    } else if (d.isFile()) yield posix(relative(root, join(dir, d.name)));
+  }
+}
+
+/**
+ * Проверяет папку. allowFile: путь к sloyka.allow.json, false (не читать) или не задан
+ * (искать sloyka.allow.json в проверяемой папке). Пути в результате относительны проверяемой папки.
+ * Возвращает { violations, allowed, warnings, files }.
+ */
+export function checkProject(dir, { allowFile } = {}) {
+  const root = resolve(dir);
+  if (!existsSync(root) || !statSync(root).isDirectory()) throw new Error(`Папка не найдена: ${dir}`);
+  const manifest = loadManifest();
+  const found = [];
+  const warnings = [];
+  let scanned = 0;
+  for (const file of files(root)) {
+    const ext = extOf(file);
+    const abs = join(root, file);
+    let hits;
+    if (JS_EXT.has(ext)) {
+      try {
+        hits = scanJsx(readFileSync(abs, 'utf8'), file, manifest);
+      } catch (e) {
+        warnings.push(`Не удалось разобрать ${file}: ${e.message}`);
+        continue;
+      }
+    } else if (ext === '.css') hits = scanCss(readFileSync(abs, 'utf8'));
+    else {
+      if (UNSUPPORTED_EXT.has(ext)) warnings.push(`Пропущен ${file}: формат ${ext} пока не проверяется`);
+      continue;
+    }
+    scanned++;
+    for (const h of hits) found.push({ file, line: h.line, rule: h.rule, message: h.message });
+  }
+  found.sort((a, b) => (a.file < b.file ? -1 : a.file > b.file ? 1 : a.line - b.line || (a.rule < b.rule ? -1 : 1)));
+
+  const allowPath = allowFile === false ? null : allowFile ? resolve(allowFile) : existsSync(join(root, ALLOW_FILE_NAME)) ? join(root, ALLOW_FILE_NAME) : null;
+  const allow = allowPath ? loadAllow(allowPath) : [];
+  const violations = [];
+  const allowed = [];
+  for (const v of found) {
+    const rule = allow.find(a => a.re.test(v.file) && (!a.rules || a.rules.includes(v.rule)));
+    if (rule) allowed.push({ ...v, reason: rule.reason });
+    else violations.push(v);
+  }
+  return { violations, allowed, warnings, files: scanned };
+}

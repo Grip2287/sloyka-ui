@@ -9,6 +9,7 @@
     "url": "git+https://github.com/Grip2287/sloyka-ui.git"
   },
   "files": [
+    "bin",
     "dist",
     "components.json",
     "templates"
@@ -21,11 +22,21 @@
     },
     "./styles.css": "./dist/styles.css",
     "./templates/*": "./templates/*",
+    "./check": {
+      "types": "./dist/check/index.d.ts",
+      "import": "./dist/check/index.js"
+    },
+    "./eslint": {
+      "import": "./dist/check/eslint.js"
+    },
+    "./stylelint": {
+      "import": "./dist/check/stylelint.js"
+    },
     "./components.json": "./components.json",
     "./package.json": "./package.json"
   },
   "scripts": {
-    "build": "node scripts/build-css.js && vite build && tsc -p tsconfig.build.json --emitDeclarationOnly && node scripts/gen-manifest.ts",
+    "build": "node scripts/build-css.js && vite build && tsc -p tsconfig.build.json --emitDeclarationOnly && node scripts/gen-manifest.ts && node scripts/build-check.js",
     "test": "vitest run",
     "storybook": "storybook dev -p 6006 --no-open",
     "build-storybook": "storybook build -o storybook-static --quiet",
@@ -63,9 +74,22 @@
   ],
   "peerDependencies": {
     "react": ">=18.3",
-    "react-dom": ">=18.3"
+    "react-dom": ">=18.3",
+    "eslint": ">=9",
+    "stylelint": ">=16"
   },
   "dependencies": {
     "@babel/parser": "^8.1.3"
+  },
+  "bin": {
+    "sloyka-check": "bin/sloyka-check.js"
+  },
+  "peerDependenciesMeta": {
+    "eslint": {
+      "optional": true
+    },
+    "stylelint": {
+      "optional": true
+    }
   }
 }

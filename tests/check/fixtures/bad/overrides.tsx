@@ -1,4 +1,4 @@
-// expect: no-component-classname-style@8, no-sl-css-overrides@8, no-sl-css-overrides@9, no-sl-css-overrides@13, no-sl-css-overrides@16
+// expect: no-component-classname-style@8, no-sl-css-overrides@8, no-sl-css-overrides@9, no-sl-css-overrides@13, no-sl-css-overrides@18
 import { Stack } from 'sloyka';
 
 const mine = styled.div`
@@ -13,7 +13,7 @@ const css = `
   .sl-card:hover { color: red }
 `;
 
-const cls = cx('mine', 'sl-badge');
+const Mine = ({ className }: { className?: string }) => null;
 export function C() {
-  return <Stack>{mine}{css}{cls}</Stack>;
+  return <Mine className={cx('mine', 'sl-badge')} />;
 }

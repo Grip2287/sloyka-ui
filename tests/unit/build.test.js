@@ -24,9 +24,9 @@ describe('build', () => {
     expect(css.startsWith('@layer sl.reset, sl.tokens, sl.base, sl.components;')).toBe(true);
   });
 
-  it('has no runtime dependencies and react as peer', () => {
+  it('has only the CLI parser as dependency and react as peer', () => {
     const pkg = JSON.parse(readFileSync('package.json', 'utf8'));
-    expect(Object.keys(pkg.dependencies || {})).toEqual([]);
+    expect(Object.keys(pkg.dependencies || {})).toEqual(['@babel/parser']);
     expect(pkg.peerDependencies.react).toBe('>=18.3');
     expect(pkg.peerDependencies['react-dom']).toBe('>=18.3');
   });
