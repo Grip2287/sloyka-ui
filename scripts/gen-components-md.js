@@ -1,20 +1,46 @@
-// Генерирует plugin/skills/sloyka/components.md из историй Storybook, чтобы справочник не расходился с кодом.
-import { readdirSync, writeFileSync } from 'node:fs';
-import { join } from 'node:path';
-import { pathToFileURL } from 'node:url';
+// Генерирует plugin/skills/sloyka/components.md из components.json (манифест собирается в npm run build),
+// чтобы справочник для Claude не расходился с кодом.
+import { readFileSync, writeFileSync } from 'node:fs';
 
-const dir = 'src/components';
-const parts = ['# Компоненты Sloyka — разметка для копирования', '', 'Сгенерировано `node scripts/gen-components-md.js` из историй Storybook. Иконки: `<i data-ic="имя">` + `slHydrateIcons()` или `slIcon(имя)`.', ''];
-const files = readdirSync(dir).flatMap(d => readdirSync(join(dir, d)).filter(f => f.endsWith('.stories.js')).map(f => join(dir, d, f))).sort();
-const mods = await Promise.all(files.map(async f => [f, await import(pathToFileURL(f).href)]));
-mods.sort((a, b) => a[1].default.title.localeCompare(b[1].default.title, 'ru'));
-for (const [, m] of mods) {
-  const { title, parameters } = m.default;
-  parts.push(`## ${title.split('/').pop()}`, '', parameters?.docs?.description?.component || '', '');
-  for (const [name, story] of Object.entries(m)) {
-    if (name === 'default' || !story.render) continue;
-    parts.push(`### ${story.name || name}`, '', '```html', story.render({ ...(m.default.args || {}), ...(story.args || {}) }).trim(), '```', '');
+const m = JSON.parse(readFileSync('components.json', 'utf8'));
+const out = [
+  '# Компоненты Sloyka — справочник',
+  '',
+  `Сгенерировано \`npm run gen:docs\` из \`components.json\` (sloyka ${m.version}). Не править руками.`,
+  '',
+  "Импорт всех компонентов: `import { … } from 'sloyka'`. Стили один раз в корне: `import 'sloyka/styles.css'`.",
+  'Другого API нет: ни `className`, ни `style`, ни своих тегов. Значения `enum` — только из списка.',
+  '',
+];
+
+const cell = x => String(x ?? '').replace(/\|/g, '\\|');
+const fmt = v => (typeof v === 'string' ? `'${v}'` : JSON.stringify(v));
+const allowed = a => (a === 'any' ? 'текст и любые компоненты Sloyka' : a === 'none' ? 'ничего' : a.join(', '));
+
+for (const g of m.groups) {
+  out.push(`## ${g.n} · ${g.title}`, '');
+  for (const name of g.components) {
+    const c = m.components[name];
+    out.push(`### ${name}`, '', `Внутрь: ${allowed(c.allowed)}.`, '');
+    const props = Object.entries(c.props);
+    if (!props.length) { out.push('Без настроек.', ''); continue; }
+    out.push('| Проп | Тип | Значения | По умолчанию | Заметка |', '|---|---|---|---|---|');
+    for (const [p, s] of props) {
+      out.push(`| \`${p}\`${s.required ? ' *' : ''} | ${cell(s.type)} | ${cell(s.options?.join(' · '))} | ${s.default === undefined ? '' : cell(fmt(s.default))} | ${cell(s.description)} |`);
+    }
+    out.push('');
   }
 }
-writeFileSync('plugin/skills/sloyka/components.md', parts.join('\n'));
-console.log(`components.md: ${mods.length} stories files`);
+out.push(
+  '## Хуки',
+  '',
+  '- `useToast()` → `{ ok, warn, crit, info }`, каждый вызывается как `(text, { title?, duration? })` и возвращает `{ close }`. `crit` не скрывается сам, остальные — через 5 с. Только внутри `<ToastProvider>`.',
+  '- `useTheme()` → `{ theme, resolvedTheme, setTheme }`, `theme`: `light | dark | system`. Только внутри `<ThemeProvider>`.',
+  '',
+  '## Шаблоны в пакете',
+  '',
+  m.templates.length ? m.templates.map(t => `- \`sloyka/templates/${t}\``).join('\n') : 'Пока нет опубликованных шаблонов.',
+  '',
+);
+writeFileSync('plugin/skills/sloyka/components.md', out.join('\n'));
+console.log(`components.md: ${Object.keys(m.components).length} компонентов`);
