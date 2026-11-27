@@ -1,30 +1,43 @@
 name: Release
 # Запускается только после успешного CI на main: непроверенный код не публикуется.
+# 1) Есть ожидающие changeset → PR «Version Packages» с новой версией и заметками «Что нового и где лежит».
+# 2) PR слит → публикация на npmjs.com (нужен секрет NPM_TOKEN) и выпуск на GitHub.
 on:
   workflow_run:
     workflows: [CI]
     types: [completed]
     branches: [main]
-permissions: { contents: write, packages: write, pull-requests: write }
+permissions: { contents: write, pull-requests: write, id-token: write }
 concurrency: { group: release, cancel-in-progress: false }
 jobs:
   release:
     if: github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push'
     runs-on: ubuntu-latest
-    # тот же образ, что в CI: в нём есть браузер для тестов разбора референсов
     container: mcr.microsoft.com/playwright:v1.65.1-noble
     steps:
       - uses: actions/checkout@v5
-        with: { ref: '${{ github.event.workflow_run.head_sha }}' }
+        with: { ref: '${{ github.event.workflow_run.head_sha }}', fetch-depth: 0 }
       - uses: actions/setup-node@v5
-        with: { node-version: 22, registry-url: 'https://npm.pkg.github.com', scope: '@grip2287' }
+        with: { node-version: 22, registry-url: 'https://registry.npmjs.org' }
       - run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
       - run: npm ci && npm run build && npm test
-      # Changesets открывает PR «Version Packages»; после его слияния публикует новую версию в GitHub Packages.
-      # Чтобы на этом PR тоже запускался CI, добавьте секрет CHANGESETS_TOKEN (личный токен с repo):
-      # PR, открытый встроенным GITHUB_TOKEN, проверки не запускает.
+      # Заметки к выпуску: сравнение с манифестом последней опубликованной версии (если она есть).
+      - name: Release notes
+        run: |
+          if ls .changeset/*.md 2>/dev/null | grep -qv README; then
+            PREV=""
+            if TARBALL=$(npm view sloyka dist.tarball 2>/dev/null) && [ -n "$TARBALL" ]; then
+              mkdir -p /tmp/prev && curl -sL "$TARBALL" | tar -xz -C /tmp/prev
+              [ -f /tmp/prev/package/components.json ] && PREV="--prev /tmp/prev/package/components.json"
+            fi
+            node scripts/release-notes.js $PREV --next components.json --changeset
+          fi
       - uses: changesets/action@v1
-        with: { publish: npx changeset publish }
+        with:
+          publish: npx changeset publish
+          createGithubReleases: true
         env:
+          # Чтобы на PR «Version Packages» запускался CI, добавьте секрет CHANGESETS_TOKEN (личный токен с repo).
           GITHUB_TOKEN: ${{ secrets.CHANGESETS_TOKEN || secrets.GITHUB_TOKEN }}
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_CONFIG_PROVENANCE: 'true'

@@ -1,8 +1,21 @@
 {
   "name": "sloyka",
   "version": "0.1.0",
-  "description": "Sloyka — библиотека React-компонентов для операторских панелей, лендингов и магазинов: светлая и тёмная тема, адаптив.",
+  "description": "Sloyka — React-компоненты для операторских панелей и админок: светлая и тёмная тема, адаптив, проверка сборки.",
   "license": "MIT",
+  "homepage": "https://github.com/Grip2287/sloyka-ui/blob/main/docs/GUIDE.md",
+  "bugs": {
+    "url": "https://github.com/Grip2287/sloyka-ui/issues"
+  },
+  "keywords": [
+    "react",
+    "components",
+    "ui",
+    "admin",
+    "dashboard",
+    "design-system",
+    "sloyka"
+  ],
   "type": "module",
   "repository": {
     "type": "git",
