@@ -1,10 +1,10 @@
 // Редактор темы: меняйте цвета и размеры в панели «Элементы управления» — пример пересобирается сразу.
 // Кнопка «＋ В шаблон» над примером отправляет тему в «Основа → Мой шаблон».
 import { themeCSS } from '../../.storybook/template-store.js';
-import { SAMPLE } from '../../.storybook/sample.js';
+import { Sample } from '../../.storybook/sample';
 
+type Args = Record<string, any>;
 const HIDE = { table: { disable: true } };
-const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;');
 
 export default {
   title: 'Основа/Редактор темы',
@@ -27,10 +27,19 @@ export const Editor = {
     fontSize: { name: 'Основной текст, px', control: { type: 'range', min: 12, max: 16, step: 1 } },
     controlHeight: { name: 'Высота кнопок и полей, px', control: { type: 'range', min: 28, max: 44, step: 2 } },
   },
-  render: a => {
+  render: (a: Args) => {
     const scoped = themeCSS(a, { light: '[data-theme="light"] .sb-tune', dark: '[data-theme="dark"] .sb-tune', root: '.sb-tune', media: false });
-    return `<style>${scoped}</style>
-<div class="sb-tune" style="display:grid;grid-template-columns:minmax(0,1fr);gap:16px;padding:16px;border-radius:var(--sl-r-lg);background:var(--sl-bg);font-size:var(--sl-fs-body)">${SAMPLE}</div>
-<div class="sl-field"><span class="sl-label">CSS для проекта</span><pre style="margin:0;padding:12px;border-radius:var(--sl-r-md);background:var(--sl-surface);border:1px solid var(--sl-border-soft);font:12px/1.5 ui-monospace,Consolas,monospace;white-space:pre-wrap;overflow-wrap:anywhere;user-select:all">${esc(themeCSS(a))}</pre></div>`;
+    return (
+      <>
+        <style>{scoped}</style>
+        <div className="sb-tune" style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr)', gap: 16, padding: 16, borderRadius: 'var(--sl-r-lg)', background: 'var(--sl-bg)', fontSize: 'var(--sl-fs-body)' }}>
+          <Sample />
+        </div>
+        <div className="sl-field">
+          <span className="sl-label">CSS для проекта</span>
+          <pre className="sb-code">{themeCSS(a)}</pre>
+        </div>
+      </>
+    );
   },
 };
