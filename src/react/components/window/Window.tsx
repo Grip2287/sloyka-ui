@@ -24,7 +24,7 @@ function WindowImpl({ title, icon, onClose, bar, footer, children }: WindowProps
       <div className="sl-window__head">
         {icon && <Icon name={icon} />}
         <span className="sl-window__title" id={id}>{title}</span>
-        {onClose && <Button variant="ghost" size="sm" iconOnly icon="x" aria-label="Закрыть" onClick={() => onClose()} />}
+        {onClose && <Button variant="ghost" size="sm" iconOnly icon="x" type="button" aria-label="Закрыть" onClick={() => onClose()} />}
       </div>
       {bar && <div className="sl-window__bar">{bar}</div>}
       <div className="sl-window__body">{children}</div>

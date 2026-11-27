@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useId, useState, type ReactNode } from 'react';
+import { cloneElement, isValidElement, useEffect, useId, useState, type ReactElement, type ReactNode } from 'react';
 import type { SloykaMarked } from '../../core';
 import { defineMeta, checkChildren } from '../../core';
 
@@ -21,16 +21,23 @@ function TooltipImpl({ text, open, defaultOpen, onOpenChange, children }: Toolti
   // Esc скрывает подсказку, не закрывая ничего другого (WCAG 1.4.13).
   useEffect(() => {
     if (!shown) return;
-    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') set(false); };
-    document.addEventListener('keydown', onKey);
-    return () => document.removeEventListener('keydown', onKey);
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') { e.preventDefault(); set(false); } };
+    // Фаза перехвата: срабатывает раньше обработчиков Shell и других, которые пропускают defaultPrevented.
+    document.addEventListener('keydown', onKey, true);
+    return () => document.removeEventListener('keydown', onKey, true);
   });
+  // Одиночный элемент получает связь сам; для остальных детей она остаётся на обёртке.
+  // Компоненты Sloyka (Button и др.) не пробрасывают aria-*, поэтому для них связь остаётся на обёртке.
+  const single = isValidElement(children) && typeof children.type === 'string' ? (children as ReactElement<{ 'aria-describedby'?: string }>) : null;
+  const content = single && shown
+    ? cloneElement(single, { 'aria-describedby': [single.props['aria-describedby'], id].filter(Boolean).join(' ') })
+    : children;
   return (
     <span
-      className="sl-tooltip-host" aria-describedby={shown ? id : undefined}
+      className="sl-tooltip-host" aria-describedby={shown && !single ? id : undefined}
       onMouseEnter={() => set(true)} onMouseLeave={() => set(false)} onFocus={() => set(true)} onBlur={() => set(false)}
     >
-      {children}
+      {content}
       {shown && <span className="sl-tooltip" role="tooltip" id={id}>{text}</span>}
     </span>
   );

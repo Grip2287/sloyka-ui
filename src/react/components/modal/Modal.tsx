@@ -31,6 +31,8 @@ function ModalImpl({ title, open, defaultOpen, onOpenChange, footer, size, child
   const dialogRef = useRef<HTMLDialogElement>(null);
   const opener = useRef<HTMLElement | null>(null);
   const downOnBackdrop = useRef(false);
+  // Меняется, когда диалог закрылся сам: эффект сверяет DOM с isOpen.
+  const [resync, setResync] = useState(0);
   const latest = useRef({ isOpen, onOpenChange, controlled: open !== undefined });
   latest.current = { isOpen, onOpenChange, controlled: open !== undefined };
 
@@ -58,7 +60,7 @@ function ModalImpl({ title, open, defaultOpen, onOpenChange, footer, size, child
       opener.current = null;
       if (back?.isConnected) back.focus();
     }
-  }, [isOpen]);
+  }, [isOpen, resync]);
 
   // Размонтирование открытого окна: вернуть фокус тому, кто его открыл.
   useEffect(() => () => {
@@ -95,13 +97,13 @@ function ModalImpl({ title, open, defaultOpen, onOpenChange, footer, size, child
       // Esc в нативном диалоге: не закрываем сами, а спрашиваем владельца состояния.
       onCancel={(e) => { e.preventDefault(); if (latest.current.isOpen) request(false); }}
       // Диалог закрыт снаружи (например, form method=dialog): синхронизируем состояние.
-      onClose={(e) => { if (latest.current.isOpen && !e.currentTarget.open) request(false); }}
+      onClose={(e) => { if (latest.current.isOpen && !e.currentTarget.open) { request(false); setResync((n) => n + 1); } }}
     >
       {isOpen && (
         <>
           <div className="sl-modal__head">
             <span className="sl-modal__title" id={titleId}>{title}</span>
-            <Button variant="ghost" size="sm" iconOnly icon="x" aria-label="Закрыть" onClick={() => request(false)} />
+            <Button variant="ghost" size="sm" iconOnly icon="x" type="button" aria-label="Закрыть" onClick={() => request(false)} />
           </div>
           <div className="sl-modal__body">{children}</div>
           {footer && <div className="sl-modal__foot">{footer}</div>}

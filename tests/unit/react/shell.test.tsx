@@ -306,6 +306,20 @@ describe('Modal', () => {
     act(() => { dlg().removeAttribute('open'); dlg().dispatchEvent(new Event('close')); });
     expect(onOpenChange).toHaveBeenCalledWith(false);
   });
+  it('кнопка закрытия внутри <form> не отправляет форму', () => {
+    const submit = vi.fn((e: any) => e.preventDefault());
+    render(<form onSubmit={submit}><Modal title="T" defaultOpen>x</Modal></form>);
+    fireEvent.click(screen.getByLabelText('Закрыть'));
+    expect(submit).not.toHaveBeenCalled();
+    expect(document.querySelector('.sl-modal__head button')).toBeNull();
+  });
+  it('управляемый режим: если владелец оставил open=true, а диалог закрылся сам, он показывается снова', () => {
+    const onOpenChange = vi.fn();
+    render(<Modal title="T" open onOpenChange={onOpenChange}>x</Modal>);
+    act(() => { dlg().removeAttribute('open'); dlg().dispatchEvent(new Event('close')); });
+    expect(onOpenChange).toHaveBeenCalledWith(false);
+    expect(dlg().open).toBe(true);
+  });
   it('в footer допустимы только кнопки', () => {
     render(<Modal title="T" defaultOpen footer={<Text>не кнопка</Text>}>x</Modal>);
     expect(warn).toHaveBeenCalledWith(expect.stringContaining('<Text> недопустим'));
@@ -329,7 +343,7 @@ describe('Toast', () => {
     const { container } = render(<ToastProvider><Fire kind="ok" text="Камера КПП-2 появится на карте." opts={{ title: 'Устройство добавлено' }} /></ToastProvider>);
     fire();
     const t = container.querySelector('.sl-toast')!;
-    expect(norm(t.outerHTML)).toBe(norm(withIcons(`<div class="sl-toast sl-toast--ok" role="status"><span class="sl-toast__icon"><i data-ic="check"></i></span><div class="sl-toast__body"><span class="sl-toast__title">Устройство добавлено</span><span class="sl-toast__text">Камера КПП-2 появится на карте.</span></div><button class="sl-btn sl-btn--icon sl-btn--sm sl-btn--ghost" aria-label="Закрыть"><i data-ic="x"></i></button></div>`)));
+    expect(norm(t.outerHTML)).toBe(norm(withIcons(`<div class="sl-toast sl-toast--ok" role="status"><span class="sl-toast__icon"><i data-ic="check"></i></span><div class="sl-toast__body"><span class="sl-toast__title">Устройство добавлено</span><span class="sl-toast__text">Камера КПП-2 появится на карте.</span></div><button class="sl-btn sl-btn--icon sl-btn--sm sl-btn--ghost" type="button" aria-label="Закрыть"><i data-ic="x"></i></button></div>`)));
   });
   it('без заголовка текст идёт в title-span', () => {
     const { container } = render(<ToastProvider><Fire kind="info" text="Готово" /></ToastProvider>);
@@ -364,6 +378,12 @@ describe('Toast', () => {
     fire();
     fireEvent.click(screen.getByLabelText('Закрыть'));
     expect(container.querySelector('.sl-toast')).toBeNull();
+  });
+  it('кнопка закрытия тоста и окна имеет type=button', () => {
+    const { container } = render(<ToastProvider><Fire kind="ok" text="x" /><Window title="W" onClose={() => {}}>b</Window></ToastProvider>);
+    fire();
+    expect(container.querySelector('.sl-toast button')!.getAttribute('type')).toBe('button');
+    expect(container.querySelector('.sl-window__head button')!.getAttribute('type')).toBe('button');
   });
   it('текст экранируется, не HTML', () => {
     const { container } = render(<ToastProvider><Fire kind="ok" text="<img src=x onerror=alert(1)>" /></ToastProvider>);
@@ -407,6 +427,19 @@ describe('Tooltip', () => {
     expect(container.querySelector('.sl-tooltip')).not.toBeNull();
     fireEvent.keyDown(document, { key: 'Escape' });
     expect(container.querySelector('.sl-tooltip')).toBeNull();
+  });
+  it('одиночный элемент получает aria-describedby сам (с учётом уже заданного), обёртка — нет', () => {
+    const { container } = render(<Tooltip text="Подсказка" defaultOpen><input aria-label="поле" aria-describedby="hint" /></Tooltip>);
+    const tip = container.querySelector('.sl-tooltip')!;
+    expect(container.querySelector('input')!.getAttribute('aria-describedby')).toBe(`hint ${tip.id}`);
+    expect(container.firstElementChild!.hasAttribute('aria-describedby')).toBe(false);
+  });
+  it('Esc скрывает подсказку и отменяет событие, чтобы не закрыть меню Shell', () => {
+    render(<Tooltip text="Т" defaultOpen>x</Tooltip>);
+    const ev = new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true });
+    act(() => { document.dispatchEvent(ev); });
+    expect(ev.defaultPrevented).toBe(true);
+    expect(document.querySelector('.sl-tooltip')).toBeNull();
   });
   it('управляемый open', () => {
     const { container, rerender } = render(<Tooltip text="Т" open={false}>x</Tooltip>);
@@ -623,7 +656,7 @@ describe('Theme', () => {
     expect(document.documentElement.dataset.theme).toBe('dark');
     g.mockRestore(); s.mockRestore();
   });
-  it('серверная разметка не зависит от темы: toggle всегда light до эффектов', () => {
+  it('серверная разметка зависит только от defaultTheme, а не от хранилища', () => {
     const html = renderToStaticMarkup(<ThemeProvider defaultTheme="dark"><ThemeToggle /></ThemeProvider>);
     expect(html).toContain('aria-pressed="true"'); // defaultTheme dark известен и на сервере; хранилище не читается
     localStorage.setItem('sl-theme', 'light');
@@ -646,6 +679,10 @@ describe('Theme', () => {
     localStorage.clear();
     new Function(renderToStaticMarkup(createElement(ThemeScript, { defaultTheme: 'dark', storageKey: 'k' })).replace(/^<script>|<\/script>$/g, ''))();
     expect(document.documentElement.dataset.theme).toBe('dark');
+  });
+  it('ThemeScript: storageKey не может закрыть тег script', () => {
+    const html = renderToStaticMarkup(<ThemeScript storageKey={'</script><b>'} />);
+    expect(html.match(/<\/script>/g)).toHaveLength(1);
   });
   it('ThemeScript переживает закрытое хранилище', () => {
     const g = vi.spyOn(Storage.prototype, 'getItem').mockImplementation(() => { throw new Error('blocked'); });

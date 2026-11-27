@@ -9,8 +9,9 @@ export interface ThemeScriptProps {
 
 /** Строка скрипта: ставит сохранённую тему до отрисовки, без зависимостей. */
 export function themeScriptSource(storageKey = 'sl-theme', defaultTheme: ThemeChoice = 'system'): string {
-  const k = JSON.stringify(storageKey);
-  const d = JSON.stringify(defaultTheme);
+  const safe = (v: string) => JSON.stringify(v).replace(/</g, '\\u003c');
+  const k = safe(storageKey);
+  const d = safe(defaultTheme);
   return `(function(){try{var t=localStorage.getItem(${k});if(t!=='light'&&t!=='dark')t=${d};if(t==='light'||t==='dark')document.documentElement.dataset.theme=t;else delete document.documentElement.dataset.theme}catch(e){}})()`;
 }
 

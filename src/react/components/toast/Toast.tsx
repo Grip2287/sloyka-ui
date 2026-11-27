@@ -83,7 +83,7 @@ function ToastItem({ item, onClose }: { item: Item; onClose: () => void }) {
           ? <><span className="sl-toast__title">{item.title}</span><span className="sl-toast__text">{item.text}</span></>
           : <span className="sl-toast__title">{item.text}</span>}
       </div>
-      <Button variant="ghost" size="sm" iconOnly icon="x" aria-label="Закрыть" onClick={onClose} />
+      <Button variant="ghost" size="sm" iconOnly icon="x" type="button" aria-label="Закрыть" onClick={onClose} />
     </div>
   );
 }
