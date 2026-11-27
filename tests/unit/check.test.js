@@ -6,7 +6,7 @@ import { spawnSync } from 'node:child_process';
 import { ESLint } from 'eslint';
 import stylelint from 'stylelint';
 import babelParser from '@babel/eslint-parser';
-import { checkProject } from '../../src/check/index.js';
+import { checkProject, globToRegExp } from '../../src/check/index.js';
 import { main } from '../../src/check/cli.js';
 import { loadManifest, RULE_IDS, nativeElementMessage, deepImportMessage, classNameMessage } from '../../src/check/rules.js';
 import sloykaEslint from '../../src/check/eslint.js';
@@ -58,6 +58,8 @@ describe('sloyka-check: fixtures', () => {
   it('good project has zero violations', () => {
     expect(good.violations).toEqual([]);
     expect(good.files).toBeGreaterThanOrEqual(3);
+    expect(good.errors).toEqual([]);
+    expect(bad.errors).toEqual([]);
   });
 
   it('rule ids', () => {
@@ -176,9 +178,9 @@ describe('sloyka-check: CLI', () => {
 
   it('skips node_modules, dist, build, .next, storybook-static; warns on .mdx', () => {
     const d = tmp();
-    for (const dir of ['node_modules/x', 'dist', 'build', '.next', 'storybook-static', 'src'])
+    for (const dir of ['node_modules/x', 'dist', 'build', '.next', 'storybook-static', 'out', 'coverage', '.turbo', '.vercel', '.nuxt', '.svelte-kit', '.git', 'src'])
       mkdirSync(join(d, dir), { recursive: true });
-    for (const dir of ['node_modules/x', 'dist', 'build', '.next', 'storybook-static'])
+    for (const dir of ['node_modules/x', 'dist', 'build', '.next', 'storybook-static', 'out', 'coverage', '.turbo', '.vercel', '.nuxt', '.svelte-kit', '.git'])
       writeFileSync(join(d, dir, 'a.jsx'), 'export const A = () => <button>x</button>;\n');
     writeFileSync(join(d, 'src/ok.jsx'), 'export const A = () => null;\n');
     writeFileSync(join(d, 'src/doc.mdx'), '# <button>\n');
@@ -193,13 +195,44 @@ describe('sloyka-check: CLI', () => {
     rmSync(d, { recursive: true, force: true });
   });
 
-  it('warns about unparsable files without failing', () => {
+  it('fails closed on unparsable files: error, exit 2, never "нарушений нет"', () => {
     const d = tmp();
     writeFileSync(join(d, 'broken.jsx'), 'const = <<<');
     const r = run(['.', '--json'], d);
-    expect(r.code).toBe(0);
-    expect(JSON.parse(r.out).warnings[0]).toMatch(/broken\.jsx/);
+    expect(r.code).toBe(2);
+    const data = JSON.parse(r.out);
+    expect(data.errors[0]).toMatch(/broken.jsx/);
+    const text = run(['.'], d);
+    expect(text.code).toBe(2);
+    expect(text.out + text.err).toMatch(/broken.jsx/);
+    expect(text.out).not.toMatch(/нарушений нет/);
     rmSync(d, { recursive: true, force: true });
+  });
+
+  it('layout detection does not depend on the scan root', () => {
+    const inner = run(['bad/app', '--json'], FIX);
+    expect(JSON.parse(inner.out).violations.map(v => `${v.file}:${v.line}`).sort()).toEqual(['global-error.tsx:7', 'global-error.tsx:8', 'layout.tsx:9']);
+    const ok = run(['good/app'], FIX);
+    expect(ok.code).toBe(0);
+  });
+
+  it('finds sloyka.allow.json up to package.json and resolves globs from it', () => {
+    const d = tmp();
+    mkdirSync(join(d, 'src/legacy'), { recursive: true });
+    writeFileSync(join(d, 'package.json'), '{}');
+    cpSync(join(FIX, 'bad/native.tsx'), join(d, 'src/legacy/native.tsx'));
+    writeFileSync(join(d, 'sloyka.allow.json'), JSON.stringify({ ignore: [{ path: 'src/legacy/**', rules: ['no-native-elements'], reason: 'легаси' }] }));
+    const r = run(['src'], d);
+    expect(r.code).toBe(0);
+    expect(r.out).toMatch(/Файл исключений: .*sloyka.allow.json/);
+    expect(JSON.parse(run(['src', '--json'], d).out).allowFile).toMatch(/sloyka.allow.json$/);
+    rmSync(d, { recursive: true, force: true });
+  });
+
+  it('glob matching normalises backslashes and can be case-insensitive', () => {
+    expect(globToRegExp('SRC/*.js', true).test('src/a.js')).toBe(true);
+    expect(globToRegExp('SRC/*.js', false).test('src/a.js')).toBe(false);
+    expect(globToRegExp('src' + String.fromCharCode(92) + '**', false).test('src/a/b.js')).toBe(true);
   });
 
   it('sloyka.allow.json removes a violation and prints it with the reason', () => {

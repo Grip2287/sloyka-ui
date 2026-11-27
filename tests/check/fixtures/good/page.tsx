@@ -3,6 +3,7 @@ import { Page, Stack, Card, Button, Text, Table } from 'sloyka';
 import * as S from 'sloyka';
 import { Banner } from '@grip2287/sloyka';
 import { classes } from 'sloyka/components.json';
+import 'sloyka/styles.css?inline';
 
 const rows = ['один', 'два'];
 
@@ -35,6 +36,7 @@ export default function Home() {
           Сохранить
         </S.Button>
         <Button variant={dynamicVariant()}>Динамика</Button>
+        <Button {...{ variant: "primary", size: "sm" }}>Spread</Button>
       </Card>
       <Table />
     </Page>
