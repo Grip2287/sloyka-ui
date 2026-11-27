@@ -1,17 +1,31 @@
-import type { MouseEvent, ReactNode } from 'react';
+'use client';
+import { useEffect, useId, useRef, useState, type MouseEvent, type ReactNode } from 'react';
 import type { SloykaMarked } from '../../core';
 import { defineMeta, cx, checkChildren, renderLink, type LinkLike } from '../../core';
 import { Icon, type IconName } from '../../icons';
 
+export interface MenuTrigger {
+  /** Подпись кнопки для экранных дикторов, например «Меню аккаунта». */
+  label: string;
+  /** Одна-две буквы на кнопке; без них — иконка пользователя. */
+  initials?: string;
+}
+
 export interface MenuProps {
   /** Шапка: имя и роль. */
   header?: { name: string; role?: string };
+  /** Кнопка, которая открывает меню. Без неё меню — просто панель. */
+  trigger?: MenuTrigger;
+  /** Управляемое состояние (только вместе с trigger). */
+  open?: boolean;
+  defaultOpen?: boolean;
+  onOpenChange?: (open: boolean) => void;
   children?: ReactNode;
 }
-function MenuImpl({ header, children }: MenuProps) {
-  checkChildren(MenuImpl as unknown as SloykaMarked, children);
+
+function Panel({ header, children, id, popover, onClick }: { header?: MenuProps['header']; children?: ReactNode; id?: string; popover?: boolean; onClick?: (e: MouseEvent<HTMLDivElement>) => void }) {
   return (
-    <div className="sl-menu">
+    <div className={cx('sl-menu', popover && 'sl-menu--popover')} id={id} onClick={onClick}>
       {header && (
         <div className="sl-menu__head">
           <div className="sl-card__title">{header.name}</div>
@@ -22,9 +36,81 @@ function MenuImpl({ header, children }: MenuProps) {
     </div>
   );
 }
+
+function MenuWithTrigger({ header, trigger, open, defaultOpen, onOpenChange, children }: MenuProps & { trigger: MenuTrigger }) {
+  const [inner, setInner] = useState(defaultOpen ?? false);
+  const isOpen = open ?? inner;
+  const id = useId();
+  const root = useRef<HTMLDivElement>(null);
+  const button = useRef<HTMLButtonElement>(null);
+  const latest = useRef({ open, onOpenChange });
+  latest.current = { open, onOpenChange };
+
+  const request = (next: boolean) => {
+    if (latest.current.open === undefined) setInner(next);
+    latest.current.onOpenChange?.(next);
+  };
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const onDown = (e: PointerEvent) => {
+      if (root.current && !root.current.contains(e.target as Node)) request(false);
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== 'Escape' || e.defaultPrevented) return;
+      e.preventDefault();
+      request(false);
+      button.current?.focus();
+    };
+    document.addEventListener('pointerdown', onDown);
+    document.addEventListener('keydown', onKey);
+    return () => {
+      document.removeEventListener('pointerdown', onDown);
+      document.removeEventListener('keydown', onKey);
+    };
+  }, [isOpen]);
+
+  // Клик по пункту (кнопке или ссылке) закрывает меню; обработчик самого пункта уже отработал.
+  const onPanelClick = (e: MouseEvent<HTMLDivElement>) => {
+    if ((e.target as HTMLElement).closest('.sl-menu__item')) request(false);
+  };
+
+  return (
+    <div className="sl-menu-anchor" ref={root}>
+      <button
+        ref={button}
+        type="button"
+        className={cx('sl-btn', 'sl-menu__trigger', isOpen && 'is-open')}
+        aria-label={trigger.label}
+        aria-haspopup="menu"
+        aria-expanded={isOpen}
+        aria-controls={id}
+        onClick={() => request(!isOpen)}
+      >
+        {trigger.initials
+          ? <span className="sl-menu__initials" aria-hidden="true">{trigger.initials}</span>
+          : <Icon name="user" />}
+        <Icon name="chevron-down" />
+      </button>
+      {isOpen && <Panel header={header} id={id} popover onClick={onPanelClick}>{children}</Panel>}
+    </div>
+  );
+}
+
+function MenuImpl(props: MenuProps) {
+  checkChildren(MenuImpl as unknown as SloykaMarked, props.children);
+  if (props.trigger) return <MenuWithTrigger {...props} trigger={props.trigger} />;
+  return <Panel header={props.header}>{props.children}</Panel>;
+}
 const MenuBase = defineMeta(MenuImpl, {
   n: '18', group: 'Меню аккаунта', name: 'Menu', allowed: ['Menu.Item', 'Menu.Separator'],
-  props: { header: { type: '{ name, role? }' } },
+  props: {
+    header: { type: '{ name, role? }' },
+    trigger: { type: '{ label, initials? }', description: 'Кнопка, открывающая меню' },
+    open: { type: 'boolean' },
+    defaultOpen: { type: 'boolean' },
+    onOpenChange: { type: 'function' },
+  },
 });
 
 export interface MenuItemProps {

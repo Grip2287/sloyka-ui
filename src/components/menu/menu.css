@@ -8,4 +8,11 @@
   .sl-menu__sep { height: 1px; margin: 4px 0; background: var(--sl-border-soft); }
   .sl-menu__item--danger { color: var(--sl-crit); }
   .sl-menu__item--danger .sl-ic { color: currentColor; }
+  /* Меню с кнопкой: кнопка в верхней панели, панель выпадает под ней справа */
+  .sl-menu-anchor { position: relative; display: inline-flex; }
+  .sl-menu__trigger { gap: 4px; padding: 0 6px 0 4px; }
+  .sl-menu__trigger > .sl-ic { color: var(--sl-text-3); transition: transform var(--sl-dur) var(--sl-ease); }
+  .sl-menu__trigger.is-open > .sl-ic:last-child { transform: rotate(180deg); }
+  .sl-menu__initials { display: grid; place-items: center; width: 26px; height: 26px; border-radius: var(--sl-r-sm); background: var(--sl-inverse); color: var(--sl-on-inverse); font: 600 var(--sl-fs-small)/1 var(--sl-font); }
+  .sl-menu--popover { position: absolute; top: calc(100% + 6px); right: 0; z-index: 30; }
 }

@@ -1,4 +1,4 @@
-import { Menu, type IconName } from '../../react';
+import { Menu, Topbar, ThemeToggle, ThemeProvider, type IconName } from '../../react';
 
 type Args = Record<string, any>;
 
@@ -19,6 +19,23 @@ export const Default = {
         <Menu.Item icon="power" danger>Выйти</Menu.Item>
       </Menu>
     </div>
+  ),
+};
+
+export const WithTrigger = {
+  name: 'С кнопкой в верхней панели',
+  render: () => (
+    <ThemeProvider><div style={{ minHeight: 280 }}>
+      <Topbar brand={{ mark: 'П', name: 'Пульт' }} title="Объекты">
+        <ThemeToggle />
+        <Menu header={{ name: 'Ольга Денисова', role: 'Администратор' }} trigger={{ label: 'Меню аккаунта', initials: 'ОД' }} defaultOpen>
+          <Menu.Item icon="user">Профиль</Menu.Item>
+          <Menu.Item icon="key">Сменить пароль</Menu.Item>
+          <Menu.Separator />
+          <Menu.Item icon="power" danger>Выйти</Menu.Item>
+        </Menu>
+      </Topbar>
+    </div></ThemeProvider>
   ),
 };
 
