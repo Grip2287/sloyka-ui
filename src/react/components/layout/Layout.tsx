@@ -36,7 +36,7 @@ function StackImpl({ gap, direction, align, justify, wrap, children }: StackProp
 export const Stack = defineMeta(StackImpl, {
   n: '00', group: 'Основа', name: 'Stack', allowed: 'any',
   props: {
-    gap: { type: 'enum', options: GAP_STR, default: 3 },
+    gap: { type: 'enum', options: GAP_STR, default: '3' },
     direction: { type: 'enum', options: DIRS, default: 'column' },
     align: { type: 'enum', options: ALIGNS, default: 'stretch' },
     justify: { type: 'enum', options: JUSTIFIES, default: 'start' },
@@ -72,7 +72,7 @@ export const Grid = defineMeta(GridImpl, {
   props: {
     columns: { type: 'enum', options: COLS, default: 'auto' },
     min: { type: 'enum', options: MINS, default: 'md' },
-    gap: { type: 'enum', options: GAP_STR, default: 3 },
+    gap: { type: 'enum', options: GAP_STR, default: '3' },
   },
 });
 

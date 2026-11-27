@@ -8,7 +8,7 @@ export default defineConfig({
     emptyOutDir: false,
     lib: { entry: 'src/react/index.ts', formats: ['es'] },
     rollupOptions: {
-      external: ['react', 'react-dom', 'react/jsx-runtime'],
+      external: ['react', 'react-dom', 'react/jsx-runtime', 'react/jsx-dev-runtime'],
       output: { preserveModules: true, preserveModulesRoot: 'src/react', entryFileNames: '[name].js' },
     },
   },

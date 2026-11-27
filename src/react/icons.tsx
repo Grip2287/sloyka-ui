@@ -1,4 +1,5 @@
 import type { ReactElement } from 'react';
+import { defineMeta } from './core';
 
 // Иконки Sloyka: сетка 16×16, линия 1.5, currentColor. Набор перенесён из 0.1.x без изменений.
 export const ICON_PATHS = {
@@ -52,7 +53,7 @@ export interface IconProps {
   size?: 16 | 20;
 }
 
-export function Icon({ name, size = 16 }: IconProps): ReactElement {
+function IconImpl({ name, size = 16 }: IconProps): ReactElement {
   return (
     <svg
       className="sl-ic"
@@ -64,3 +65,11 @@ export function Icon({ name, size = 16 }: IconProps): ReactElement {
     />
   );
 }
+
+export const Icon = defineMeta(IconImpl, {
+  n: '00', group: 'Основа', name: 'Icon', allowed: 'none',
+  props: {
+    name: { type: 'enum', options: Object.keys(ICON_PATHS), required: true, description: 'Имя иконки из набора Sloyka' },
+    size: { type: 'enum', options: ['16', '20'], default: '16' },
+  },
+});

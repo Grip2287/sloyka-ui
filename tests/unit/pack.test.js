@@ -16,7 +16,7 @@ it('package identity', () => {
 });
 
 it('npm pack contains public entry points', () => {
-  for (const f of ['dist/index.js', 'dist/index.d.ts', 'dist/styles.css', 'README.md', 'LICENSE'])
+  for (const f of ['dist/index.js', 'components.json', 'dist/index.d.ts', 'dist/styles.css', 'README.md', 'LICENSE'])
     expect(files, f).toContain(f);
   expect(files.some(f => /^dist\/fonts\/.+\.woff2$/.test(f))).toBe(true);
   expect(files.some(f => /^templates\/.+/.test(f))).toBe(true);
