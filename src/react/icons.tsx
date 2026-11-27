@@ -54,9 +54,17 @@ export interface IconProps {
 }
 
 function IconImpl({ name, size = 16 }: IconProps): ReactElement {
+  return <IconSvg name={name} size={size} />;
+}
+
+/**
+ * Внутренняя деталь для компонентов Sloyka (не экспортируется из пакета):
+ * та же иконка с дополнительным классом оформления, например `sl-ic--lg` в LinkCard.
+ */
+export function IconSvg({ name, size = 16, variant }: IconProps & { variant?: 'lg' }): ReactElement {
   return (
     <svg
-      className="sl-ic"
+      className={variant ? `sl-ic sl-ic--${variant}` : 'sl-ic'}
       viewBox="0 0 16 16"
       aria-hidden="true"
       {...(size === 20 ? { width: 20, height: 20, style: { width: 20, height: 20 } } : {})}

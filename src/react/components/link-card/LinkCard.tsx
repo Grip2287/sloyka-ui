@@ -1,5 +1,5 @@
 import { defineMeta, renderLink, type LinkLike } from '../../core';
-import { Icon, type IconName } from '../../icons';
+import { Icon, IconSvg, type IconName } from '../../icons';
 
 export interface LinkCardProps {
   icon: IconName;
@@ -14,7 +14,7 @@ export const LinkCard = defineMeta(function LinkCard({ icon, title, text, href, 
     href, linkAs, className: 'sl-card sl-card--interactive sl-link-card',
     children: (
       <>
-        <Icon name={icon} size={20} />
+        <IconSvg name={icon} variant="lg" />
         <div><div className="sl-card__title">{title}</div><div className="sl-card__sub">{text}</div></div>
         <Icon name="chevron-right" />
       </>

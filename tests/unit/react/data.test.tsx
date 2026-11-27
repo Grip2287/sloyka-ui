@@ -6,6 +6,7 @@ import {
   List, Group, Row, Disclosure, Table, Empty, Dropzone,
 } from '../../../src/react';
 import { resetWarnings } from '../../../src/react/core';
+import { IconSvg } from '../../../src/react/icons';
 
 let warn: ReturnType<typeof vi.spyOn>;
 beforeEach(() => { resetWarnings(); warn = vi.spyOn(console, 'warn').mockImplementation(() => {}); });
@@ -13,7 +14,7 @@ afterEach(() => { cleanup(); warn.mockRestore(); });
 
 /** `<i data-ic="x"></i>` из историй 0.1.x -> svg-иконка React-версии. */
 const withIcons = (html: string) =>
-  html.replace(/<i data-ic="([\w-]+)"( class="sl-ic--lg")?><\/i>/g, (_, n, lg) => renderToStaticMarkup(<Icon name={n as never} size={lg ? 20 : 16} />));
+  html.replace(/<i data-ic="([\w-]+)"( class="sl-ic--lg")?><\/i>/g, (_, n, lg) => renderToStaticMarkup(lg ? <IconSvg name={n as never} variant="lg" /> : <Icon name={n as never} />));
 
 function norm(html: string, drop: string[] = []): string {
   const t = document.createElement('template');
@@ -38,7 +39,6 @@ const same = (container: HTMLElement, expected: string, drop: string[] = []) =>
  *  - KeyValue: приглушённое значение (class="sl-muted" на dd) делается текстом Text tone="muted" внутри dd.
  *  - Metric: полоса получает role="progressbar" и aria-valuenow/min/max/label (в 0.1.x была немая); значение форматируется
  *    по-русски («5,3%»); ширина полосы округляется до целого.
- *  - LinkCard: иконка слева размером 20 (Icon size=20), а не класс .sl-ic--lg 22px; в сравнении принято как есть.
  *  - Banner: role="status" (ok, warn) и role="alert" (crit); текстовый ребёнок оборачивается в .sl-banner__text.
  *  - Group: <div class="sl-group"> вместо кастомного <sl-group> (React не регистрирует элемент); у кнопки type="button";
  *    счётчик закрашен только у раскрытой группы (как в истории).
