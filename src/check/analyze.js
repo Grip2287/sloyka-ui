@@ -1,16 +1,32 @@
 // Общая логика проверки JS/TS/JSX. Работает с узлами и Babel, и ESTree (ESLint),
 // поэтому ESLint-плагин и CLI дают одинаковый результат.
-import { RULE_IDS, PACKAGE_NAMES, nativeElementMessage, classNameMessage, propValueMessage, deepImportMessage, slSelectorMessage, slClassMessage } from './rules.js';
+import {
+  RULE_IDS, PACKAGE_NAMES, nativeElementMessage, classNameMessage, propValueMessage, deepImportMessage,
+  slSelectorMessage, slClassMessage, headRestrictedMessage, spreadMessage, styledWrapMessage,
+} from './rules.js';
 import { selectorHits } from './scan-css.js';
 
 const FORBIDDEN_ATTRS = new Set(['className', 'style', 'dangerouslySetInnerHTML']);
 const SKIP_KEYS = new Set(['parent', 'loc', 'range', 'start', 'end', 'tokens', 'comments', 'extra', 'leadingComments', 'trailingComments', 'innerComments']);
 const SL_CLASS = /(?<![\w-])sl-[A-Za-z][\w-]*/;
+const LAYOUT_TAGS = new Set(['html', 'head', 'body']);
+const CREATE_ELEMENT_NAMES = new Set(['createElement', 'jsx', 'jsxs', '_jsx', '_jsxs', 'jsxDEV', '_jsxDEV']);
+const STYLED_SOURCES = new Set(['styled-components', '@emotion/styled', 'goober']);
+const LOWER_TAG = /^[a-z]/;
 
-const isLayoutFile = filename => {
-  const p = filename.split('\\').join('/');
-  return /(^|\/)app\/(.*\/)?layout\.[cm]?[jt]sx?$/.test(p) || /(^|\/)pages\/_document\.[cm]?[jt]sx?$/.test(p);
-};
+/**
+ * Файлы, где допустимы html/head/body: Next app/**\/layout и global-error, Remix app/root, pages/_document.
+ * Определяется по абсолютному пути (ближайшая папка app), а не по корню проверки.
+ */
+export function isLayoutFile(filename) {
+  const parts = filename.split('\\').join('/').split('/').map(p => p.toLowerCase());
+  const base = parts.pop() || '';
+  const parent = parts[parts.length - 1];
+  if (parent === 'pages' && /^_document\.[cm]?[jt]sx?$/.test(base)) return true;
+  if (!parts.includes('app')) return false;
+  if (/^(layout|global-error)\.[cm]?[jt]sx?$/.test(base)) return true;
+  return parent === 'app' && /^root\.[cm]?[jt]sx?$/.test(base);
+}
 
 /** Строковое значение узла-литерала (Babel или ESTree), иначе undefined. Числа превращаются в строку. */
 function staticValue(node) {
@@ -48,15 +64,28 @@ function jsxName(name) {
   return null;
 }
 
+/** a.b.c -> ['a', 'b', 'c'] для идентификаторов и обычных member-выражений, иначе null. */
+function exprParts(node) {
+  if (!node) return null;
+  if (node.type === 'Identifier') return [node.name];
+  if (node.type === 'MemberExpression' && !node.computed && node.property.type === 'Identifier') {
+    const head = exprParts(node.object);
+    return head && [...head, node.property.name];
+  }
+  return null;
+}
+
 /**
- * visitors для обхода AST. report({ rule, message, line }).
- * enabled: подмножество RULE_IDS (по умолчанию все).
+ * visitors для обхода AST. report({ rule, line, message }).
+ * enabled: подмножество RULE_IDS (по умолчанию все). filename: абсолютный путь файла.
  */
 export function createAnalyzer({ filename = '', manifest, report, enabled = RULE_IDS }) {
   const on = new Set(enabled);
   const layout = isLayoutFile(filename);
-  const named = new Map(); // локальное имя -> имя в пакете
+  const named = new Map(); // локальное имя -> ключ в манифесте (Button, Card.Head)
   const namespaces = new Set();
+  const stringVars = new Map(); // const T = 'div'
+  const styledNames = new Set();
   const seen = new Set();
   const flag = (rule, line, message) => {
     if (!on.has(rule)) return;
@@ -73,8 +102,7 @@ export function createAnalyzer({ filename = '', manifest, report, enabled = RULE
     if (message) flag('no-deep-imports', source.loc.start.line, message);
   };
 
-  const sloykaKey = nameNode => {
-    const parts = jsxName(nameNode);
+  const keyFromParts = parts => {
     if (!parts) return null;
     const [root, ...rest] = parts;
     let key;
@@ -98,48 +126,108 @@ export function createAnalyzer({ filename = '', manifest, report, enabled = RULE
     for (const hit of selectorHits(text)) flag('no-sl-css-overrides', lineAt(node, text, hit.index), slSelectorMessage(hit.token));
   };
 
+  const checkProp = (key, prop, valueNode, line) => {
+    if (FORBIDDEN_ATTRS.has(prop)) return flag('no-component-classname-style', line, classNameMessage(key, prop));
+    const spec = manifest.components[key].props[prop];
+    const value = spec && spec.type === 'enum' && Array.isArray(spec.options) ? staticValue(valueNode) : undefined;
+    if (value !== undefined && !spec.options.includes(value)) flag('no-invalid-prop-value', line, propValueMessage(key, prop, value, spec.options));
+  };
+
+  const checkSpread = (key, attr) => {
+    const arg = attr.argument;
+    const line = attr.loc.start.line;
+    if (!arg || arg.type !== 'ObjectExpression') return flag('no-component-classname-style', line, spreadMessage(key));
+    for (const p of arg.properties) {
+      const isProp = (p.type === 'ObjectProperty' || p.type === 'Property') && !p.computed && !p.method;
+      const name = isProp && (p.key.type === 'Identifier' ? p.key.name : staticValue(p.key));
+      if (!isProp || typeof name !== 'string') flag('no-component-classname-style', p.loc.start.line, spreadMessage(key));
+      else checkProp(key, name, p.value, p.loc.start.line);
+    }
+  };
+
+  const checkStyledArg = (arg, line) => {
+    const tag = staticValue(arg);
+    if (typeof tag === 'string' && LOWER_TAG.test(tag)) return flag('no-native-elements', line, nativeElementMessage(tag));
+    const key = keyFromParts(exprParts(arg));
+    if (key) flag('no-component-classname-style', line, styledWrapMessage(key));
+  };
+
   const visitors = {
     ImportDeclaration(node) {
       checkSource(node.source);
-      if (node.importKind === 'type' || !PACKAGE_NAMES.includes(node.source.value)) return;
+      if (node.importKind === 'type') return;
+      const from = node.source.value;
+      const isStyled = STYLED_SOURCES.has(from);
+      const isSloyka = PACKAGE_NAMES.includes(from);
       for (const s of node.specifiers) {
-        if (s.type === 'ImportNamespaceSpecifier') namespaces.add(s.local.name);
-        else if (s.type === 'ImportSpecifier') named.set(s.local.name, s.imported.name ?? s.imported.value);
+        if (isSloyka) {
+          if (s.type === 'ImportNamespaceSpecifier') namespaces.add(s.local.name);
+          else if (s.type === 'ImportSpecifier') named.set(s.local.name, s.imported.name ?? s.imported.value);
+        } else if (isStyled && (s.type === 'ImportDefaultSpecifier' || (s.type === 'ImportSpecifier' && (s.imported.name ?? s.imported.value) === 'styled'))) {
+          styledNames.add(s.local.name);
+        }
       }
+    },
+    TSImportEqualsDeclaration(node) {
+      const ref = node.moduleReference;
+      if (ref && ref.type === 'TSExternalModuleReference') checkSource(ref.expression);
     },
     ExportNamedDeclaration: node => checkSource(node.source),
     ExportAllDeclaration: node => checkSource(node.source),
     ImportExpression: node => checkSource(node.source),
+    VariableDeclarator(node) {
+      if (node.id.type !== 'Identifier' || !node.init) return;
+      const str = staticValue(node.init);
+      if (typeof str === 'string' && LOWER_TAG.test(str)) stringVars.set(node.id.name, str);
+      else {
+        const key = keyFromParts(exprParts(node.init)); // const X = Button; const H = Card.Head
+        if (key) named.set(node.id.name, key);
+      }
+    },
+    MemberExpression(node) {
+      if (node.computed || node.object.type !== 'Identifier' || node.property.type !== 'Identifier') return;
+      if (styledNames.has(node.object.name) && LOWER_TAG.test(node.property.name))
+        flag('no-native-elements', node.loc.start.line, nativeElementMessage(node.property.name));
+    },
     CallExpression(node) {
       const callee = node.callee;
       if ((callee.type === 'Identifier' && callee.name === 'require') || callee.type === 'Import') checkSource(node.arguments[0]);
+      else if (callee.type === 'MemberExpression' && callee.object.type === 'Identifier' && callee.object.name === 'require' && callee.property.name === 'resolve') checkSource(node.arguments[0]);
+      const fn = callee.type === 'Identifier' ? callee.name : callee.type === 'MemberExpression' && !callee.computed && callee.property.type === 'Identifier' ? callee.property.name : null;
+      if (fn && CREATE_ELEMENT_NAMES.has(fn)) {
+        const tag = staticValue(node.arguments[0]);
+        if (typeof tag === 'string' && LOWER_TAG.test(tag)) flag('no-native-elements', node.loc.start.line, nativeElementMessage(tag));
+      }
+      if (callee.type === 'Identifier' && styledNames.has(callee.name)) checkStyledArg(node.arguments[0], node.loc.start.line);
     },
     JSXElement(node) {
       const opening = node.openingElement;
       const name = opening.name;
-      const native = name.type === 'JSXIdentifier' && /^[a-z]/.test(name.name);
-      const isHead = native && layout && name.name === 'head';
+      let tag = null;
+      if (name.type === 'JSXNamespacedName') tag = `${name.namespace.name}:${name.name.name}`;
+      else if (name.type === 'JSXIdentifier') tag = LOWER_TAG.test(name.name) ? name.name : stringVars.get(name.name) ?? null;
+      const native = tag !== null;
+      const isHead = native && layout && tag === 'head';
       headStack.push(isHead);
       if (isHead) headDepth++;
+      const inHead = headDepth > (isHead ? 1 : 0);
       const line = name.loc.start.line;
 
       if (native) {
-        const tag = name.name;
-        const allowed = (layout && LAYOUT_TAGS.has(tag)) || (headDepth > (isHead ? 1 : 0));
-        if (!allowed) flag('no-native-elements', line, nativeElementMessage(tag));
+        if (inHead && tag === 'style') flag('no-native-elements', line, headRestrictedMessage('<style>'));
+        else if (!((layout && LAYOUT_TAGS.has(tag)) || inHead)) flag('no-native-elements', line, nativeElementMessage(tag));
       }
 
-      const key = native ? null : sloykaKey(name);
+      const key = native ? null : keyFromParts(jsxName(name));
       for (const attr of opening.attributes) {
+        if (attr.type === 'JSXSpreadAttribute') {
+          if (key) checkSpread(key, attr);
+          continue;
+        }
         if (attr.type !== 'JSXAttribute' || attr.name.type !== 'JSXIdentifier') continue;
         const prop = attr.name.name;
-        const attrLine = attr.loc.start.line;
-        if (key && FORBIDDEN_ATTRS.has(prop)) flag('no-component-classname-style', attrLine, classNameMessage(key, prop));
-        else if (key) {
-          const spec = manifest.components[key].props[prop];
-          const value = spec && spec.type === 'enum' && Array.isArray(spec.options) ? staticValue(attr.value) : undefined;
-          if (value !== undefined && !spec.options.includes(value)) flag('no-invalid-prop-value', attrLine, propValueMessage(key, prop, value, spec.options));
-        }
+        if (key) checkProp(key, prop, attr.value, attr.loc.start.line);
+        else if (native && inHead && prop === 'dangerouslySetInnerHTML') flag('no-native-elements', attr.loc.start.line, headRestrictedMessage('dangerouslySetInnerHTML'));
         if (prop === 'className' || prop === 'class') checkClassTokens(attr);
       }
     },
@@ -152,5 +240,3 @@ export function createAnalyzer({ filename = '', manifest, report, enabled = RULE
   };
   return visitors;
 }
-
-const LAYOUT_TAGS = new Set(['html', 'head', 'body']);

@@ -38,18 +38,22 @@ export function main(argv, io = {}) {
     return 2;
   }
 
-  const { violations, allowed, warnings, files } = result;
+  const { violations, allowed, warnings, errors, files, allowFile: usedAllow } = result;
+  const code = errors.length ? 2 : violations.length ? 1 : 0;
   if (json) {
-    out(JSON.stringify({ violations, allowed, warnings, files }, null, 2));
-    return violations.length ? 1 : 0;
+    out(JSON.stringify({ violations, allowed, warnings, errors, files, allowFile: usedAllow }, null, 2));
+    return code;
   }
+  if (usedAllow) out(`Файл исключений: ${usedAllow}`);
+  for (const e of errors) err(`Ошибка разбора: ${e}`);
   for (const w of warnings) err(`Предупреждение: ${w}`);
   for (const a of allowed) out(`Исключено (${ALLOW_FILE_NAME}): ${a.file}:${a.line} ${a.rule} (причина: ${a.reason})`);
   for (const v of violations) out(`${v.file}:${v.line} ${v.rule} → ${v.message}`);
-  out(
+  if (errors.length) out(`Не удалось разобрать файлов: ${errors.length}. Проверка не пройдена${violations.length ? `, нарушений: ${violations.length}` : ''}.`);
+  else out(
     violations.length
       ? `Нарушений: ${violations.length}${allowed.length ? `, исключено: ${allowed.length}` : ''} (проверено файлов: ${files})`
       : `Sloyka check: нарушений нет${allowed.length ? `, исключено: ${allowed.length}` : ''} (проверено файлов: ${files})`,
   );
-  return violations.length ? 1 : 0;
+  return code;
 }

@@ -96,7 +96,7 @@ describe('sloyka-check: ESLint and Stylelint match the CLI', () => {
           files: ['**/*.{js,jsx,ts,tsx}'],
           languageOptions: {
             parser: babelParser,
-            parserOptions: { requireConfigFile: false, sourceType: 'module', babelOptions: { parserOpts: { plugins: ['jsx', 'typescript'] } } },
+            parserOptions: { requireConfigFile: false, sourceType: 'module', babelOptions: { parserOpts: { plugins: ['jsx', 'typescript', 'decorators-legacy'] } } },
           },
         },
         sloykaEslint.configs.recommended,

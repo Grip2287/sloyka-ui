@@ -19,13 +19,22 @@ function walk(node, visitors) {
 export function pluginsFor(file) {
   const ts = /\.[cm]?tsx?$/.test(file);
   const plain = /\.[cm]?ts$/.test(file); // в .ts нет JSX
-  return [...(ts ? ['typescript'] : []), ...(plain ? [] : ['jsx'])];
+  return [...(ts ? ['typescript'] : []), ...(plain ? [] : ['jsx']), 'decorators-legacy'];
 }
 
-/** Возвращает [{ rule, line, message }]. Бросает ошибку разбора, если файл не разобрать. */
-export function scanJsx(source, file, manifest) {
-  const ast = parse(source, { sourceType: 'unambiguous', plugins: pluginsFor(file), allowReturnOutsideFunction: true });
-  const out = [];
-  walk(ast.program, createAnalyzer({ filename: file, manifest, report: v => out.push(v) }));
-  return out;
+/**
+ * Возвращает { hits: [{ rule, line, message }], errors: [string] }.
+ * Ошибки разбора (в том числе исправленные парсером) не скрываются: проверка по ним считается проваленной.
+ * absPath нужен для определения layout-файлов (Next app/layout и т.п.).
+ */
+export function scanJsx(source, file, manifest, absPath = file) {
+  const hits = [];
+  let ast;
+  try {
+    ast = parse(source, { sourceType: 'unambiguous', plugins: pluginsFor(file), allowReturnOutsideFunction: true, errorRecovery: true });
+  } catch (e) {
+    return { hits, errors: [`${file}: ${e.message}`] };
+  }
+  walk(ast.program, createAnalyzer({ filename: absPath, manifest, report: v => hits.push(v) }));
+  return { hits, errors: (ast.errors || []).map(e => `${file}: ${e.message}`) };
 }

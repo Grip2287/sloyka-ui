@@ -84,7 +84,7 @@ export function propValueMessage(component, prop, value, options) {
 
 /** null, если спецификатор не относится к sloyka или это публичный вход. */
 export function deepImportMessage(spec) {
-  let s = String(spec).replace(/^~/, '');
+  let s = String(spec).replace(/^~/, '').replace(/[?#].*$/, '');
   const nm = s.lastIndexOf('node_modules/');
   if (nm >= 0) s = s.slice(nm + 'node_modules/'.length);
   const pkg = PACKAGE_NAMES.find(p => s === p || s.startsWith(`${p}/`));
@@ -100,4 +100,16 @@ export function slSelectorMessage(token) {
 
 export function slClassMessage(token) {
   return `Класс ${token} внутренний (.sl-*) и не предназначен для сайта. Используйте компоненты Sloyka с пропсами.`;
+}
+
+export function headRestrictedMessage(what) {
+  return `В <head> нельзя ${what}. Тему подключайте через ThemeScript, стили через sloyka/styles.css и шаблоны.`;
+}
+
+export function spreadMessage(component) {
+  return `${component}: spread-пропсы не проверяются. Передайте пропсы явно (например variant="primary"), без {...props}.`;
+}
+
+export function styledWrapMessage(component) {
+  return `styled(${component}) подменяет стили компонента Sloyka. Задавайте вид пропсами ${component}.`;
 }

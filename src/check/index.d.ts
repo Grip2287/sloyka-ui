@@ -16,6 +16,10 @@ export interface CheckResult {
   violations: Violation[];
   allowed: AllowedViolation[];
   warnings: string[];
+  /** Файлы, которые не удалось разобрать: проверка не пройдена (CLI завершается с кодом 2). */
+  errors: string[];
+  /** Использованный файл исключений или null. */
+  allowFile: string | null;
   /** Сколько файлов проверено. */
   files: number;
 }
