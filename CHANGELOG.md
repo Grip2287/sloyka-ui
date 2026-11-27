@@ -1,4 +1,4 @@
-# @grip2287/sloyka
+# sloyka
 
 ## 0.1.0
 
