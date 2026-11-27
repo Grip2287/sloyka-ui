@@ -1,0 +1,26 @@
+{
+  "name": "sloyka-example-next",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "check": "sloyka-check .",
+    "lint": "eslint app components",
+    "prebuild": "sloyka-check .",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "next": "^16.0.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "sloyka": "file:../.."
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "eslint": "^9.0.0",
+    "typescript": "~6.0.0",
+    "typescript-eslint": "^8.0.0"
+  }
+}

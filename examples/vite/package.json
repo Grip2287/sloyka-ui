@@ -1,0 +1,28 @@
+{
+  "name": "sloyka-example-vite",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "check": "sloyka-check src",
+    "lint": "eslint src && stylelint \"src/**/*.css\"",
+    "prebuild": "sloyka-check src",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "sloyka": "file:../.."
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "@vitejs/plugin-react": "^6.3.0",
+    "eslint": "^9.0.0",
+    "stylelint": "^16.0.0",
+    "typescript": "~6.0.0",
+    "typescript-eslint": "^8.0.0",
+    "vite": "^8.4.0"
+  }
+}
