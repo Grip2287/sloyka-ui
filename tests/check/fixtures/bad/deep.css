@@ -1,0 +1,20 @@
+/* expect: no-deep-imports@2, no-deep-imports@3, no-sl-css-overrides@5, no-sl-css-overrides@9, no-sl-css-overrides@11, no-sl-css-overrides@14, no-sl-css-overrides@19 */
+@import 'sloyka/dist/styles.css';
+@import url("sloyka/src/index.css");
+
+.sl-btn { color: red; }
+
+.page,
+.fine,
+.sl-card:hover { color: blue; }
+
+[class*='sl-'] { margin: 0; }
+
+.ok {
+  & .sl-badge { color: red; }
+  color: var(--sl-text);
+}
+
+@media (min-width: 40rem) {
+  .x > .sl-table { gap: 0; }
+}

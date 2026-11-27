@@ -1,0 +1,17 @@
+@import 'sloyka/styles.css';
+@import url('sloyka/templates/strogij.css') layer(theme);
+@import "sloyka/templates/sinij.css";
+
+/* .sl-card в комментарии не считается */
+.my-hero {
+  color: var(--sl-text);
+  background: var(--sl-surface);
+}
+
+.my-hero > .my-title::after {
+  content: '.sl-btn в строке';
+}
+
+@media (min-width: 40rem) {
+  .my-hero { padding: var(--sl-4); }
+}
