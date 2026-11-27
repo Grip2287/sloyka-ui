@@ -7,3 +7,4 @@ playwright-report/
 .npmrc
 components.json
 tests/fixtures/.generated/
+agents/components.md

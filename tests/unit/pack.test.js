@@ -19,7 +19,8 @@ it('package identity', () => {
 it('npm pack contains public entry points', () => {
   for (const f of ['dist/index.js', 'components.json', 'dist/index.d.ts', 'dist/styles.css', 'README.md', 'LICENSE',
     'bin/sloyka-check.js', 'dist/check/index.js', 'dist/check/index.d.ts', 'dist/check/cli.js', 'dist/check/rules.js', 'dist/check/analyze.js',
-    'dist/check/scan-jsx.js', 'dist/check/scan-css.js', 'dist/check/eslint.js', 'dist/check/stylelint.js'])
+    'dist/check/scan-jsx.js', 'dist/check/scan-css.js', 'dist/check/eslint.js', 'dist/check/stylelint.js',
+    'agents/sloyka.md', 'agents/components.md', 'docs/GUIDE.md', 'CHANGELOG.md'])
     expect(files, f).toContain(f);
   expect(files.some(f => /^dist\/fonts\/.+\.woff2$/.test(f))).toBe(true);
   expect(files.some(f => /^templates\/.+/.test(f))).toBe(true);

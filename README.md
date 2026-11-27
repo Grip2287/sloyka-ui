@@ -71,6 +71,10 @@ Semver. Каждый выпуск сопровождается заметкой 
 
 Версия 0.1.x (HTML + веб-компоненты) сохранена тегом `v0.1.0` и пакетом `@grip2287/sloyka@0.1.0`.
 
+## ИИ-агенты (Codex, Cursor, Copilot, Gemini CLI)
+
+В пакете есть инструкция для агентов: `node_modules/sloyka/agents/sloyka.md` и справочник `agents/components.md`. Добавьте в корень сайта `AGENTS.md` со ссылкой на них — готовый текст в [GUIDE, раздел 9](docs/GUIDE.md#9-работа-с-ии-агентами). Для работы над самой библиотекой — [AGENTS.md](AGENTS.md).
+
 ## Плагин для Claude Code
 
 В `plugin/` лежат скиллы `sloyka` (сборка страниц из компонентов) и `sloyka-references` (разбор референсов).

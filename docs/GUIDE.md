@@ -262,6 +262,28 @@ export default [sloyka.configs.recommended];
 - Обновление: поменяйте версию в `package.json`, `npm i`, затем `npm run build` — `sloyka-check` покажет, что нужно поправить.
 - Откат: верните прежнюю версию в `package.json` и `npm i`.
 
-## 9. Работа с Claude
+## 9. Работа с ИИ-агентами
 
-Плагин `sloyka` (папка `plugin/`) учит Claude собирать страницы только из компонентов. Примеры запросов — `docs/PROMPTS.md`. На просьбу «обнови sloyka» Claude сначала показывает, что нового и где лежит, и только потом меняет код.
+**Claude Code.** Плагин `sloyka` (папка `plugin/`) учит Claude собирать страницы только из компонентов:
+
+```
+/plugin marketplace add Grip2287/sloyka-ui
+/plugin install sloyka@sloyka
+```
+
+**Codex, Cursor, GitHub Copilot, Gemini CLI и другие.** В пакете лежит инструкция для агентов: `node_modules/sloyka/agents/sloyka.md` (правила и порядок работы) и `node_modules/sloyka/agents/components.md` (все компоненты и props). Чтобы агент её читал, добавьте в корень своего сайта файл `AGENTS.md`:
+
+```markdown
+# AGENTS.md
+
+Интерфейс собирается только из библиотеки Sloyka.
+Перед любой правкой интерфейса прочитай и выполняй:
+- node_modules/sloyka/agents/sloyka.md — правила и порядок работы
+- node_modules/sloyka/agents/components.md — компоненты и их props
+
+Перед сдачей: `npx sloyka-check src` — ноль нарушений, затем `npm run build`.
+```
+
+`AGENTS.md` читают Codex, Cursor, Copilot, Gemini CLI и другие агенты. Если ваш агент использует свой файл (`.cursor/rules`, `.github/copilot-instructions.md`, `GEMINI.md`, `CLAUDE.md`), положите туда те же строки.
+
+Примеры запросов — `docs/PROMPTS.md`, они подходят любому агенту. На просьбу «обнови sloyka» агент сначала показывает, что нового и где лежит, и только потом меняет код.

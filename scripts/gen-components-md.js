@@ -42,5 +42,7 @@ out.push(
   m.templates.length ? m.templates.map(t => `- \`sloyka/templates/${t}\``).join('\n') : 'Пока нет опубликованных шаблонов.',
   '',
 );
-writeFileSync('plugin/skills/sloyka/components.md', out.join('\n'));
-console.log(`components.md: ${Object.keys(m.components).length} компонентов`);
+// Без аргумента — справочник скилла Claude; при сборке пакета — agents/components.md для других ИИ-агентов.
+const target = process.argv[2] ?? 'plugin/skills/sloyka/components.md';
+writeFileSync(target, out.join('\n'));
+console.log(`${target}: ${Object.keys(m.components).length} компонентов`);
