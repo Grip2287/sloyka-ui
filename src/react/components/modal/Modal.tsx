@@ -71,8 +71,9 @@ function ModalImpl({ title, open, defaultOpen, onOpenChange, footer, size, child
   const native = typeof HTMLDialogElement !== 'undefined' && typeof HTMLDialogElement.prototype.showModal === 'function';
 
   const onKeyDown = (e: KeyboardEvent<HTMLDialogElement>) => {
-    if (native) return; // нативный диалог сам ловит Esc (событие cancel) и держит фокус внутри
-    if (e.key === 'Escape') { e.preventDefault(); request(false); return; }
+    // Esc нативный диалог ловит сам (событие cancel). Tab — нет: из последнего поля Chromium уводит фокус
+    // в свою панель адреса, поэтому цикл по Tab держим сами и для нативного диалога.
+    if (e.key === 'Escape' && !native) { e.preventDefault(); request(false); return; }
     if (e.key !== 'Tab') return;
     const items = [...e.currentTarget.querySelectorAll<HTMLElement>(FOCUSABLE)];
     if (items.length === 0) return;

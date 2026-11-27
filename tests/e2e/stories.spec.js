@@ -3,7 +3,8 @@ import AxeBuilder from '@axe-core/playwright';
 import { stories, url } from './stories.js';
 
 const WIDTHS = [390, 1024, 1440];
-for (const s of stories) {
+// Стенды проверок поведения (метка no-screenshot) проверяются в behaviour.spec.js, не скриншотами.
+for (const s of stories.filter(e => !e.tags?.includes('no-screenshot'))) {
   for (const theme of ['light', 'dark']) {
     for (const w of WIDTHS) {
       test(`${s.id} · ${theme} · ${w}`, async ({ page }) => {

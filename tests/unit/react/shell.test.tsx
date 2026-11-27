@@ -241,6 +241,20 @@ describe('Modal', () => {
     expect(c!.className).toBe('sl-modal');
     expect(warn).toHaveBeenCalledWith(expect.stringContaining('Modal'));
   });
+  it('Tab с последнего элемента — на первый, Shift+Tab с первого — на последний (и у нативного диалога)', () => {
+    render(<Harness />);
+    fireEvent.click(screen.getByText('Открыть'));
+    const items = [...dlg().querySelectorAll<HTMLElement>('input, button')];
+    const first = items[0]!; // крестик в шапке
+    const last = items[items.length - 1]!; // «Добавить»
+    last.focus();
+    const forward = fireEvent.keyDown(last, { key: 'Tab' });
+    expect(forward).toBe(false); // default prevented
+    expect(document.activeElement).toBe(first);
+    const back = fireEvent.keyDown(first, { key: 'Tab', shiftKey: true });
+    expect(back).toBe(false);
+    expect(document.activeElement).toBe(last);
+  });
   it('открытие переносит фокус внутрь, закрытие возвращает его на кнопку', () => {
     render(<Harness />);
     const opener = screen.getByText('Открыть');
