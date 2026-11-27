@@ -27,19 +27,27 @@ interface ButtonCommon {
 
 export type ButtonProps = ButtonCommon &
   (
-    | { iconOnly?: false; icon?: IconName; 'aria-label'?: string; children?: ReactNode }
+    | {
+        iconOnly?: false; icon?: IconName; 'aria-label'?: string; children?: ReactNode;
+        /** На телефоне (до 767 px) видна только иконка, подпись прячется; имя кнопки для скринридера остаётся. */
+        hideLabelOnPhone?: boolean;
+      }
     | {
         iconOnly: true;
         icon: IconName;
         /** Обязателен: у кнопки без текста нет другого имени. */
         'aria-label': string;
         children?: never;
+        hideLabelOnPhone?: never;
       }
   );
 
 function ButtonImpl(props: ButtonProps) {
   const { variant, size, caps, block, busy, disabled, type, onClick, href, linkAs, external, iconOnly, icon, children } = props;
-  const label = props['aria-label'];
+  const hideLabel = !iconOnly && props.hideLabelOnPhone === true;
+  // Подпись на телефоне скрыта (display: none) — имя кнопки берём из неё, если не задано своё.
+  const label = props['aria-label']
+    ?? (hideLabel && (typeof children === 'string' || typeof children === 'number') ? String(children) : undefined);
   checkChildren(ButtonImpl as unknown as SloykaMarked, children);
   const v = pick('Button', 'variant', variant, VARIANTS, 'default');
   const s = pick('Button', 'size', size, SIZES, 'md');
@@ -54,7 +62,7 @@ function ButtonImpl(props: ButtonProps) {
   const inner = (
     <>
       {icon && <Icon name={icon} />}
-      {!iconOnly && children}
+      {!iconOnly && (hideLabel ? <span className="sl-hide-sm">{children}</span> : children)}
     </>
   );
   const off = Boolean(disabled || busy);
@@ -89,6 +97,7 @@ export const Button = defineMeta(ButtonImpl, {
     busy: { type: 'boolean' }, disabled: { type: 'boolean' }, type: { type: 'enum', options: TYPES },
     onClick: { type: 'function' }, href: { type: 'string' }, linkAs: { type: 'component' }, external: { type: 'boolean' },
     'aria-label': { type: 'string', description: 'Обязателен при iconOnly' },
+    hideLabelOnPhone: { type: 'boolean', description: 'На телефоне видна только иконка' },
   },
 });
 

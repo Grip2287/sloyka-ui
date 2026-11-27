@@ -88,8 +88,6 @@
   .sl-table__row--click:focus-visible { outline: 2px solid var(--sl-focus); outline-offset: -2px; }
   .sl-row:focus-visible { outline: 2px solid var(--sl-focus); outline-offset: -2px; }
   .sl-banner__item > span { min-width: 0; overflow-wrap: anywhere; }
-  /* У заголовка баннера в React всегда есть иконка: длинное слово переносится, а не раздвигает страницу. */
-  .sl-banner__title { overflow-wrap: anywhere; }
   @media (max-width: 767px) {
     .sl-table--stack .sl-table__r, .sl-table--stack .sl-table__c { text-align: inherit; }
     .sl-table--stack .sl-table__min { width: auto; white-space: normal; }
@@ -99,11 +97,6 @@
   .sl-page-head__aside { font-size: 11px; color: var(--sl-text-3); }
   .sl-topbar__sep { width: 1px; height: 24px; background: var(--sl-border); }
   .sl-shell .sl-topbar__sep { display: none; }
-  /* Телефон: у кнопок с иконкой в верхней панели видна только иконка (в 0.1.x подпись пряталась .sl-hide-sm);
-     подпись остаётся в разметке и служит именем кнопки для скринридера. */
-  @media (max-width: 767px) {
-    .sl-topbar__end .sl-btn:has(> .sl-ic) { gap: 0; font-size: 0; }
-  }
   .sl-login-wrap { display: grid; grid-template-columns: minmax(0, 340px); justify-content: center; justify-items: center; gap: 18px; padding: 12px 0; }
   .sl-login-wrap > .sl-brand { font-size: 20px; }
   .sl-login-wrap > .sl-brand .sl-brand__mark { width: 40px; height: 40px; border-radius: 12px; font-size: 18px; }

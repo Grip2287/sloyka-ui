@@ -12,12 +12,12 @@ export const Default = {
   name: 'Баннеры',
   render: () => (
     <>
-      <Banner title="Система работает штатно">Обновлено в 11:04:59</Banner>
-      <Banner tone="warn" title="План строится, но без части рекомендаций">
+      <Banner icon="check" title="Система работает штатно">Обновлено в 11:04:59</Banner>
+      <Banner tone="warn" icon="alert" title="План строится, но без части рекомендаций">
         <Banner.Item action={<Button size="sm">Подключить группу</Button>}>Группа «Дежурные силы» не подключена к оповещению</Banner.Item>
         <Banner.Item action={<Button size="sm">Открыть карту</Button>}>Периметр объекта не нанесён на карту</Banner.Item>
       </Banner>
-      <Banner tone="crit" title="Сценарии недоступны">Причина: устройства не привязаны к периметру объекта.</Banner>
+      <Banner tone="crit" icon="alert" title="Сценарии недоступны">Причина: устройства не привязаны к периметру объекта.</Banner>
     </>
   ),
 };
@@ -29,7 +29,7 @@ const PLAYGROUND_ARG_TYPES = {
   action: { name: 'Кнопка (пусто — без неё)', control: 'text' },
 };
 const renderPlayground = (a: Args) => (
-  <Banner tone={a.kind} title={a.title}>
+  <Banner tone={a.kind} icon={a.kind === 'ok' ? 'check' : 'alert'} title={a.title}>
     {a.action
       ? <Banner.Item action={<Button size="sm">{a.action}</Button>}>{a.text}</Banner.Item>
       : a.text}

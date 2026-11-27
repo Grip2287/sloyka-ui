@@ -1,5 +1,5 @@
 'use client';
-import { useCallback, useEffect, useId, useMemo, useRef, useState, type ReactNode } from 'react';
+import { isValidElement, useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import type { SloykaMarked } from '../../core';
 import { defineMeta, checkChildren } from '../../core';
 import { ShellContext } from './context';
@@ -25,10 +25,12 @@ function ShellImpl({ topbar, nav, navOpen, defaultNavOpen, onNavOpenChange, chil
   checkChildren(ShellImpl as unknown as SloykaMarked, children);
   checkChildren(TOPBAR_CHECK, topbar);
   checkChildren(NAV_CHECK, nav);
-  const navId = useId();
+  // id меню: свой у <Nav id>, иначе «sl-nav» — на него без JS ведёт кнопка-ссылка (#sl-nav, :target).
+  const ownId = isValidElement<{ id?: unknown }>(nav) ? nav.props.id : undefined;
+  const navId = typeof ownId === 'string' && ownId ? ownId : 'sl-nav';
   const [inner, setInner] = useState(Boolean(defaultNavOpen));
   const open = navOpen ?? inner;
-  const toggleRef = useRef<HTMLButtonElement>(null);
+  const toggleRef = useRef<HTMLAnchorElement>(null);
   const rootRef = useRef<HTMLDivElement>(null);
   const latest = useRef({ open, controlled: navOpen !== undefined, onNavOpenChange });
   latest.current = { open, controlled: navOpen !== undefined, onNavOpenChange };

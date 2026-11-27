@@ -32,12 +32,15 @@ function TopbarImpl({ brand, title, children }: TopbarProps) {
   return (
     <header className="sl-topbar">
       {shell && (
-        <button
-          ref={shell.toggleRef} type="button" className="sl-btn sl-btn--icon sl-btn--ghost sl-shell__toggle"
-          aria-label="Меню" aria-expanded={shell.open} aria-controls={shell.navId} onClick={shell.toggle}
+        // Ссылка на меню: без JS открывает его через :target (как в 0.1.x), с JS — переключает состояние.
+        <a
+          ref={shell.toggleRef} href={`#${shell.navId}`} role="button" className="sl-btn sl-btn--icon sl-btn--ghost sl-shell__toggle"
+          aria-label="Меню" aria-expanded={shell.open} aria-controls={shell.navId}
+          onClick={(e) => { e.preventDefault(); shell.toggle(); }}
+          onKeyDown={(e) => { if (e.key === ' ') { e.preventDefault(); shell.toggle(); } }}
         >
           <Icon name="menu" />
-        </button>
+        </a>
       )}
       <BrandView {...brand} />
       {title && <><span className="sl-topbar__sep" aria-hidden="true" /><span className="sl-topbar__title">{title}</span></>}

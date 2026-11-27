@@ -57,9 +57,9 @@ function Admin({ brand = 'SLOYKA', title = 'Устройства', banner, cards
       <Shell
         topbar={
           <Topbar brand={{ mark: 'S', name: brand }} title="Панель администрирования">
-            <Button size="sm" icon="arrow-left">Мониторинг</Button>
+            <Button size="sm" icon="arrow-left" hideLabelOnPhone>Мониторинг</Button>
             <ThemeToggle />
-            <Button size="sm" icon="user">ОД 12</Button>
+            <Button size="sm" icon="user" hideLabelOnPhone>ОД 12</Button>
             <Button size="sm" iconOnly icon="power" variant="danger" aria-label="Выйти" />
           </Topbar>
         }
@@ -84,7 +84,7 @@ function Admin({ brand = 'SLOYKA', title = 'Устройства', banner, cards
 export const Default = {
   name: 'Устройства',
   render: () => (
-    <Admin banner={<Banner tone="warn" title="2 устройства не размещены на карте">Разместите их в разделе «Карты», иначе зоны не построятся.</Banner>} />
+    <Admin banner={<Banner tone="warn" icon="alert" title="2 устройства не размещены на карте">Разместите их в разделе «Карты», иначе зоны не построятся.</Banner>} />
   ),
 };
 
@@ -100,7 +100,7 @@ export const Playground = {
   },
   render: (a: Args) => (
     <Admin brand={a.brand} title={a.title}
-      banner={a.banner ? <Banner tone="warn" title={a.banner} /> : undefined}
+      banner={a.banner ? <Banner tone="warn" icon="alert" title={a.banner} /> : undefined}
       cards={Array.from({ length: Number(a.cards) }, (_, i) => (
         <Card key={i} accent={TONES[i % 4]}>
           <Card.Head title={`Устройство ${i + 1}`} subtitle="Класс · Модель" />

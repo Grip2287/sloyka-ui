@@ -1,23 +1,25 @@
 import { Children, type ReactNode } from 'react';
 import type { SloykaMarked } from '../../core';
 import { defineMeta, pick, cx, checkChildren } from '../../core';
-import { Icon } from '../../icons';
+import { Icon, type IconName } from '../../icons';
 
 const TONES = ['ok', 'warn', 'crit'] as const;
 
 export interface BannerProps {
   tone?: (typeof TONES)[number];
   title: string;
+  /** Иконка перед заголовком (например, check или alert). По умолчанию её нет. */
+  icon?: IconName;
   /** Текст-пояснение или Banner.Item со своим действием. */
   children?: ReactNode;
 }
 
-function BannerImpl({ tone, title, children }: BannerProps) {
+function BannerImpl({ tone, title, icon, children }: BannerProps) {
   checkChildren(BannerImpl as unknown as SloykaMarked, children);
   const t = pick('Banner', 'tone', tone, TONES, 'ok');
   return (
     <div className={cx('sl-banner', t !== 'ok' && `sl-banner--${t}`)} role={t === 'crit' ? 'alert' : 'status'}>
-      <div className="sl-banner__title"><Icon name={t === 'ok' ? 'check' : 'alert'} />{title}</div>
+      <div className="sl-banner__title">{icon && <Icon name={icon} />}{title}</div>
       {Children.map(children, (c) =>
         typeof c === 'string' || typeof c === 'number' ? <div className="sl-banner__text">{c}</div> : c)}
     </div>
@@ -26,7 +28,7 @@ function BannerImpl({ tone, title, children }: BannerProps) {
 
 const BannerBase = defineMeta(BannerImpl, {
   n: '09', group: 'Баннеры', name: 'Banner', allowed: ['Banner.Item', 'Button', 'Text', 'Stack'],
-  props: { tone: { type: 'enum', options: TONES, default: 'ok' }, title: { type: 'string', required: true } },
+  props: { tone: { type: 'enum', options: TONES, default: 'ok' }, title: { type: 'string', required: true }, icon: { type: 'IconName' } },
 });
 
 export interface BannerItemProps {

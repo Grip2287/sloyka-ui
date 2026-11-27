@@ -17,9 +17,9 @@ export const Default = {
   render: () => (
     <Frame>
       <Topbar brand={{ mark: 'S', name: 'SLOYKA' }} title="Панель администрирования">
-        <Button size="sm" icon="arrow-left">Мониторинг</Button>
+        <Button size="sm" icon="arrow-left" hideLabelOnPhone>Мониторинг</Button>
         <Button size="sm" iconOnly icon="moon" aria-label="Тёмная тема" />
-        <Button size="sm" icon="user" aria-label="ОД 12 — аккаунт">ОД 12</Button>
+        <Button size="sm" icon="user" hideLabelOnPhone aria-label="ОД 12 — аккаунт">ОД 12</Button>
         <Button size="sm" iconOnly icon="power" variant="danger" aria-label="Выйти" />
       </Topbar>
     </Frame>
@@ -41,9 +41,9 @@ export const Playground = {
   render: (a: Args) => (
     <Frame>
       <Topbar brand={{ mark: a.mark, name: a.brand }} title={a.title || undefined}>
-        {a.back && <Button size="sm" icon="arrow-left">{a.back}</Button>}
+        {a.back && <Button size="sm" icon="arrow-left" hideLabelOnPhone>{a.back}</Button>}
         {a.theme && <Button size="sm" iconOnly icon="moon" aria-label="Тёмная тема" />}
-        {a.user && <Button size="sm" icon="user" aria-label={`${a.user} — аккаунт`}>{a.user}</Button>}
+        {a.user && <Button size="sm" icon="user" hideLabelOnPhone aria-label={`${a.user} — аккаунт`}>{a.user}</Button>}
         {a.logout && <Button size="sm" iconOnly icon="power" variant="danger" aria-label="Выйти" />}
       </Topbar>
     </Frame>

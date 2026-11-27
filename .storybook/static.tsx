@@ -1,37 +1,45 @@
 // Витрина вида для того, что в React существует только «вживую»:
 // уведомление появляется через useToast, модальное окно — в верхнем слое страницы (<dialog>.showModal).
-// Статичный снимок в ряд с другими примерами рисуется теми же классами Sloyka; живые версии — в историях «Live».
-import type { CSSProperties, ReactNode } from 'react';
-import { Button } from '../src/react';
-import { ICON_PATHS, type IconName } from '../src/react/icons';
+// Статичный снимок в ряд с другими примерами повторяет их разметку (сверяется тестом
+// tests/unit/react/static-parity.test.tsx); живые версии — в историях «Live».
+import { useId, type ReactNode } from 'react';
+import { Button, Icon, type IconName } from '../src/react';
 
-const TOAST_ICON = { ok: 'check', warn: 'alert', crit: 'alert', info: 'info' } as const;
+const TOAST_ICON: Record<'ok' | 'warn' | 'crit' | 'info', IconName> = { ok: 'check', warn: 'alert', crit: 'alert', info: 'info' };
 
-export function StaticToast({ kind, title, text, close }: { kind: 'ok' | 'warn' | 'crit' | 'info'; title: string; text?: string; close?: boolean }) {
-  const icon: IconName = TOAST_ICON[kind];
+/**
+ * Та же разметка, что у уведомления из useToast(). `withClose={false}` — только для компактного примера панели
+ * (sample.tsx, как в 0.1.x): у живого уведомления кнопка «Закрыть» есть всегда.
+ */
+export function StaticToast({ kind, title, text, withClose = true }: { kind: 'ok' | 'warn' | 'crit' | 'info'; title: string; text?: string; withClose?: boolean }) {
   return (
-    <div className="sl-toast" style={{ '--c': `var(--sl-${kind === 'info' ? 'text-2' : kind})` } as CSSProperties}>
-      <svg className="sl-ic sl-toast__icon" viewBox="0 0 16 16" aria-hidden="true" dangerouslySetInnerHTML={{ __html: ICON_PATHS[icon] }} />
+    <div className={`sl-toast sl-toast--${kind}`} role={kind === 'crit' ? 'alert' : 'status'}>
+      <span className="sl-toast__icon"><Icon name={TOAST_ICON[kind]} /></span>
       <div className="sl-toast__body">
-        <span className="sl-toast__title">{title}</span>
-        {text && <span className="sl-toast__text">{text}</span>}
+        {text
+          ? <><span className="sl-toast__title">{title}</span><span className="sl-toast__text">{text}</span></>
+          : <span className="sl-toast__title">{title}</span>}
       </div>
-      {close && <Button variant="ghost" size="sm" iconOnly icon="x" aria-label="Закрыть" />}
+      {withClose && <Button variant="ghost" size="sm" iconOnly icon="x" type="button" aria-label="Закрыть" />}
     </div>
   );
 }
 
-/** Окно на затемнении в потоке страницы (без верхнего слоя). */
-export function StaticModal({ title, width = 420, footer, children }: { title: string; width?: number; footer: ReactNode; children: ReactNode }) {
+/**
+ * Окно на затемнении в потоке страницы. Разметка — как у открытого <Modal>, только вместо <dialog>
+ * (открытый модально, он всегда уходит в верхний слой) — <div role="dialog">.
+ */
+export function StaticModal({ title, width = 420, footer, children }: { title: string; width?: number; footer?: ReactNode; children?: ReactNode }) {
+  const titleId = useId();
   return (
     <div style={{ display: 'grid', gridTemplateColumns: `minmax(0,${width}px)`, justifyContent: 'center', padding: 28, borderRadius: 'var(--sl-r-lg)', background: 'var(--sl-backdrop)' }}>
-      <div className="sl-modal" role="dialog" aria-label={title}>
+      <div className="sl-modal" role="dialog" aria-labelledby={titleId}>
         <div className="sl-modal__head">
-          <span className="sl-modal__title">{title}</span>
-          <Button variant="ghost" size="sm" iconOnly icon="x" aria-label="Закрыть" />
+          <span className="sl-modal__title" id={titleId}>{title}</span>
+          <Button variant="ghost" size="sm" iconOnly icon="x" type="button" aria-label="Закрыть" />
         </div>
         <div className="sl-modal__body">{children}</div>
-        <div className="sl-modal__foot">{footer}</div>
+        {footer && <div className="sl-modal__foot">{footer}</div>}
       </div>
     </div>
   );

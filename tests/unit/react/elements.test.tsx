@@ -55,6 +55,13 @@ describe('Button', () => {
     same(render(<Button size="sm">Скачать архив</Button>).container, '<button class="sl-btn sl-btn--sm">Скачать архив</button>');
     same(render(<Button disabled>Обновить</Button>).container, '<button class="sl-btn" disabled>Обновить</button>');
   });
+  it('hideLabelOnPhone: подпись в .sl-hide-sm (как в верхней панели 0.1.x), имя кнопки остаётся', () => {
+    same(render(<Button size="sm" icon="user" hideLabelOnPhone aria-label="ОД 12 — аккаунт">ОД 12</Button>).container,
+      '<button class="sl-btn sl-btn--sm" aria-label="ОД 12 — аккаунт"><i data-ic="user"></i><span class="sl-hide-sm">ОД 12</span></button>');
+    // без aria-label имя берётся из текстовой подписи: на телефоне она скрыта display:none
+    same(render(<Button size="sm" icon="arrow-left" hideLabelOnPhone>Мониторинг</Button>).container,
+      '<button class="sl-btn sl-btn--sm" aria-label="Мониторинг"><i data-ic="arrow-left"></i><span class="sl-hide-sm">Мониторинг</span></button>');
+  });
   it('parity: iconOnly danger', () => {
     same(render(<Button iconOnly variant="danger" icon="power" aria-label="Выйти" />).container,
       '<button class="sl-btn sl-btn--icon sl-btn--danger" aria-label="Выйти"><i data-ic="power"></i></button>');

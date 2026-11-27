@@ -30,7 +30,7 @@ export function Sample() {
         <Tag>Администратор</Tag>
         <Chip count={1}>На линии</Chip>
       </div>
-      <Banner tone="warn" title="2 устройства не размещены на карте" />
+      <Banner tone="warn" icon="alert" title="2 устройства не размещены на карте" />
       <div style={{ maxWidth: 420 }}>
         <Stats items={[{ label: 'Онлайн', value: 10, tone: 'ok' }, { label: 'Офлайн', value: 1 }]} />
       </div>
@@ -54,7 +54,7 @@ export function Sample() {
         { key: 'event', title: 'Событие', render: () => <Status tone="ok">Вход</Status> },
       ]} />
       <div className="row" style={{ alignItems: 'flex-start' }}>
-        <StaticToast kind="ok" title="Сохранено" />
+        <StaticToast kind="ok" title="Сохранено" withClose={false} />
         <div style={{ width: 220 }}>
           <Menu>
             <Menu.Item icon="user">Профиль</Menu.Item>

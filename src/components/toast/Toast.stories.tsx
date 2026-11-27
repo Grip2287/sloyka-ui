@@ -13,9 +13,9 @@ export const Default = {
   name: 'Уведомления и подсказка',
   render: () => (
     <div className="col">
-      <StaticToast kind="ok" title="Устройство добавлено" text="Камера КПП-2 появится на карте после размещения." close />
-      <StaticToast kind="warn" title="Связь нестабильна" text="Шлюз-04 отвечает с задержкой." close />
-      <StaticToast kind="crit" title="Не удалось загрузить журнал" text="Проверьте соединение и обновите страницу." close />
+      <StaticToast kind="ok" title="Устройство добавлено" text="Камера КПП-2 появится на карте после размещения." />
+      <StaticToast kind="warn" title="Связь нестабильна" text="Шлюз-04 отвечает с задержкой." />
+      <StaticToast kind="crit" title="Не удалось загрузить журнал" text="Проверьте соединение и обновите страницу." />
       <span>
         <Tooltip text="Переключить тему"><Button size="sm" iconOnly icon="moon" aria-label="Тёмная тема" /></Tooltip>
       </span>
@@ -55,5 +55,5 @@ export const Playground = {
     title: { name: 'Заголовок', control: 'text' },
     text: { name: 'Текст', control: 'text' },
   },
-  render: (a: Args) => <StaticToast kind={a.kind} title={a.title} text={a.text} close />,
+  render: (a: Args) => <StaticToast kind={a.kind} title={a.title} text={a.text} />,
 };

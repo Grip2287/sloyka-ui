@@ -172,12 +172,12 @@ describe('LinkCard and Steps', () => {
 
 describe('Banner', () => {
   it('parity: ok with text', () => {
-    const { container } = render(<Banner title="Система работает штатно">Обновлено в 11:04:59</Banner>);
+    const { container } = render(<Banner icon="check" title="Система работает штатно">Обновлено в 11:04:59</Banner>);
     same(container, `<div class="sl-banner" role="status"><div class="sl-banner__title"><i data-ic="check"></i>Система работает штатно</div><div class="sl-banner__text">Обновлено в 11:04:59</div></div>`);
   });
   it('parity: warn with items and actions', () => {
     const { container } = render(
-      <Banner tone="warn" title="План строится, но без части рекомендаций">
+      <Banner tone="warn" icon="alert" title="План строится, но без части рекомендаций">
         <Banner.Item action={<Button size="sm">Подключить группу</Button>}>Группа «Дежурные силы» не подключена к оповещению</Banner.Item>
         <Banner.Item action={<Button size="sm">Открыть карту</Button>}>Периметр объекта не нанесён на карту</Banner.Item>
       </Banner>,
@@ -186,6 +186,10 @@ describe('Banner', () => {
     <div class="sl-banner__item"><span>Группа «Дежурные силы» не подключена к оповещению</span><button class="sl-btn sl-btn--sm">Подключить группу</button></div>
     <div class="sl-banner__item"><span>Периметр объекта не нанесён на карту</span><button class="sl-btn sl-btn--sm">Открыть карту</button></div></div>`);
     expect(warn).not.toHaveBeenCalled();
+  });
+  it('без icon заголовок без иконки (как в 0.1.x)', () => {
+    const { container } = render(<Banner tone="warn" title="Длинный заголовок">Текст</Banner>);
+    same(container, `<div class="sl-banner sl-banner--warn" role="status"><div class="sl-banner__title">Длинный заголовок</div><div class="sl-banner__text">Текст</div></div>`);
   });
   it('crit uses role alert; unknown tone warns', () => {
     const { container } = render(<Banner tone="crit" title="Сценарии недоступны" />);

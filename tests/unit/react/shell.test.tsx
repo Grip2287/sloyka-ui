@@ -464,6 +464,11 @@ describe('Tooltip', () => {
 });
 
 describe('Login', () => {
+  it('подписи полей и кнопки настраиваются (userLabel, passLabel, button)', () => {
+    const { container } = render(<Login brand={{ mark: 'S', name: 'S' }} onSubmit={() => {}} userLabel="Логин" passLabel="Код доступа" button="Продолжить" />);
+    expect([...container.querySelectorAll('.sl-label')].map((l) => l.textContent)).toEqual(['Логин', 'Код доступа']);
+    expect(container.querySelector('button[type=submit]')!.textContent).toBe('Продолжить');
+  });
   it('parity: карточка входа', () => {
     const { container } = render(<Login brand={{ mark: 'S', name: 'SLOYKA' }} onSubmit={() => {}} footer="Название организации" />);
     expect(container.querySelector('.sl-login-wrap > .sl-brand .sl-brand__mark')!.textContent).toBe('S');
@@ -546,6 +551,37 @@ describe('Shell', () => {
     expect(container.querySelector('main.sl-shell__main')!.textContent).toBe('Содержимое');
     expect(container.querySelectorAll('main')).toHaveLength(1);
     expect(container.querySelector('.sl-shell__backdrop')).not.toBeNull();
+  });
+  it('без JS кнопка меню — ссылка на #sl-nav (как в 0.1.x); с JS переход отменяется', () => {
+    const html = renderToStaticMarkup(<App />);
+    const tpl = document.createElement('template');
+    tpl.innerHTML = html;
+    const link = tpl.content.querySelector('a.sl-shell__toggle')!;
+    expect(link.className).toBe('sl-btn sl-btn--icon sl-btn--ghost sl-shell__toggle');
+    expect(link.getAttribute('href')).toBe('#sl-nav');
+    expect(html).toContain('id="sl-nav"');
+    expect(html).toContain('aria-controls="sl-nav"');
+    render(<App />);
+    const ev = new MouseEvent('click', { bubbles: true, cancelable: true });
+    act(() => { toggle().dispatchEvent(ev); });
+    expect(ev.defaultPrevented).toBe(true);
+    expect(toggle().getAttribute('aria-expanded')).toBe('true');
+  });
+  it('id меню: свой у Nav внутри Shell; вне Shell без id', () => {
+    render(
+      <Shell topbar={<Topbar brand={{ mark: 'S', name: 'S' }} />} nav={<Nav id="side"><Nav.Item icon="plug" href="/a">A</Nav.Item></Nav>} />,
+    );
+    expect(document.querySelector('nav.sl-shell__nav')!.id).toBe('side');
+    expect(toggle().getAttribute('href')).toBe('#side');
+    expect(toggle().getAttribute('aria-controls')).toBe('side');
+    cleanup();
+    const { container } = render(<Nav><Nav.Item icon="plug" href="/a">A</Nav.Item></Nav>);
+    expect(container.querySelector('nav')!.hasAttribute('id')).toBe(false);
+  });
+  it('Space на кнопке-ссылке тоже открывает меню', () => {
+    const { container } = render(<App />);
+    fireEvent.keyDown(toggle(), { key: ' ' });
+    expect(root(container).hasAttribute('data-nav-open')).toBe(true);
   });
   it('кнопка открывает меню, фокус уходит в первый пункт', () => {
     const onChange = vi.fn();

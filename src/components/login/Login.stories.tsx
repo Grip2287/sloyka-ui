@@ -15,14 +15,17 @@ export const Default = {
 
 export const Playground = {
   name: 'Песочница',
-  args: { mark: 'S', brand: 'SLOYKA', footer: 'Название организации', error: '' },
+  args: { mark: 'S', brand: 'SLOYKA', userLabel: 'Имя пользователя', passLabel: 'Пароль', button: 'Войти', footer: 'Название организации', error: '' },
   argTypes: {
     mark: { name: 'Знак', control: 'text' },
     brand: { name: 'Название', control: 'text' },
+    userLabel: { name: 'Подпись логина', control: 'text' },
+    passLabel: { name: 'Подпись пароля', control: 'text' },
+    button: { name: 'Текст кнопки', control: 'text' },
     footer: { name: 'Подпись внизу', control: 'text' },
     error: { name: 'Ошибка входа', control: 'text' },
   },
   render: (a: Args) => (
-    <Login brand={{ mark: a.mark, name: a.brand }} footer={a.footer || undefined} error={a.error || undefined} onSubmit={() => {}} />
+    <Login brand={{ mark: a.mark, name: a.brand }} userLabel={a.userLabel} passLabel={a.passLabel} button={a.button} footer={a.footer || undefined} error={a.error || undefined} onSubmit={() => {}} />
   ),
 };

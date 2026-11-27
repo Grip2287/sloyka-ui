@@ -1,12 +1,12 @@
 'use client';
-import { createContext, type MouseEventHandler, type RefObject } from 'react';
+import { createContext, type RefObject } from 'react';
 
 /** Внутренняя связь Shell, Topbar и Nav: кнопка меню, состояние и закрытие по пункту. */
 export interface ShellState {
   open: boolean;
   navId: string;
-  toggleRef: RefObject<HTMLButtonElement | null>;
-  toggle: MouseEventHandler<HTMLButtonElement>;
+  toggleRef: RefObject<HTMLAnchorElement | null>;
+  toggle: () => void;
   close: () => void;
 }
 

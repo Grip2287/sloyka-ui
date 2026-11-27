@@ -14,15 +14,17 @@ export interface NavProps {
   /** Узкий вид «рейл»: иконка и подпись столбиком. */
   rail?: boolean;
   'aria-label'?: string;
+  /** id меню. Внутри Shell по умолчанию «sl-nav»: на него ведёт кнопка меню телефона (и без JS). Вне Shell id нет. */
+  id?: string;
   children?: ReactNode;
 }
 
-function NavImpl({ current, rail, 'aria-label': label, children }: NavProps) {
+function NavImpl({ current, rail, 'aria-label': label, id, children }: NavProps) {
   checkChildren(NavImpl as unknown as SloykaMarked, children);
   const shell = useContext(ShellContext);
   return (
     <nav
-      className={cx('sl-nav', rail && 'sl-nav--rail', shell && 'sl-shell__nav')} id={shell?.navId}
+      className={cx('sl-nav', rail && 'sl-nav--rail', shell && 'sl-shell__nav')} id={id ?? shell?.navId}
       aria-label={label ?? 'Разделы'}
       // Выбор пункта закрывает меню телефона (делегирование: пункт может быть ссылкой роутера).
       onClick={shell ? (e) => { if (shell.open && (e.target as Element).closest('.sl-nav__item')) shell.close(); } : undefined}
@@ -33,7 +35,7 @@ function NavImpl({ current, rail, 'aria-label': label, children }: NavProps) {
 }
 const NavBase = defineMeta(NavImpl, {
   n: '24', group: 'Боковое меню: полное и рейл', name: 'Nav', allowed: ['Nav.Section', 'Nav.Item'],
-  props: { current: { type: 'string' }, rail: { type: 'boolean' }, 'aria-label': { type: 'string', default: 'Разделы' } },
+  props: { current: { type: 'string' }, rail: { type: 'boolean' }, 'aria-label': { type: 'string', default: 'Разделы' }, id: { type: 'string' } },
 });
 
 export interface NavSectionProps {
