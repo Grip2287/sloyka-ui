@@ -76,6 +76,14 @@ describe('sloyka-check: нативная вёрстка', () => {
     expect(v).toEqual(['13 native-js-markup', '14 native-js-markup', '15 native-js-markup']);
   });
 
+  it('поиск элементов по классам sl-* — чтение, его можно', () => {
+    expect(check(page(`<script>
+  const title = document.querySelector('.sl-card__title').textContent;
+  document.querySelectorAll('.sl-modal input').forEach((i) => { i.value = ''; });
+  const card = document.getElementById('x').closest('.sl-card');
+</script>`))).toEqual([]);
+  });
+
   it('из пакета подключаются только styles.css, шаблоны и скрипты компонентов', () => {
     const v = check(page('', '<script src="node_modules/sloyka/dist/index.js"></script>\n  <link rel="stylesheet" href="https://unpkg.com/sloyka@2.0.0/templates/template-1.css">'));
     expect(v).toEqual(['8 no-deep-imports']);

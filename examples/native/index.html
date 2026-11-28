@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Пульт — объекты</title>
+  <!-- Нативные компоненты Sloyka: только HTML + CSS. Разметка — из node_modules/sloyka/native/*.html -->
+  <script src="node_modules/sloyka/native/theme-head.js"></script>
+  <link rel="stylesheet" href="node_modules/sloyka/dist/styles.css">
+</head>
+<body>
+<!-- 24 · Shell + Nav, 16 · Topbar (native/shell.html) -->
+<div class="sl-shell">
+  <header class="sl-topbar">
+    <a href="#sl-nav" role="button" class="sl-btn sl-btn--icon sl-btn--ghost sl-shell__toggle" aria-label="Меню" aria-expanded="false" aria-controls="sl-nav"><svg class="sl-ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 4h11M2.5 8h11M2.5 12h11"/></svg></a>
+    <span class="sl-brand"><span class="sl-brand__mark">П</span><span class="sl-brand__text">Пульт</span></span><span class="sl-topbar__sep" aria-hidden="true"></span><span class="sl-topbar__title">Объекты</span>
+    <div class="sl-topbar__end">
+      <button type="button" class="sl-btn sl-btn--sm sl-btn--icon" aria-label="Тёмная тема" aria-pressed="false" data-sl-theme-toggle=""><svg class="sl-ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M13 9.5A5.5 5.5 0 1 1 6.5 3a4.5 4.5 0 0 0 6.5 6.5z"/></svg></button>
+      <button class="sl-btn sl-btn--icon" type="button" aria-label="Выйти" id="logout"><svg class="sl-ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 2v6"/><path d="M4.6 4.4a5 5 0 1 0 6.8 0"/></svg></button>
+    </div>
+  </header>
+  <nav class="sl-nav sl-shell__nav" id="sl-nav" aria-label="Разделы">
+    <div class="sl-nav__section sl-caps">Мониторинг</div>
+    <a href="#" class="sl-nav__item" aria-current="page"><svg class="sl-ic" viewBox="0 0 16 16" aria-hidden="true"><rect x="2.5" y="2.5" width="4.5" height="4.5" rx="1"/><rect x="9" y="2.5" width="4.5" height="4.5" rx="1"/><rect x="2.5" y="9" width="4.5" height="4.5" rx="1"/><rect x="9" y="9" width="4.5" height="4.5" rx="1"/></svg><span class="sl-nav__label">Объекты</span></a>
+    <a href="#journal" class="sl-nav__item"><svg class="sl-ic" viewBox="0 0 16 16" aria-hidden="true"><rect x="3" y="2" width="10" height="12" rx="1.5"/><path d="M5.5 5.5h5M5.5 8h5M5.5 10.5h3"/></svg><span class="sl-nav__label">Журнал</span><span class="sl-count sl-count--solid">3</span></a>
+    <div class="sl-nav__section sl-caps">Система</div>
+    <a href="#settings" class="sl-nav__item"><svg class="sl-ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M10.5 2.5a3 3 0 0 0-2.8 4.1L2.8 11.5a1.2 1.2 0 0 0 1.7 1.7l4.9-4.9a3 3 0 0 0 4.1-2.8l-1.9 1.9-1.8-.3-.3-1.8z"/></svg><span class="sl-nav__label">Настройки</span></a>
+  </nav>
+  <div class="sl-shell__backdrop" aria-hidden="true"></div>
+  <main class="sl-shell__main">
+    <!-- 15 · PageHeader -->
+    <div class="sl-page-head">
+      <h1 class="sl-page-title">Объекты</h1>
+    </div>
+
+    <!-- 10 · Stats: цифры заполняет app.js -->
+    <div class="sl-stats">
+      <div class="sl-stat"><span class="sl-stat__value" id="stat-all">4</span><span class="sl-caps">Всего</span></div>
+      <div class="sl-stat"><span class="sl-stat__value" style="--c:var(--sl-ok)" id="stat-ok">2</span><span class="sl-caps">На связи</span></div>
+      <div class="sl-stat"><span class="sl-stat__value" style="--c:var(--sl-warn)" id="stat-warn">1</span><span class="sl-caps">Задержка</span></div>
+      <div class="sl-stat"><span class="sl-stat__value" style="--c:var(--sl-crit)" id="stat-crit">1</span><span class="sl-caps">Нет связи</span></div>
+    </div>
+
+    <!-- 15 · Toolbar: 02 · Search, Select; 01 · Button -->
+    <div class="sl-toolbar">
+      <label class="sl-search"><svg class="sl-ic" viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5L14 14"/></svg><input class="sl-input" placeholder="Поиск объекта" aria-label="Поиск объекта" name="query" id="query"/></label>
+      <select class="sl-select" name="state" aria-label="Состояние" id="state">
+        <option value="all">Все состояния</option>
+        <option value="ok">На связи</option>
+        <option value="warn">Задержка</option>
+        <option value="crit">Нет связи</option>
+      </select>
+      <div class="sl-toolbar__end">
+        <button class="sl-btn" type="button" data-sl-open="user-modal"><svg class="sl-ic" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="5.5" r="2.5"/><path d="M3 13.5c.6-2.6 2.6-3.8 5-3.8s4.4 1.2 5 3.8"/></svg>Добавить пользователя</button>
+        <button class="sl-btn sl-btn--primary" type="button" data-sl-open="site-modal"><svg class="sl-ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 3v10M3 8h10"/></svg>Добавить объект</button>
+      </div>
+    </div>
+
+    <!-- 00 · Grid + 06 · Card -->
+    <div class="sl-grid sl-grid--auto-md sl-grid--gap-3" id="sites">
+      <article class="sl-card" data-accent="ok">
+        <div class="sl-card__head">
+          <div>
+            <div class="sl-card__title">КПП-1</div>
+            <div class="sl-card__sub">ул. Заводская, 12</div>
+          </div>
+        </div>
+        <dl class="sl-kv">
+          <dt>Состояние</dt>
+          <dd><span class="sl-status sl-status--ok">На связи</span></dd>
+          <dt>Устройств</dt>
+          <dd>14</dd>
+        </dl>
+      </article>
+      <article class="sl-card" data-accent="warn">
+        <div class="sl-card__head">
+          <div>
+            <div class="sl-card__title">Склад №4</div>
+            <div class="sl-card__sub">Промзона, корпус 7</div>
+          </div>
+        </div>
+        <dl class="sl-kv">
+          <dt>Состояние</dt>
+          <dd><span class="sl-status sl-status--warn">Задержка</span></dd>
+          <dt>Устройств</dt>
+          <dd>9</dd>
+        </dl>
+      </article>
+      <article class="sl-card" data-accent="crit">
+        <div class="sl-card__head">
+          <div>
+            <div class="sl-card__title">Шлюз-04</div>
+            <div class="sl-card__sub">Набережная, 3</div>
+          </div>
+        </div>
+        <dl class="sl-kv">
+          <dt>Состояние</dt>
+          <dd><span class="sl-status sl-status--crit">Нет связи</span></dd>
+          <dt>Устройств</dt>
+          <dd>6</dd>
+        </dl>
+      </article>
+      <article class="sl-card" data-accent="ok">
+        <div class="sl-card__head">
+          <div>
+            <div class="sl-card__title">Офис</div>
+            <div class="sl-card__sub">пр. Мира, 40</div>
+          </div>
+        </div>
+        <dl class="sl-kv">
+          <dt>Состояние</dt>
+          <dd><span class="sl-status sl-status--ok">На связи</span></dd>
+          <dt>Устройств</dt>
+          <dd>21</dd>
+        </dl>
+      </article>
+    </div>
+
+    <!-- Новая карточка: app.js клонирует этот фрагмент и заполняет тексты -->
+    <template id="site-card">
+      <article class="sl-card" data-accent="ok">
+        <div class="sl-card__head">
+          <div>
+            <div class="sl-card__title">Название</div>
+            <div class="sl-card__sub">Адрес</div>
+          </div>
+        </div>
+        <dl class="sl-kv">
+          <dt>Состояние</dt>
+          <dd><span class="sl-status sl-status--ok">На связи</span></dd>
+          <dt>Устройств</dt>
+          <dd>0</dd>
+        </dl>
+      </article>
+    </template>
+
+    <!-- 14 · Empty -->
+    <div class="sl-empty" id="empty" hidden>
+      <svg class="sl-ic" viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5L14 14"/></svg>
+      <div class="sl-empty__title">Ничего не найдено</div>
+      <div>Измените запрос или фильтр.</div>
+    </div>
+
+    <!-- 00 · Text + 13 · Table -->
+    <h2 class="sl-text sl-text--section" id="journal">Журнал событий</h2>
+    <div class="sl-table-wrap">
+      <table class="sl-table sl-table--stack">
+        <thead>
+          <tr>
+            <th class="sl-table__min">Время</th>
+            <th>Объект</th>
+            <th>Событие</th>
+            <th>Важность</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td data-label="Время" class="sl-table__min">11:04</td>
+            <td data-label="Объект">Шлюз-04</td>
+            <td data-label="Событие">Потеряна связь с контроллером</td>
+            <td data-label="Важность"><span class="sl-status sl-status--crit">Авария</span></td>
+          </tr>
+          <tr>
+            <td data-label="Время" class="sl-table__min">10:52</td>
+            <td data-label="Объект">Склад №4</td>
+            <td data-label="Событие">Ответ дольше 2 секунд</td>
+            <td data-label="Важность"><span class="sl-status sl-status--warn">Внимание</span></td>
+          </tr>
+          <tr>
+            <td data-label="Время" class="sl-table__min">10:31</td>
+            <td data-label="Объект">КПП-1</td>
+            <td data-label="Событие">Добавлена камера КПП-2</td>
+            <td data-label="Важность"><span class="sl-status sl-status--ok">Норма</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 21 · Modal: новый пользователь, 4 поля 02 · Field (native/modal.html, native/field.html) -->
+    <dialog class="sl-modal" id="user-modal" aria-labelledby="user-modal-title">
+      <div class="sl-modal__head">
+        <span class="sl-modal__title" id="user-modal-title">Новый пользователь</span>
+        <button class="sl-btn sl-btn--ghost sl-btn--sm sl-btn--icon" type="button" aria-label="Закрыть"><svg class="sl-ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8"/></svg></button>
+      </div>
+      <div class="sl-modal__body">
+        <div class="sl-stack sl-stack--gap-3 sl-stack--a-stretch sl-stack--j-start">
+          <label class="sl-field"><span class="sl-label" id="u-name-l">Имя пользователя</span><input class="sl-input" required autocomplete="name" aria-labelledby="u-name-l" aria-describedby="u-name-e" name="name"/><span class="sl-error" id="u-name-e" hidden>Укажите имя пользователя</span></label>
+          <label class="sl-field"><span class="sl-label" id="u-email-l">Почта</span><input class="sl-input" type="email" required autocomplete="email" aria-labelledby="u-email-l" aria-describedby="u-email-e" name="email"/><span class="sl-error" id="u-email-e" hidden>Укажите почту в формате name@example.ru</span></label>
+          <label class="sl-field"><span class="sl-label" id="u-login-l">Логин</span><input class="sl-input" required autocomplete="username" aria-labelledby="u-login-l" aria-describedby="u-login-e" name="login"/><span class="sl-error" id="u-login-e" hidden>Укажите логин</span></label>
+          <label class="sl-field"><span class="sl-label" id="u-pass-l">Пароль</span><input class="sl-input" type="password" required autocomplete="new-password" aria-labelledby="u-pass-l" aria-describedby="u-pass-h u-pass-e" name="password"/><span class="sl-hint" id="u-pass-h">Не короче 8 символов</span><span class="sl-error" id="u-pass-e" hidden>Пароль — не короче 8 символов</span></label>
+        </div>
+      </div>
+      <div class="sl-modal__foot">
+        <button class="sl-btn" type="button" data-sl-close="">Отменить</button>
+        <button class="sl-btn sl-btn--primary" type="button" id="user-save">Сохранить</button>
+      </div>
+    </dialog>
+
+    <!-- 21 · Modal: новый объект -->
+    <dialog class="sl-modal" id="site-modal" aria-labelledby="site-modal-title">
+      <div class="sl-modal__head">
+        <span class="sl-modal__title" id="site-modal-title">Новый объект</span>
+        <button class="sl-btn sl-btn--ghost sl-btn--sm sl-btn--icon" type="button" aria-label="Закрыть"><svg class="sl-ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8"/></svg></button>
+      </div>
+      <div class="sl-modal__body">
+        <div class="sl-stack sl-stack--gap-3 sl-stack--a-stretch sl-stack--j-start">
+          <label class="sl-field"><span class="sl-label" id="s-title-l">Название</span><input class="sl-input" required aria-labelledby="s-title-l" aria-describedby="s-title-e" name="title"/><span class="sl-error" id="s-title-e" hidden>Укажите название</span></label>
+          <label class="sl-field"><span class="sl-label" id="s-address-l">Адрес</span><input class="sl-input" aria-labelledby="s-address-l" name="address"/></label>
+        </div>
+      </div>
+      <div class="sl-modal__foot">
+        <button class="sl-btn" type="button" data-sl-close="">Отмена</button>
+        <button class="sl-btn sl-btn--primary" type="button" id="site-save">Сохранить</button>
+      </div>
+    </dialog>
+  </main>
+</div>
+
+<!-- Скрипты компонентов, которые есть на странице -->
+<script src="node_modules/sloyka/native/shell.js"></script>
+<script src="node_modules/sloyka/native/theme.js"></script>
+<script src="node_modules/sloyka/native/modal.js"></script>
+<script src="node_modules/sloyka/native/toast.js"></script>
+<!-- Свой код: только обработчики событий -->
+<script src="app.js"></script>
+</body>
+</html>

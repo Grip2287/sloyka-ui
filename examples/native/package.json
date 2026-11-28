@@ -1,0 +1,12 @@
+{
+  "name": "sloyka-example-native",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "check": "sloyka-check .",
+    "dev": "sloyka-check . && node serve.js"
+  },
+  "dependencies": {
+    "sloyka": "file:../.."
+  }
+}

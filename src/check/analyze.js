@@ -15,6 +15,8 @@ const STYLED_SOURCES = new Set(['styled-components', '@emotion/styled', 'goober'
 const LOWER_TAG = /^[a-z]/;
 const MARKUP_SL = /class\s*=\s*\\?["'][^"'<>]*(?<![\w-])sl-[A-Za-z]/;
 const CLASS_LIST_WRITES = new Set(['add', 'toggle', 'replace']);
+/** Поиск элементов по селектору — чтение, а не переопределение: '.sl-*' в аргументе допустим. */
+const QUERY_METHODS = new Set(['querySelector', 'querySelectorAll', 'closest', 'matches']);
 
 /**
  * Файлы, где допустимы html/head/body: Next app/**\/layout и global-error, Remix app/root, pages/_document.
@@ -124,8 +126,15 @@ export function createAnalyzer({ filename = '', manifest, report, enabled = RULE
     });
   };
 
+  // Селектор в querySelector/closest/matches — чтение. В нативной вёрстке (свой JS без React) это можно;
+  // в React-коде (JSX или импорт из sloyka) обращение к .sl-* по-прежнему нарушение — решаем в Program:exit.
+  const readOnly = new WeakSet();
+  const deferred = [];
+  let reactFile = false;
   const checkLiteral = (node, text) => {
-    for (const hit of selectorHits(text)) flag('no-sl-css-overrides', lineAt(node, text, hit.index), slSelectorMessage(hit.token));
+    const hits = selectorHits(text);
+    if (readOnly.has(node)) { if (hits.length) deferred.push({ node, text, hits }); return; }
+    for (const hit of hits) flag('no-sl-css-overrides', lineAt(node, text, hit.index), slSelectorMessage(hit.token));
     // Разметка Sloyka строкой (innerHTML, insertAdjacentHTML, шаблоны): class="sl-…"
     const m = MARKUP_SL.exec(text);
     if (m) flag('native-js-markup', lineAt(node, text, m.index), nativeJsMarkupMessage());
@@ -211,6 +220,11 @@ export function createAnalyzer({ filename = '', manifest, report, enabled = RULE
         const onClassList = obj.type === 'MemberExpression' && !obj.computed && obj.property.type === 'Identifier' && obj.property.name === 'classList';
         if (onClassList && CLASS_LIST_WRITES.has(method)) checkClassWrite(node.arguments, node.loc.start.line);
         if (method === 'setAttribute' && staticValue(node.arguments[0]) === 'class') checkClassWrite(node.arguments.slice(1), node.loc.start.line);
+        if (QUERY_METHODS.has(method) && node.arguments[0]) {
+          const arg = node.arguments[0];
+          readOnly.add(arg);
+          if (arg.type === 'TemplateLiteral') arg.quasis.forEach((q) => readOnly.add(q));
+        }
       }
       if ((callee.type === 'Identifier' && callee.name === 'require') || callee.type === 'Import') checkSource(node.arguments[0]);
       else if (callee.type === 'MemberExpression' && callee.object.type === 'Identifier' && callee.object.name === 'require' && callee.property.name === 'resolve') checkSource(node.arguments[0]);
@@ -221,7 +235,12 @@ export function createAnalyzer({ filename = '', manifest, report, enabled = RULE
       }
       if (callee.type === 'Identifier' && styledNames.has(callee.name)) checkStyledArg(node.arguments[0], node.loc.start.line);
     },
+    'Program:exit'() {
+      if (!reactFile && named.size === 0 && namespaces.size === 0) return;
+      for (const { node, text, hits } of deferred) for (const hit of hits) flag('no-sl-css-overrides', lineAt(node, text, hit.index), slSelectorMessage(hit.token));
+    },
     JSXElement(node) {
+      reactFile = true;
       const opening = node.openingElement;
       const name = opening.name;
       let tag = null;

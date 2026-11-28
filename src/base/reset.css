@@ -3,4 +3,7 @@
   :where(button, input, select, textarea) { font: inherit; color: inherit; }
   :where(h1, h2, h3, h4, p, dl, dd, figure) { margin: 0; }
   :where(img, svg, video) { display: block; max-width: 100%; }
+  /* hidden всегда прячет: компоненты задают display, а нативные скрипты и свой JS прячут элементы атрибутом hidden.
+     !important в первом слое сильнее любого display из следующих слоёв и стилей сайта. */
+  [hidden]:not([hidden="until-found"]) { display: none !important; }
 }
