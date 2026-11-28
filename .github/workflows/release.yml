@@ -20,8 +20,6 @@ jobs:
       - uses: actions/setup-node@v5
         with: { node-version: 22, registry-url: 'https://registry.npmjs.org' }
       - run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
-      # Доверенная публикация (OIDC) работает с npm 11.5.1 и новее; у Node 22 npm старее.
-      - run: npm install -g npm@latest && npm --version
       - run: npm ci && npm run build && npm test
       # Манифест последней опубликованной версии — для заметок «Что нового и где лежит».
       # Лежит вне репозитория: changesets/action сбрасывает рабочую копию перед `version`.
@@ -30,6 +28,9 @@ jobs:
           if TARBALL=$(npm view sloyka dist.tarball 2>/dev/null) && [ -n "$TARBALL" ]; then
             mkdir -p /tmp/prev && curl -sL "$TARBALL" | tar -xz -C /tmp/prev && ls /tmp/prev/package/components.json
           else echo "sloyka ещё не опубликован — первый выпуск"; fi
+      # Доверенная публикация (OIDC) работает с npm 11.5.1 и новее; у Node 22 npm старее.
+      # Ставим после тестов: сборка и тесты идут на npm, который идёт с Node.
+      - run: npm install -g npm@11 && npm --version
       - uses: changesets/action@v1
         with:
           version: npm run version:release
