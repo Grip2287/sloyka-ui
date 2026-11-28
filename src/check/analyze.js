@@ -2,7 +2,7 @@
 // поэтому ESLint-плагин и CLI дают одинаковый результат.
 import {
   RULE_IDS, PACKAGE_NAMES, nativeElementMessage, classNameMessage, propValueMessage, deepImportMessage,
-  slSelectorMessage, slClassMessage, headRestrictedMessage, spreadMessage, styledWrapMessage,
+  slSelectorMessage, slClassMessage, headRestrictedMessage, spreadMessage, styledWrapMessage, nativeJsMarkupMessage,
 } from './rules.js';
 import { selectorHits } from './scan-css.js';
 
@@ -13,6 +13,8 @@ const LAYOUT_TAGS = new Set(['html', 'head', 'body']);
 const CREATE_ELEMENT_NAMES = new Set(['createElement', 'jsx', 'jsxs', '_jsx', '_jsxs', 'jsxDEV', '_jsxDEV']);
 const STYLED_SOURCES = new Set(['styled-components', '@emotion/styled', 'goober']);
 const LOWER_TAG = /^[a-z]/;
+const MARKUP_SL = /class\s*=\s*\\?["'][^"'<>]*(?<![\w-])sl-[A-Za-z]/;
+const CLASS_LIST_WRITES = new Set(['add', 'toggle', 'replace']);
 
 /**
  * Файлы, где допустимы html/head/body: Next app/**\/layout и global-error, Remix app/root, pages/_document.
@@ -124,6 +126,13 @@ export function createAnalyzer({ filename = '', manifest, report, enabled = RULE
 
   const checkLiteral = (node, text) => {
     for (const hit of selectorHits(text)) flag('no-sl-css-overrides', lineAt(node, text, hit.index), slSelectorMessage(hit.token));
+    // Разметка Sloyka строкой (innerHTML, insertAdjacentHTML, шаблоны): class="sl-…"
+    const m = MARKUP_SL.exec(text);
+    if (m) flag('native-js-markup', lineAt(node, text, m.index), nativeJsMarkupMessage());
+  };
+  /** el.className = 'sl-…', el.classList.add('sl-…'), el.setAttribute('class', 'sl-…') */
+  const checkClassWrite = (valueNodes, line) => {
+    for (const v of valueNodes) eachString(v, (n, text) => { if (SL_CLASS.test(text)) flag('native-js-markup', line, nativeJsMarkupMessage()); });
   };
 
   const checkProp = (key, prop, valueNode, line) => {
@@ -189,8 +198,20 @@ export function createAnalyzer({ filename = '', manifest, report, enabled = RULE
       if (styledNames.has(node.object.name) && LOWER_TAG.test(node.property.name))
         flag('no-native-elements', node.loc.start.line, nativeElementMessage(node.property.name));
     },
+    AssignmentExpression(node) {
+      const left = node.left;
+      if (left.type === 'MemberExpression' && !left.computed && left.property.type === 'Identifier' && left.property.name === 'className')
+        checkClassWrite([node.right], node.loc.start.line);
+    },
     CallExpression(node) {
       const callee = node.callee;
+      if (callee.type === 'MemberExpression' && !callee.computed && callee.property.type === 'Identifier') {
+        const method = callee.property.name;
+        const obj = callee.object;
+        const onClassList = obj.type === 'MemberExpression' && !obj.computed && obj.property.type === 'Identifier' && obj.property.name === 'classList';
+        if (onClassList && CLASS_LIST_WRITES.has(method)) checkClassWrite(node.arguments, node.loc.start.line);
+        if (method === 'setAttribute' && staticValue(node.arguments[0]) === 'class') checkClassWrite(node.arguments.slice(1), node.loc.start.line);
+      }
       if ((callee.type === 'Identifier' && callee.name === 'require') || callee.type === 'Import') checkSource(node.arguments[0]);
       else if (callee.type === 'MemberExpression' && callee.object.type === 'Identifier' && callee.object.name === 'require' && callee.property.name === 'resolve') checkSource(node.arguments[0]);
       const fn = callee.type === 'Identifier' ? callee.name : callee.type === 'MemberExpression' && !callee.computed && callee.property.type === 'Identifier' ? callee.property.name : null;

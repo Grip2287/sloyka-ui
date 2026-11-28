@@ -1,4 +1,5 @@
-export type RuleId = 'no-native-elements' | 'no-component-classname-style' | 'no-deep-imports' | 'no-sl-css-overrides' | 'no-invalid-prop-value';
+export type RuleId = 'no-native-elements' | 'no-component-classname-style' | 'no-deep-imports' | 'no-sl-css-overrides' | 'no-invalid-prop-value'
+  | 'native-unknown-class' | 'native-own-class' | 'native-own-tag' | 'native-no-inline-style' | 'native-no-style-tag' | 'native-js-markup';
 
 export interface Violation {
   /** Путь относительно проверяемой папки, через «/». */

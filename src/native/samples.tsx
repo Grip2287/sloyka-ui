@@ -34,7 +34,10 @@ const hidePopover = (html: string) => html
   .replace('sl-menu__trigger is-open', 'sl-menu__trigger')
   .replace('aria-expanded="true"', 'aria-expanded="false"')
   .replace('class="sl-menu sl-menu--popover"', 'class="sl-menu sl-menu--popover" hidden');
-const hideTooltip = (html: string) => html.replace('<span class="sl-tooltip" role="tooltip"', '<span class="sl-tooltip" role="tooltip" hidden');
+/** Подсказка в скрытом виде: её показывает tooltip.js при наведении и фокусе. */
+const hideTooltip = (html: string) => html
+  .replace(/<span class="sl-tooltip-host" aria-describedby="[^"]*">/, '<span class="sl-tooltip-host">')
+  .replace('<span class="sl-tooltip" role="tooltip"', '<span class="sl-tooltip" role="tooltip" hidden');
 const withTheme = (n: ReactNode) => <ThemeProvider>{n}</ThemeProvider>;
 
 const TOPBAR = <Topbar brand={{ mark: 'П', name: 'Пульт' }} title="Объекты"><ThemeToggle /></Topbar>;

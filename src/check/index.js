@@ -1,16 +1,18 @@
 // Публичный вход sloyka/check: checkProject(dir) обходит папку и применяет правила.
 import { readdirSync, readFileSync, existsSync, statSync } from 'node:fs';
 import { dirname, join, relative, resolve, sep } from 'node:path';
-import { RULE_IDS, loadManifest } from './rules.js';
+import { RULE_IDS, loadManifest, loadNativeKnown } from './rules.js';
 import { scanJsx } from './scan-jsx.js';
 import { scanCss } from './scan-css.js';
+import { scanHtml } from './scan-html.js';
 
 export { RULE_IDS };
 
 export const SKIP_DIRS = new Set(['node_modules', 'dist', 'build', '.next', 'storybook-static', 'out', 'coverage', '.turbo', '.vercel', '.nuxt', '.svelte-kit', '.git']);
 const JS_EXT = new Set(['.js', '.jsx', '.ts', '.tsx', '.mjs', '.cjs', '.mts', '.cts']);
 // Форматы, которые мы не умеем разбирать: пропускаем с предупреждением, чтобы их не приняли за проверенные.
-const UNSUPPORTED_EXT = new Set(['.mdx', '.vue', '.svelte', '.astro', '.html', '.scss', '.sass', '.less', '.styl']);
+const HTML_EXT = new Set(['.html', '.htm']);
+const UNSUPPORTED_EXT = new Set(['.mdx', '.vue', '.svelte', '.astro', '.scss', '.sass', '.less', '.styl']);
 export const ALLOW_FILE_NAME = 'sloyka.allow.json';
 
 export class AllowFileError extends Error {}
@@ -103,6 +105,15 @@ export function checkProject(dir, { allowFile } = {}) {
       hits = res.hits;
       errors.push(...res.errors);
     } else if (ext === '.css') hits = scanCss(readFileSync(abs, 'utf8'));
+    else if (HTML_EXT.has(ext)) {
+      // Нативная вёрстка: разметка компонентов из native/*.html; встроенные <script> — по правилам JS.
+      const scanJs = (src) => {
+        const res = scanJsx(src, `${file}.js`, manifest, abs);
+        errors.push(...res.errors);
+        return res.hits;
+      };
+      hits = scanHtml(readFileSync(abs, 'utf8'), loadNativeKnown(), scanJs);
+    }
     else {
       if (UNSUPPORTED_EXT.has(ext)) warnings.push(`Пропущен ${file}: формат ${ext} пока не проверяется`);
       continue;

@@ -63,7 +63,8 @@ describe('sloyka-check: fixtures', () => {
   });
 
   it('rule ids', () => {
-    expect(RULE_IDS).toEqual(['no-native-elements', 'no-component-classname-style', 'no-deep-imports', 'no-sl-css-overrides', 'no-invalid-prop-value']);
+    expect(RULE_IDS).toEqual(['no-native-elements', 'no-component-classname-style', 'no-deep-imports', 'no-sl-css-overrides', 'no-invalid-prop-value',
+      'native-unknown-class', 'native-own-class', 'native-own-tag', 'native-no-inline-style', 'native-no-style-tag', 'native-js-markup']);
   });
 
   it('messages are in Russian and carry hints from the manifest', () => {
