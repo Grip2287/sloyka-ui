@@ -1,8 +1,11 @@
 import '../src/index.css';
 import './preview.css';
-import type { ReactNode } from 'react';
+import { useEffect, useRef, createElement, type ReactNode } from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
+import { addons } from 'storybook/preview-api';
+import { snippetFromDom, scriptsFor } from '../src/native/format.js';
 import type { Decorator, Preview } from '@storybook/react-vite';
-import { ToastProvider, useToast } from '../src/react';
+import { ToastProvider, useToast, Icon, type IconName } from '../src/react';
 import { COMPONENTS as COMPONENT_MAP, componentFromTitle, componentCSS, addComponent, addTheme } from './template-store.js';
 
 // Стили референсов: src/references/<slug>/ref.css, всё внутри [data-ref="<slug>"]
@@ -37,6 +40,48 @@ function TemplateBar({ title, args }: { title: string; args: Args }) {
   );
 }
 
+// Панель «Код» (manager.tsx): разметка примера как нативный фрагмент и скрипты компонентов.
+const SCRIPT_SOURCES = import.meta.glob('../src/native/scripts/*.js', { query: '?raw', import: 'default', eager: true }) as Record<string, string>;
+const scriptSource = (file: string) => (SCRIPT_SOURCES[`../src/native/scripts/${file}`] ?? '')
+  .replace(/__SL_ICON_([a-z-]+)__/g, (_, n: string) => renderToStaticMarkup(createElement(Icon, { name: n as IconName })));
+
+const STORY_SOURCES = import.meta.glob('../src/**/*.stories.tsx', { query: '?raw', import: 'default', eager: true }) as Record<string, string>;
+
+/** React-код примера: импорты файла, сам пример и функции файла, на которые он ссылается. */
+function storySource(fileName: string | undefined, storyName: string): string {
+  const key = Object.keys(STORY_SOURCES).find((k) => fileName && fileName.replace(/^\.\//, '').endsWith(k.replace(/^\.\.\//, '')));
+  const src = key ? STORY_SOURCES[key] : '';
+  if (!src) return '';
+  const blocks = [...src.matchAll(/^export const (\w+)[^=]*= \{[\s\S]*?^\};/gm)];
+  const label = (name: string) => name.replace(/([a-z])([A-Z])/g, '$1 $2');
+  const found = blocks.find((b) => b[0].includes(`name: '${storyName}'`) || b[0].includes(`name: "${storyName}"`) || label(b[1]) === storyName);
+  if (!found) return '';
+  const imports = (src.match(/^import [^;]+;$/gm) ?? []).filter((l) => !l.includes('.storybook/')).map((l) => l.replace(/from '(\.\.\/)+react'/, "from 'sloyka'"));
+  const helpers = [...src.matchAll(/^(?:export )?function (\w+)[\s\S]*?^\}/gm)].filter((f) => found[0].includes(`<${f[1]}`) || found[0].includes(`${f[1]}(`)).map((f) => f[0]);
+  return [...imports, '', ...helpers, ...(helpers.length ? [''] : []), found[0]].join('\n');
+}
+
+function CodeSource({ storyId, react, children }: { storyId: string; react: string; children: ReactNode }) {
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const box = ref.current;
+    if (!box) return;
+    let timer = 0;
+    const send = () => {
+      const root = box.querySelector('.sb-stage') ?? box.querySelector('.sl-root') ?? box;
+      const html = snippetFromDom(root);
+      const scripts = scriptsFor(html);
+      addons.getChannel().emit('sloyka/code', { storyId, react, html, scripts, scriptSources: Object.fromEntries(scripts.map((f) => [f, scriptSource(f)])) });
+    };
+    const later = () => { clearTimeout(timer); timer = window.setTimeout(send, 150); };
+    later();
+    const mo = new MutationObserver(later);
+    mo.observe(box, { subtree: true, childList: true, attributes: true, characterData: true });
+    return () => { clearTimeout(timer); mo.disconnect(); };
+  }, [storyId, react]);
+  return <div ref={ref} style={{ display: 'contents' }}>{children}</div>;
+}
+
 function Stage({ theme, label, refSlug, children }: { theme: 'light' | 'dark'; label?: string; refSlug?: string; children: ReactNode }) {
   return <div className="sb-stage sl-root" data-theme={theme} data-label={label} data-ref={refSlug}>{children}</div>;
 }
@@ -64,6 +109,7 @@ const withStage: Decorator = (Story, ctx) => {
     view = <Stage theme={t} refSlug={refSlug}><Story /></Stage>;
   }
 
+  view = <CodeSource storyId={ctx.id} react={storySource(ctx.parameters.fileName as string | undefined, ctx.name)}>{view}</CodeSource>;
   const key = componentFromTitle(ctx.title);
   const css = key ? componentCSS(key, { scale: Number(ctx.args.slScale ?? 100), radius: Number(ctx.args.slRadius ?? -1) }, '.sb-tweak ') : '';
   const hasBar = Boolean(key) || ctx.title === 'Основа/Редактор темы';
