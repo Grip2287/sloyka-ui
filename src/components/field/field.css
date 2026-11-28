@@ -10,8 +10,11 @@
   .sl-hint { font-size: var(--sl-fs-small); color: var(--sl-text-3); }
   .sl-error { font-size: var(--sl-fs-small); color: var(--sl-crit); }
   .sl-textarea { height: auto; min-height: 80px; padding: 10px 12px; resize: vertical; }
-  .sl-search { position: relative; display: block; }
-  .sl-search .sl-ic { position: absolute; left: 11px; top: 50%; translate: 0 -50%; color: var(--sl-text-3); pointer-events: none; }
+  /* Значок и поле — в одной ячейке сетки: лупа центрируется по полю, а не по высоте ряда,
+     даже если соседние поля в ряду выше (с подписью, подсказкой или ошибкой). */
+  .sl-search { display: grid; align-content: start; }
+  .sl-search > .sl-ic, .sl-search > .sl-input { grid-area: 1 / 1; }
+  .sl-search .sl-ic { position: relative; z-index: 1; align-self: center; margin-left: 11px; color: var(--sl-text-3); pointer-events: none; }
   .sl-search .sl-input { padding-left: 34px; }
   .sl-select { appearance: none; padding-right: 34px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23888' stroke-width='1.6' stroke-linecap='round'%3E%3Cpath d='M4 6l4 4 4-4'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; background-size: 16px; cursor: pointer; }
   .sl-compose { display: flex; gap: 8px; }
