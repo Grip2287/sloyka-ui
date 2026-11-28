@@ -1,6 +1,8 @@
 # Sloyka
 
-React-библиотека компонентов для операторских панелей и админок. Светлая и тёмная тема, адаптив под телефон, планшет и монитор. Работает в Vite и Next.js (App Router).
+Библиотека компонентов для операторских панелей и админок. Светлая и тёмная тема, адаптив под телефон, планшет и монитор.
+
+Каждый компонент есть **в двух вариантах с одинаковым видом**: React (Vite, Next.js App Router) и **нативный — HTML + CSS** без React (у компонентов с поведением — свой маленький скрипт). ИИ-агент сам выбирает нативный вариант, если в запросе есть слово «Предикат» или «только HTML и CSS».
 
 Сайт собирается **только из компонентов** Sloyka: свои теги, `className`, `style` и CSS для `.sl-*` запрещены, и это проверяется при сборке. Поэтому все сайты выглядят одинаково и обновляются одной версией пакета.
 
@@ -9,7 +11,7 @@ React-библиотека компонентов для операторски�
 ## Быстрый старт
 
 ```bash
-npm i sloyka@1.0.0     # или: pnpm add sloyka@1.0.0 · yarn add sloyka@1.0.0
+npm i sloyka@2.0.0     # или: pnpm add sloyka@2.0.0 · yarn add sloyka@2.0.0
 ```
 
 ```tsx
@@ -33,6 +35,17 @@ export function App() {
 }
 ```
 
+Тот же пример нативными компонентами (HTML + CSS):
+
+```html
+<link rel="stylesheet" href="node_modules/sloyka/dist/styles.css">
+<!-- каркас из node_modules/sloyka/native/shell.html, кнопка из native/button.html -->
+<button class="sl-btn sl-btn--primary">Добавить</button>
+<script src="node_modules/sloyka/native/shell.js"></script>
+```
+
+Все фрагменты — `native/*.html`, справочник — `agents/native-components.md`, подробно — [GUIDE, раздел 4А](docs/GUIDE.md#4а-нативные-компоненты-html--css).
+
 Проверка проекта перед сборкой:
 
 ```json
@@ -48,6 +61,7 @@ export function App() {
 | `sloyka` | компоненты 01–24, `useToast`, `useTheme` |
 | `sloyka/styles.css` | все стили (один файл) |
 | `sloyka/templates/*` | шаблоны темы |
+| `sloyka/native/*` | нативные компоненты: фрагменты `*.html`, скрипты поведения `*.js`, `components.json` |
 | `sloyka/components.json` | список компонентов, props и допустимых значений |
 | `sloyka-check`, `sloyka/check` | проверка проекта (CLI и API) |
 | `sloyka/eslint`, `sloyka/stylelint` | те же правила в редакторе |
@@ -59,7 +73,7 @@ npm install
 npm run storybook        # http://localhost:6006
 ```
 
-Каждый компонент показан в двух темах на любой ширине, у каждого есть песочница (Controls) с размером и скруглением. В npm-пакет Storybook не входит — только в репозитории. Подробно: [GUIDE → Storybook](docs/GUIDE.md#storybook--витрина-компонентов).
+Каждый компонент показан в двух темах на любой ширине, у каждого есть песочница (Controls) с размером и скруглением, а панель **«Код»** показывает пример на React и тот же пример на HTML + CSS. В npm-пакет Storybook не входит — только в репозитории. Подробно: [GUIDE → Storybook](docs/GUIDE.md#storybook--витрина-компонентов).
 
 **Шаблоны.** В песочнице настройте размер и скругление и нажмите «＋ В шаблон». Цвета — «Основа → Редактор темы». Всё собирается на странице «Основа → Мой шаблон», сохраняется как «Шаблон N» в `templates/`. На сайте: `import 'sloyka/templates/template-1.css'` после стилей. Все шаблоны — «Основа → Все шаблоны».
 
@@ -73,7 +87,7 @@ Semver. Каждый выпуск сопровождается заметкой 
 
 ## ИИ-агенты (Codex, Cursor, Copilot, Gemini CLI)
 
-В пакете есть инструкция для агентов: `node_modules/sloyka/agents/sloyka.md` и справочник `agents/components.md`. Добавьте в корень сайта `AGENTS.md` со ссылкой на них — готовый текст в [GUIDE, раздел 9](docs/GUIDE.md#9-работа-с-ии-агентами). Для работы над самой библиотекой — [AGENTS.md](AGENTS.md).
+В пакете есть инструкция для агентов: `node_modules/sloyka/agents/sloyka.md` (выбор React или HTML + CSS, правила) и справочники `agents/components.md` и `agents/native-components.md`. Добавьте в корень сайта `AGENTS.md` со ссылкой на них — готовый текст в [GUIDE, раздел 9](docs/GUIDE.md#9-работа-с-ии-агентами). Для работы над самой библиотекой — [AGENTS.md](AGENTS.md).
 
 ## Плагин для Claude Code
 
