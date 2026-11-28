@@ -6,8 +6,7 @@
     "dev": "vite",
     "check": "sloyka-check src",
     "lint": "eslint src && stylelint \"src/**/*.css\"",
-    "prebuild": "sloyka-check src",
-    "build": "tsc --noEmit && vite build",
+    "build": "sloyka-check src && tsc --noEmit && vite build",
     "preview": "vite preview"
   },
   "dependencies": {

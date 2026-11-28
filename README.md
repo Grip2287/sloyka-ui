@@ -9,7 +9,7 @@ React-библиотека компонентов для операторски�
 ## Быстрый старт
 
 ```bash
-npm i sloyka@1.0.0
+npm i sloyka@1.0.0     # или: pnpm add sloyka@1.0.0 · yarn add sloyka@1.0.0
 ```
 
 ```tsx
@@ -36,7 +36,7 @@ export function App() {
 Проверка проекта перед сборкой:
 
 ```json
-{ "scripts": { "prebuild": "sloyka-check src" } }
+{ "scripts": { "build": "sloyka-check src && vite build" } }
 ```
 
 Плюс по желанию `sloyka/eslint` и `sloyka/stylelint` — см. GUIDE, раздел 6.

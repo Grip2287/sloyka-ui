@@ -51,3 +51,16 @@ it('@babel/parser belongs to the CLI only, not to the component bundle', () => {
   expect(bundle.length).toBeGreaterThan(10);
   for (const f of bundle) expect(readFileSync(`dist/${f}`, 'utf8'), f).not.toMatch(/@babel\/parser|from ['"](eslint|stylelint)/);
 });
+
+it('components are a production build: no jsxDEV / react/jsx-dev-runtime (Next prerender fails on it)', () => {
+  const offenders = [];
+  const walk = d => {
+    for (const e of readdirSync(d, { withFileTypes: true })) {
+      const p = `${d}/${e.name}`;
+      if (e.isDirectory()) { if (p !== 'dist/check') walk(p); }
+      else if (p.endsWith('.js') && /jsxDEV|react\/jsx-dev-runtime/.test(readFileSync(p, 'utf8'))) offenders.push(p);
+    }
+  };
+  walk('dist');
+  expect(offenders).toEqual([]);
+});

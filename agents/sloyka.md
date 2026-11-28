@@ -22,16 +22,16 @@ Sloyka — закрытый набор React-компонентов для па�
 1. **Запрос → номера компонентов.** Разложи задачу на группы 01–24 и коротко покажи план, например: «каркас — 24 Shell + Nav, 16 Topbar; список — 06 Card в Grid; журнал — 13 Table; добавление — 21 Modal с 02 Field; результат — 22 useToast».
 2. **Сверь props** каждого компонента с `agents/components.md`. Не угадывай имена props.
 3. **Подключение** (один раз):
-   - `npm i sloyka@<точная версия>`;
+   - установи пакет менеджером проекта: есть `pnpm-lock.yaml` → `pnpm add sloyka@<версия>`, `yarn.lock` → `yarn add sloyka@<версия>`, иначе `npm i sloyka@<версия>`;
    - `import 'sloyka/styles.css'` в корне приложения;
    - `<ThemeProvider>` и `<ToastProvider>` вокруг приложения;
    - Next.js: `<ThemeScript />` в `<head>` и `suppressHydrationWarning` на `<html>`; компоненты с состоянием и обработчиками — в файлах с `'use client'`.
    - Ссылки роутера: `linkAs={Link}` (Next `next/link`, `react-router-dom`).
 4. **Проверка (обязательно перед сдачей):**
    ```bash
-   npx sloyka-check src        # или папку с кодом: app, components
+   npx sloyka-check src        # pnpm: pnpm exec sloyka-check src; папка — где код: src, app, components
    ```
-   Ноль нарушений, код выхода 0. Если в `package.json` нет `"prebuild": "sloyka-check src"` — добавь. Нарушение исправляй заменой на компонент из подсказки, а не исключением. Затем сборка проекта (`npm run build`).
+   Ноль нарушений, код выхода 0. Если команда `build` в `package.json` не начинается с проверки — сделай так: `"build": "sloyka-check src && <прежняя сборка>"`. Нарушение исправляй заменой на компонент из подсказки, а не исключением. Затем сборка проекта (`npm run build` / `pnpm build`).
 5. Проверь обе темы и ширины 390, 1024, 1440: нет горизонтальной прокрутки и обрезанного текста. У кнопок-иконок есть `aria-label`; статус не передаётся только цветом.
 
 ## Минимальный пример
@@ -79,7 +79,7 @@ export default function Page() {
 ## Обновление библиотеки
 
 1. Сначала покажи пользователю, что нового: раздел новой версии в `node_modules/sloyka/CHANGELOG.md` или на https://github.com/Grip2287/sloyka-ui/releases («Добавлено / Изменено / Удалено / Нужно поправить в сайтах»). Дождись согласия.
-2. `npm i sloyka@<версия>`, затем `npx sloyka-check src` и сборка; исправь пункты «Нужно поправить».
+2. `npm i sloyka@<версия>` (или `pnpm add` / `yarn add` — как в проекте), затем `npx sloyka-check src` и сборка; исправь пункты «Нужно поправить».
 3. Откат — прежняя версия в `package.json` и `npm i`.
 
 ## Чего Sloyka не умеет

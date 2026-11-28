@@ -17,9 +17,9 @@ Sloyka — закрытый набор React-компонентов. Ты **со
 
 ## Порядок работы
 1. **Запрос → номера компонентов.** Разложи задачу пользователя на группы 01–24 и покажи план в одну-две строки: «каркас — 24 Shell/Nav, 16 Topbar; список объектов — 06 Card в Grid; журнал — 13 Table; добавление — 21 Modal с 02 Field; результат — 22 useToast».
-2. **Подключение** (один раз): `npm i sloyka@<точная версия>`; `import 'sloyka/styles.css'` в корне; `ThemeProvider` и `ToastProvider` вокруг приложения; в Next — `<ThemeScript />` в `<head>` и `suppressHydrationWarning` на `<html>`.
+2. **Подключение** (один раз): `npm i sloyka@<точная версия>` (в проекте на pnpm — `pnpm add`, на yarn — `yarn add`); `import 'sloyka/styles.css'` в корне; `ThemeProvider` и `ToastProvider` вокруг приложения; в Next — `<ThemeScript />` в `<head>` и `suppressHydrationWarning` на `<html>`.
 3. **Сборка страниц** из компонентов по плану. Ссылки в Next/react-router — через `linkAs={Link}`.
-4. **Проверка:** `npx sloyka-check src` (или папка `app`) — ноль нарушений. Добавь в проект `"prebuild": "sloyka-check src"`, если его нет. Затем сборка проекта. Нарушение исправляй заменой на компонент из совета, а не исключением.
+4. **Проверка:** `npx sloyka-check src` (или папка `app`) — ноль нарушений. Встрой проверку в сборку, если её нет: `"build": "sloyka-check src && <сборка>"`. Затем сборка проекта. Нарушение исправляй заменой на компонент из совета, а не исключением.
 5. Исключение в `sloyka.allow.json` — только с прямого согласия пользователя и с причиной.
 
 ## Шаблоны («сделай по шаблону 1»)

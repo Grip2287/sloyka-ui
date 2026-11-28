@@ -23,8 +23,12 @@ Sloyka — React-библиотека компонентов для операт
 ## 2. Установка
 
 ```bash
-npm i sloyka@1.0.0
+npm i sloyka@1.0.0        # npm
+pnpm add sloyka@1.0.0     # pnpm
+yarn add sloyka@1.0.0     # yarn
 ```
+
+Пакет один и тот же в любом менеджере: он берётся с npmjs.com. Дальше в инструкции команды даны для npm; в pnpm вместо `npx` — `pnpm exec`, вместо `npm run` — `pnpm run`.
 
 Ставьте точную версию. Обновление — смена версии в `package.json` (раздел 8).
 
@@ -199,10 +203,10 @@ import 'sloyka/templates/template-1.css';
 
 Три входа, одни и те же правила и сообщения.
 
-**CLI** — подключите перед сборкой:
+**CLI** — встройте в команду сборки (так проверка работает в npm, pnpm и yarn одинаково):
 
 ```json
-{ "scripts": { "prebuild": "sloyka-check src", "build": "vite build" } }
+{ "scripts": { "build": "sloyka-check src && vite build" } }
 ```
 
 ```
@@ -281,7 +285,7 @@ export default [sloyka.configs.recommended];
 - node_modules/sloyka/agents/sloyka.md — правила и порядок работы
 - node_modules/sloyka/agents/components.md — компоненты и их props
 
-Перед сдачей: `npx sloyka-check src` — ноль нарушений, затем `npm run build`.
+Перед сдачей: `npx sloyka-check src` (в pnpm — `pnpm exec sloyka-check src`) — ноль нарушений, затем сборка.
 ```
 
 `AGENTS.md` читают Codex, Cursor, Copilot, Gemini CLI и другие агенты. Если ваш агент использует свой файл (`.cursor/rules`, `.github/copilot-instructions.md`, `GEMINI.md`, `CLAUDE.md`), положите туда те же строки.
