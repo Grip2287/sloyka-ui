@@ -56,6 +56,7 @@ export function formatHtml(html) {
 
 
 /** Скрипт компонента по признаку в разметке: какие файлы sloyka/native/*.js нужны фрагменту. */
+/** @type {Array<[string, RegExp]>} */
 export const SCRIPT_MARKERS = [
   ['modal.js', /class="sl-modal[\s"]/],
   ['menu.js', /sl-menu__trigger/],
@@ -67,6 +68,7 @@ export const SCRIPT_MARKERS = [
   ['shell.js', /class="sl-shell[\s"]/],
   ['window.js', /sl-window__head[^]*?aria-label="Закрыть"/],
 ];
+/** @param {string} html @returns {string[]} */
 export const scriptsFor = (html) => SCRIPT_MARKERS.filter(([, re]) => re.test(html)).map(([f]) => f);
 
 /**

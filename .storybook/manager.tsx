@@ -50,7 +50,7 @@ function CodePanel() {
         </span>
       </div>
       <div style={{ flex: 1, overflow: 'auto' }}>
-        <SyntaxHighlighter language={tab === 'react' ? 'jsx' : tab === 'html' ? 'html' : 'javascript'} copyable bordered={false} padded>
+        <SyntaxHighlighter language={tab === 'react' ? 'jsx' : tab === 'html' ? 'html' : 'jsextra'} copyable bordered={false} padded>
           {code}
         </SyntaxHighlighter>
       </div>

@@ -9,58 +9,8 @@ import { mkdirSync, readFileSync, writeFileSync, readdirSync, rmSync } from 'nod
 import { pathToFileURL } from 'node:url';
 import { resolve, join } from 'node:path';
 
-export const slug = (name) => name.replace(/\./g, '-').replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
-
-/** id из useId (`«r0»`, `_R_…_`, `:r0:`) → читаемые `sl-id-1`, одинаковые на каждой сборке. */
-export function normalizeIds(html) {
-  const ids = [...html.matchAll(/\sid="([^"]+)"/g)].map((m) => m[1]).filter((v) => /[«»:]|^_R_/.test(v));
-  let out = html;
-  [...new Set(ids)].forEach((raw, i) => { out = out.split(raw).join(`sl-id-${i + 1}`); });
-  return out;
-}
-
-const INLINE = new Set(['span', 'strong', 'b', 'i', 'em', 'svg', 'path', 'circle', 'rect', 'line', 'polyline', 'polygon', 'g', 'code', 'small', 'input', 'img', 'br']);
-
-const isInlineLine = (l) => { const t = l.trim().match(/^<\/?([a-zA-Z0-9-]+)/)?.[1]; return !t || INLINE.has(t.toLowerCase()); };
-
-/** Простое оформление: блочные теги с новой строки и отступом, строчные — внутри строки. */
-export function formatHtml(html) {
-  const tokens = html.match(/<[^>]+>|[^<]+/g) ?? [];
-  const lines = [];
-  let depth = 0;
-  let line = '';
-  let inlineDepth = 0;
-  const flush = () => { if (line.trim()) lines.push('  '.repeat(depth) + line.trim()); line = ''; };
-  for (const t of tokens) {
-    const m = t.match(/^<\/?([a-zA-Z0-9-]+)/);
-    const tag = m?.[1].toLowerCase();
-    const closing = t.startsWith('</');
-    const selfClose = t.endsWith('/>') || ['input', 'img', 'br', 'hr', 'meta', 'link'].includes(tag ?? '');
-    if (!tag || INLINE.has(tag) || inlineDepth > 0) {
-      line += t;
-      if (tag === 'svg' && !closing && !selfClose) inlineDepth++;
-      if (tag === 'svg' && closing) inlineDepth--;
-      continue;
-    }
-    if (closing) { flush(); depth = Math.max(0, depth - 1); lines.push('  '.repeat(depth) + t); continue; }
-    flush();
-    lines.push('  '.repeat(depth) + t);
-    if (!selfClose) depth++;
-  }
-  flush();
-  // «<tag>текст</tag>» без вложенных блоков — в одну строку
-  const joined = [];
-  for (let i = 0; i < lines.length; i++) {
-    const a = lines[i], b = lines[i + 1], c = lines[i + 2];
-    const tag = a.trim().match(/^<([a-zA-Z0-9-]+)/)?.[1];
-    if (tag && c !== undefined && !a.trim().endsWith('/>') && c.trim() === `</${tag}>` && isInlineLine(b)) {
-      joined.push(a + b.trim() + c.trim()); i += 2; continue;
-    }
-    if (tag && b !== undefined && b.trim() === `</${tag}>`) { joined.push(a + b.trim()); i += 1; continue; }
-    joined.push(a);
-  }
-  return joined.join('\n');
-}
+export { slug, normalizeIds, formatHtml } from '../src/native/format.js';
+import { normalizeIds, formatHtml, slug } from '../src/native/format.js';
 
 export async function generate({ root = process.cwd(), write = true } = {}) {
   const out = resolve(root, 'node_modules/.cache', `sloyka-native-${process.pid}-${Date.now()}.mjs`);
