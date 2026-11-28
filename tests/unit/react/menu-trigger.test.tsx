@@ -22,7 +22,7 @@ describe('Menu with trigger', () => {
 
   it('renders a closed trigger with initials and ARIA', () => {
     render(account());
-    const btn = screen.getByRole('button', { name: 'Меню аккаунта' });
+    const btn = screen.getByRole('button', { name: /^Меню аккаунта/ });
     expect(btn.getAttribute('aria-haspopup')).toBe('menu');
     expect(btn.getAttribute('aria-expanded')).toBe('false');
     expect(btn.textContent).toContain('ОП');
@@ -31,7 +31,7 @@ describe('Menu with trigger', () => {
 
   it('opens on click, panel is linked to the trigger', () => {
     render(account());
-    const btn = screen.getByRole('button', { name: 'Меню аккаунта' });
+    const btn = screen.getByRole('button', { name: /^Меню аккаунта/ });
     fireEvent.click(btn);
     expect(btn.getAttribute('aria-expanded')).toBe('true');
     const panel = document.getElementById(btn.getAttribute('aria-controls')!);
@@ -41,7 +41,7 @@ describe('Menu with trigger', () => {
 
   it('Esc closes and returns focus to the trigger', () => {
     render(account());
-    const btn = screen.getByRole('button', { name: 'Меню аккаунта' });
+    const btn = screen.getByRole('button', { name: /^Меню аккаунта/ });
     fireEvent.click(btn);
     fireEvent.keyDown(document, { key: 'Escape' });
     expect(btn.getAttribute('aria-expanded')).toBe('false');
@@ -50,7 +50,7 @@ describe('Menu with trigger', () => {
 
   it('pointerdown outside closes, inside does not', () => {
     render(<div><span data-testid="out">вне</span>{account()}</div>);
-    const btn = screen.getByRole('button', { name: 'Меню аккаунта' });
+    const btn = screen.getByRole('button', { name: /^Меню аккаунта/ });
     fireEvent.click(btn);
     fireEvent.pointerDown(screen.getByText('Профиль'));
     expect(btn.getAttribute('aria-expanded')).toBe('true');
@@ -61,7 +61,7 @@ describe('Menu with trigger', () => {
   it('item click runs its handler and closes the menu', () => {
     const onExit = vi.fn();
     render(account({}, onExit));
-    const btn = screen.getByRole('button', { name: 'Меню аккаунта' });
+    const btn = screen.getByRole('button', { name: /^Меню аккаунта/ });
     fireEvent.click(btn);
     fireEvent.click(screen.getByText('Выйти'));
     expect(onExit).toHaveBeenCalledOnce();
@@ -71,7 +71,7 @@ describe('Menu with trigger', () => {
   it('controlled: follows open and asks via onOpenChange', () => {
     const onOpenChange = vi.fn();
     render(account({ open: true, onOpenChange }));
-    const btn = screen.getByRole('button', { name: 'Меню аккаунта' });
+    const btn = screen.getByRole('button', { name: /^Меню аккаунта/ });
     expect(btn.getAttribute('aria-expanded')).toBe('true');
     fireEvent.click(btn);
     expect(onOpenChange).toHaveBeenCalledWith(false);
@@ -81,5 +81,12 @@ describe('Menu with trigger', () => {
   it('without initials shows the user icon', () => {
     render(<Menu trigger={{ label: 'Аккаунт' }}><Menu.Item>Профиль</Menu.Item></Menu>);
     expect(screen.getByRole('button', { name: 'Аккаунт' }).querySelector('svg')).toBeTruthy();
+  });
+  it('видимые инициалы входят в имя кнопки (WCAG 2.5.3)', () => {
+    render(<Menu trigger={{ label: 'Меню аккаунта', initials: 'ОП' }}><Menu.Item>Выйти</Menu.Item></Menu>);
+    expect(screen.getByRole('button').getAttribute('aria-label')).toBe('Меню аккаунта, ОП');
+    cleanup();
+    render(<Menu trigger={{ label: 'Меню аккаунта' }}><Menu.Item>Выйти</Menu.Item></Menu>);
+    expect(screen.getByRole('button').getAttribute('aria-label')).toBe('Меню аккаунта');
   });
 });

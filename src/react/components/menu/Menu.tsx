@@ -81,7 +81,8 @@ function MenuWithTrigger({ header, trigger, open, defaultOpen, onOpenChange, chi
         ref={button}
         type="button"
         className={cx('sl-btn', 'sl-menu__trigger', isOpen && 'is-open')}
-        aria-label={trigger.label}
+        // Видимые инициалы входят в имя кнопки (WCAG 2.5.3 «Метка в имени»).
+        aria-label={trigger.initials ? `${trigger.label}, ${trigger.initials}` : trigger.label}
         aria-haspopup="menu"
         aria-expanded={isOpen}
         aria-controls={id}
