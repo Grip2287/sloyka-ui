@@ -258,7 +258,7 @@ npm run storybook    # откроется http://localhost:6006
 | Копировать фрагменты из `native/*.html`, менять тексты, ссылки, `name`, `value`, `id` | Придумывать классы `sl-*` и добавлять свои классы |
 | Выбирать варианты классами из фрагментов (`sl-btn--primary`, `sl-tag--ok`) | Свои теги и обёртки (`<p>`, `<div>` без класса Sloyka) — вместо них Text, Stack, Grid |
 | Повторять строки, пункты, карточки | `style="…"`, свой `<style>`, свой CSS для `.sl-*` |
-| Свой JS для событий: `addEventListener`, данные, `textContent`, `value`, `slModal.open()`, `slToast.ok()` | Создавать разметку Sloyka из JS (`innerHTML` с `sl-*`) и менять классы `sl-*` |
+| Свой JS для событий: `addEventListener`, данные, `textContent`, `value`, `hidden`, `slModal.open()`, `slToast.ok()`, поиск `querySelector('.sl-…')`, клон `<template>` с фрагментом | Создавать разметку Sloyka из JS (`innerHTML` с `sl-*`) и менять классы `sl-*` |
 
 **Поведение.** Кнопка открывает окно атрибутом `data-sl-open="<id окна>"`, кнопка с `data-sl-close` закрывает его; Esc, затемнение и «Закрыть» работают сами. Скрипты шлют события, на которые вешается свой код: `sl-open` и `sl-close` (окно), `sl-toggle` (меню, группа), `change` (сегменты), `sl-send` (строка сообщения). Уведомления — `slToast.ok('Сохранено')`, `warn`, `crit`, `info`. Тема — кнопка `data-sl-theme-toggle` или `slTheme.set('dark')`.
 
