@@ -82,7 +82,7 @@ function ThemeToggleImpl() {
   const dark = resolvedTheme === 'dark';
   return (
     <button
-      type="button" className="sl-btn sl-btn--sm sl-btn--icon" aria-label="Тёмная тема" aria-pressed={dark}
+      type="button" className="sl-btn sl-btn--sm sl-btn--icon" aria-label="Тёмная тема" aria-pressed={dark} data-sl-theme-toggle=""
       onClick={() => setTheme(dark ? 'light' : 'dark')}
     >
       <Icon name={dark ? 'sun' : 'moon'} />

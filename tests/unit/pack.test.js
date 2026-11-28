@@ -20,7 +20,7 @@ it('npm pack contains public entry points', () => {
   for (const f of ['dist/index.js', 'components.json', 'dist/index.d.ts', 'dist/styles.css', 'README.md', 'LICENSE',
     'bin/sloyka-check.js', 'dist/check/index.js', 'dist/check/index.d.ts', 'dist/check/cli.js', 'dist/check/rules.js', 'dist/check/analyze.js',
     'dist/check/scan-jsx.js', 'dist/check/scan-css.js', 'dist/check/eslint.js', 'dist/check/stylelint.js',
-    'agents/sloyka.md', 'agents/components.md', 'docs/GUIDE.md', 'CHANGELOG.md'])
+    'agents/sloyka.md', 'agents/components.md', 'agents/native-components.md', 'native/components.json', 'native/modal.html', 'native/modal.js', 'native/theme-head.js', 'docs/GUIDE.md', 'CHANGELOG.md'])
     expect(files, f).toContain(f);
   expect(files.some(f => /^dist\/fonts\/.+\.woff2$/.test(f))).toBe(true);
   expect(files.some(f => /^templates\/.+/.test(f))).toBe(true);
@@ -34,7 +34,7 @@ it('every export path exists after build', () => {
   const pkg = JSON.parse(readFileSync('package.json', 'utf8'));
   for (const [key, target] of Object.entries(pkg.exports)) {
     const t = typeof target === 'string' ? target : target.import;
-    const path = t.replace('*', 'README.md').replace(/^\.\//, '');
+    const path = t.replace('*', key === './native/*' ? 'components.json' : 'README.md').replace(/^\.\//, '');
     expect(existsSync(path), `${key} → ${path}`).toBe(true);
   }
 });

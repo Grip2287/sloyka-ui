@@ -265,7 +265,7 @@ describe('Segmented', () => {
   const opts = [{ value: 'a', label: 'Без зон' }, { value: 'b', label: 'Рабочий' }, { value: 'c', label: 'Всё' }];
   it('parity: block, third pressed', () => {
     same(render(<Segmented block options={opts} defaultValue="c" />).container,
-      '<div class="sl-segmented sl-segmented--block" role="group"><button type="button" aria-pressed="false" tabindex="-1">Без зон</button><button type="button" aria-pressed="false" tabindex="-1">Рабочий</button><button type="button" aria-pressed="true" tabindex="0">Всё</button></div>');
+      '<div class="sl-segmented sl-segmented--block" role="group"><button type="button" value="a" aria-pressed="false" tabindex="-1">Без зон</button><button type="button" value="b" aria-pressed="false" tabindex="-1">Рабочий</button><button type="button" value="c" aria-pressed="true" tabindex="0">Всё</button></div>');
   });
   it('first option is selected by default', () => {
     render(<Segmented options={opts} />);

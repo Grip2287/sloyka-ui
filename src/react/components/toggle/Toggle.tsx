@@ -41,7 +41,7 @@ export const Segmented = defineMeta(function Segmented({ options, value, default
   return (
     <div className={cx('sl-segmented', block && 'sl-segmented--block')} role="group" aria-label={label}>
       {options.map((o, i) => (
-        <button key={o.value} type="button" ref={(el) => { refs.current[i] = el; }} aria-pressed={i === found}
+        <button key={o.value} type="button" value={o.value} ref={(el) => { refs.current[i] = el; }} aria-pressed={i === found}
           tabIndex={i === active ? 0 : -1} onClick={() => select(o.value)} onKeyDown={(e) => onKey(e, i)}>
           {o.label}
         </button>

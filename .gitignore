@@ -8,3 +8,5 @@ playwright-report/
 components.json
 tests/fixtures/.generated/
 agents/components.md
+/native/
+agents/native-components.md
