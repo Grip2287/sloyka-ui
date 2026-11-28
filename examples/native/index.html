@@ -16,7 +16,19 @@
     <span class="sl-brand"><span class="sl-brand__mark">П</span><span class="sl-brand__text">Пульт</span></span><span class="sl-topbar__sep" aria-hidden="true"></span><span class="sl-topbar__title">Объекты</span>
     <div class="sl-topbar__end">
       <button type="button" class="sl-btn sl-btn--sm sl-btn--icon" aria-label="Тёмная тема" aria-pressed="false" data-sl-theme-toggle=""><svg class="sl-ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M13 9.5A5.5 5.5 0 1 1 6.5 3a4.5 4.5 0 0 0 6.5 6.5z"/></svg></button>
-      <button class="sl-btn sl-btn--icon" type="button" aria-label="Выйти" id="logout"><svg class="sl-ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 2v6"/><path d="M4.6 4.4a5 5 0 1 0 6.8 0"/></svg></button>
+      <!-- 18 · Menu с кнопкой (native/menu.html + menu.js) -->
+      <div class="sl-menu-anchor">
+        <button type="button" class="sl-btn sl-menu__trigger" aria-label="Меню аккаунта" aria-haspopup="menu" aria-expanded="false" aria-controls="account-menu"><span class="sl-menu__initials" aria-hidden="true">ИП</span><svg class="sl-ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 6l4 4 4-4"/></svg></button>
+        <div class="sl-menu sl-menu--popover" hidden id="account-menu">
+          <div class="sl-menu__head">
+            <div class="sl-card__title">Иван Петров</div>
+            <div class="sl-card__sub">Оператор</div>
+          </div>
+          <button type="button" class="sl-menu__item" id="profile"><svg class="sl-ic" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="5.5" r="2.5"/><path d="M3 13.5c.6-2.6 2.6-3.8 5-3.8s4.4 1.2 5 3.8"/></svg>Профиль</button>
+          <div class="sl-menu__sep" role="separator"></div>
+          <button type="button" class="sl-menu__item sl-menu__item--danger" id="logout"><svg class="sl-ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 2v6"/><path d="M4.6 4.4a5 5 0 1 0 6.8 0"/></svg>Выйти</button>
+        </div>
+      </div>
     </div>
   </header>
   <nav class="sl-nav sl-shell__nav" id="sl-nav" aria-label="Разделы">
@@ -219,6 +231,7 @@
 <!-- Скрипты компонентов, которые есть на странице -->
 <script src="node_modules/sloyka/native/shell.js"></script>
 <script src="node_modules/sloyka/native/theme.js"></script>
+<script src="node_modules/sloyka/native/menu.js"></script>
 <script src="node_modules/sloyka/native/modal.js"></script>
 <script src="node_modules/sloyka/native/toast.js"></script>
 <!-- Свой код: только обработчики событий -->

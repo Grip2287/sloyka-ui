@@ -78,5 +78,6 @@ $('site-save').addEventListener('click', () => {
   refresh();
 });
 
+$('profile').addEventListener('click', () => slToast.info('Профиль'));
 $('logout').addEventListener('click', () => slToast.info('Выход выполнен'));
 refresh();

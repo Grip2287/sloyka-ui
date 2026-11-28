@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import {
   Shell, Topbar, Nav, PageHeader, Toolbar, Search, Select, Button, Grid, Card, KeyValue, Status,
-  Stats, Table, Text, Modal, Field, Stack, Empty, ThemeToggle, useToast,
+  Stats, Table, Text, Modal, Field, Stack, Empty, ThemeToggle, Menu, useToast,
 } from 'sloyka';
 import { SITES, EVENTS, type Site, type Tone } from './data';
 import { UserModal } from './UserModal';
@@ -42,7 +42,11 @@ export function AdminApp() {
       topbar={
         <Topbar brand={{ mark: 'П', name: 'Пульт' }} title="Объекты">
           <ThemeToggle />
-          <Button icon="power" iconOnly aria-label="Выйти" onClick={() => toast.info('Выход выполнен')} />
+          <Menu trigger={{ label: 'Меню аккаунта', initials: 'ИП' }} header={{ name: 'Иван Петров', role: 'Оператор' }}>
+            <Menu.Item icon="user" onClick={() => toast.info('Профиль')}>Профиль</Menu.Item>
+            <Menu.Separator />
+            <Menu.Item icon="power" danger onClick={() => toast.info('Выход выполнен')}>Выйти</Menu.Item>
+          </Menu>
         </Topbar>
       }
       nav={
